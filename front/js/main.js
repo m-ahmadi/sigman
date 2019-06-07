@@ -15,7 +15,7 @@ var svg = d3.select("body").append("svg")
 	.append("g")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("data.csv", function(error, data) {
+d3.csv("zob.csv", function(error, data) {
 	var accessor = candlestick.accessor();
 	
 	data = data.slice(0, 200).map(function(d) {
