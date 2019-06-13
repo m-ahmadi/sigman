@@ -17,14 +17,13 @@ var yAxis = d3.axisLeft().scale(y);
 var svg = d3.select("#box");
 
 var accessor = candlestick.accessor();
-debugger
+
 $.ajax({
 	url: "data.csv",
 	method: "GET"
 }).done(setup);
 
 
-		
 function setup(d) {
 	var data = d3.csvParse(d, function (d) {
 		return {
@@ -71,3 +70,7 @@ function draw(data) {
 	svg.selectAll("g.x.axis").call(xAxis);
 	svg.selectAll("g.y.axis").call(yAxis);
 }
+
+
+$(function () {
+});
