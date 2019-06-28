@@ -13,26 +13,28 @@
 
 var widget = new TradingView.widget({
 	symbol: "AMZN",
-	width: "100%",
-//	height: "300px",
-	timeframe: "8M",
-//	autosize: true,
-	toolbar_bg: "hsla(233%,100$,55%,1)", 
 	fullscreen: false,
 	interval: "1D",
 	container_id: "tv_chart_container",
 	datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
 	library_path: "js/lib/charting_library/",
 	disabled_features: [
-		//"header_widget",
-		//"left_toolbar"
+		"header_widget",
+		"left_toolbar",
+		"context_menus", // timezone_menu, scales_context_menu, legend_context_menu, symbol_info, show_chart_property_page
+		"show_chart_property_page",
+//		"remove_library_container_border",
+//		"border_around_the_chart",
+		"edit_buttons_in_legend",
+		"countdown",
+		"display_market_status",
+		"timeframes_toolbar",
+		"go_to_date",
+		"control_bar"
 	],
 	enabled_features: [
 		"move_logo_to_main_pane"
-	],
-	overrides: {
-		"mainSeriesProperties.style": 0
-	}
+	]
 });
 
 widget.onChartReady(function() {
