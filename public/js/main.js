@@ -1,14 +1,64 @@
-// $(function () {
+$(function () {
 
-// var widget = new TradingView.widget({
-	// symbol: 'A',
-	// interval: 'D',
-	// timezone: "America/New_York",
-	// container_id: "tv_chart_container",
-	// locale: "ru",
-	// datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
-	// library_path: "js/lib/charting_library/"
-// });
+
+var japi = {};
+var config = {
+	exchanges: [
+		{ value: "", name: "All Exchanges", desc: "" }
+	],
+	symbolsTypes: [
+		{name: "All types", value: ""},
+		{name: "Stock", value: "stock"},
+		{name: "Index", value: "index"}
+	],
+	supportedResolutions: [ "1D" ],
+	supports_marks: true
+};
+// essential:
+japi.onReady = function (callback) {
+	setTimeout(callback, 0, config);
+	console.log("onReady()");
+};
+japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
+	
+	console.log("resolveSymbol()");
+	onSymbolResolvedCallback();
+	
+};
+
+japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
+	console.log("getBars()");
+};
+// optional:
+japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
+	console.log("searchSymbols()");
+};
+japi.subscribeBars = function (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {
+	console.log("subscribeBars()");
+};
+japi.unsubscribeBars = function (subscriberUID) {
+	console.log("unsubscribeBars()");
+};
+japi.calculateHistoryDepth = function (resolution, resolutionBack, intervalBack) {
+	console.log("calculateHistoryDepth()");
+};
+japi.getMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
+	console.log("getMarks()");
+};
+japi.getTimescaleMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
+	console.log("getTimescaleMarks()");
+};
+japi.getServerTime = function (callback) {
+	console.log("getServerTime()");
+};
+
+
+
+
+
+
+
+
 
 
 var widget = new TradingView.widget({
@@ -16,8 +66,9 @@ var widget = new TradingView.widget({
 	fullscreen: false,
 	interval: "1D",
 	container_id: "tv_chart_container",
-	datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
-	library_path: "js/lib/charting_library/",
+//	datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
+	datafeed: japi,
+	library_path: "tradingview/charting_library/",
 	disabled_features: [
 		"header_widget",
 		"left_toolbar",
@@ -42,6 +93,6 @@ widget.onChartReady(function() {
 });
 
 
-// });
+});
 
 
