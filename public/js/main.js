@@ -14,21 +14,76 @@ var config = {
 	supportedResolutions: [ "1D" ],
 	supports_marks: true
 };
+
 // essential:
 japi.onReady = function (callback) {
 	setTimeout(callback, 0, config);
 	console.log("onReady()");
 };
+
 japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
-	
 	console.log("resolveSymbol()");
-	onSymbolResolvedCallback();
+	
+	var symbolInfo = {
+		name: "test",
+		ticker: "",
+		description: "some description asd",
+		session: "0900-1230",
+		exchange: "",
+		listed_exchange: "",
+		timezone: "Asia/Tehran" ,
+		expired: false,
+		sector: "",
+		industry: "",
+		currency_code: "",
+		minmov: 1,
+		pricescale: 100,
+		minmove2: 0,
+		fractional: false,
+		has_intraday: false,
+		supported_resolutions: [ "1D"],
+		intraday_multipliers: [],
+		has_seconds: false,
+		seconds_multipliers: [],
+		has_daily: false,
+		has_weekly_and_monthly: false,
+		has_empty_bars: false,
+		has_no_volume: false,
+		volume_precision: 0,
+		data_status: 'endofday',
+		expiration_date: 0
+	};
+	
+	setTimeout(onSymbolResolvedCallback, 0, symbolInfo);
 	
 };
 
 japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
+	debugger
+	
+	$.ajax({
+		url: "path/to/some/where",
+		method: "GET",
+		data: {},
+		beforeSend: function () {
+			
+		},
+	}).done(function (data) {
+		onHistoryCallback(data, {noData: false})
+		/*
+		if (bars.length) {
+			onHistoryCallback(bars, {noData: false})
+		} else {
+			onHistoryCallback(bars, {noData: true})
+		}
+		*/
+	});
 	console.log("getBars()");
 };
+
+
+
+
 // optional:
 japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
 	console.log("searchSymbols()");
