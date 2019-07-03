@@ -25,44 +25,21 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 	console.log("resolveSymbol()");
 	
 	var symbolInfo = {
-		name: "test",
-		ticker: "",
-		description: "some description asd",
-		session: "0900-1230",
-		exchange: "",
-		listed_exchange: "",
+		name: symbolName,
+		ticker: symbolName,
+		description: "zob ahan esfahan",
 		timezone: "Asia/Tehran" ,
-		expired: false,
-		sector: "",
-		industry: "",
-		currency_code: "",
 		minmov: 1,
-		pricescale: 100,
-		minmove2: 0,
-		fractional: false,
-		has_intraday: false,
-		supported_resolutions: [ "1D"],
-		intraday_multipliers: [],
-		has_seconds: false,
-		seconds_multipliers: [],
-		has_daily: false,
-		has_weekly_and_monthly: false,
-		has_empty_bars: false,
-		has_no_volume: false,
-		volume_precision: 0,
-		data_status: 'endofday',
-		expiration_date: 0
+		pricescale: 1
 	};
-	
 	setTimeout(onSymbolResolvedCallback, 0, symbolInfo);
-	
 };
 
 japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
-	debugger
+	
 	
 	$.ajax({
-		url: "path/to/some/where",
+		url: "./api",
 		method: "GET",
 		data: {},
 		beforeSend: function () {
@@ -117,7 +94,7 @@ japi.getServerTime = function (callback) {
 
 
 var widget = new TradingView.widget({
-	symbol: "AMZN",
+	symbol: "zob",
 	fullscreen: false,
 	interval: "1D",
 	container_id: "tv_chart_container",
