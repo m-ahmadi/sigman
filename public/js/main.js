@@ -17,8 +17,9 @@ var config = {
 
 // essential:
 japi.onReady = function (callback) {
-	setTimeout(callback, 0, config);
 	console.log("onReady()");
+	
+	setTimeout(callback, 0, config);
 };
 
 japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
@@ -28,6 +29,7 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 		name: symbolName,
 		ticker: symbolName,
 		description: "zob ahan esfahan",
+		session: "0900-1230",
 		timezone: "Asia/Tehran" ,
 		minmov: 1,
 		pricescale: 1
@@ -36,7 +38,7 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 };
 
 japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
-	
+	console.log("getBars()");
 	
 	$.ajax({
 		url: "./api",
@@ -55,7 +57,6 @@ japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, on
 		}
 		*/
 	});
-	console.log("getBars()");
 };
 
 
