@@ -1,4 +1,4 @@
-$(function () {
+// $(function () {
 
 
 var japi = {};
@@ -126,6 +126,6 @@ widget.onChartReady(function() {
 });
 
 
-});
+// });
 
 
