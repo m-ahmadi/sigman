@@ -1,131 +1,61 @@
-$(function () {
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+	width = 960 - margin.left - margin.right,
+	height = 500 - margin.top - margin.bottom;
 
+var parseDate = d3.timeParse("%d-%b-%y");
+var x = techan.scale.financetime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+var candlestick = techan.plot.candlestick().xScale(x).yScale(y);
+var xAxis = d3.axisBottom().scale(x);
+var yAxis = d3.axisLeft().scale(y);
 
-var japi = {};
-var config = {
-	exchanges: [
-		{ value: "", name: "All Exchanges", desc: "" }
-	],
-	symbolsTypes: [
-		{name: "All types", value: ""},
-		{name: "Stock", value: "stock"},
-		{name: "Index", value: "index"}
-	],
-	supportedResolutions: [ "1D" ],
-	supports_marks: true
-};
+var svg = d3.select("body").append("svg")
+	.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// essential:
-japi.onReady = function (callback) {
-	console.log("onReady()");
+d3.csv("data.csv", function(error, data) {
+	var accessor = candlestick.accessor();
 	
-	setTimeout(callback, 0, config);
-};
-
-japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
-	console.log("resolveSymbol()");
-	
-	var symbolInfo = {
-		name: symbolName,
-		ticker: symbolName,
-		description: "zob ahan esfahan",
-		session: "0900-1230",
-		timezone: "Asia/Tehran" ,
-		minmov: 1,
-		pricescale: 1
-	};
-	setTimeout(onSymbolResolvedCallback, 0, symbolInfo);
-};
-
-japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
-	console.log("getBars()");
-	
-	$.ajax({
-		url: "./api",
-		method: "GET",
-		data: {},
-		beforeSend: function () {
-			
-		},
-	}).done(function (data) {
-		onHistoryCallback(data, {noData: false})
-		/*
-		if (bars.length) {
-			onHistoryCallback(bars, {noData: false})
-		} else {
-			onHistoryCallback(bars, {noData: true})
-		}
-		*/
-	});
-};
-
-
-
-
-// optional:
-japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
-	console.log("searchSymbols()");
-};
-japi.subscribeBars = function (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {
-	console.log("subscribeBars()");
-};
-japi.unsubscribeBars = function (subscriberUID) {
-	console.log("unsubscribeBars()");
-};
-japi.calculateHistoryDepth = function (resolution, resolutionBack, intervalBack) {
-	console.log("calculateHistoryDepth()");
-};
-japi.getMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
-	console.log("getMarks()");
-};
-japi.getTimescaleMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
-	console.log("getTimescaleMarks()");
-};
-japi.getServerTime = function (callback) {
-	console.log("getServerTime()");
-};
-
-
-
-
-
-
-
-
-
-
-var widget = new TradingView.widget({
-	symbol: "zob",
-	fullscreen: false,
-	interval: "1D",
-	container_id: "tv_chart_container",
-//	datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
-	datafeed: japi,
-	library_path: "tradingview/charting_library/",
-	disabled_features: [
-		"header_widget",
-		"left_toolbar",
-		"context_menus", // timezone_menu, scales_context_menu, legend_context_menu, symbol_info, show_chart_property_page
-		"show_chart_property_page",
-//		"remove_library_container_border",
-//		"border_around_the_chart",
-		"edit_buttons_in_legend",
-		"countdown",
-		"display_market_status",
-		"timeframes_toolbar",
-		"go_to_date",
-		"control_bar"
-	],
-	enabled_features: [
-		"move_logo_to_main_pane"
-	]
+	data = data.slice(0, 200).map(function(d) {
+		return {
+			date: parseDate(d.Date),
+			open: +d.Open,
+			high: +d.High,
+			low: +d.Low,
+			close: +d.Close,
+			volume: +d.Volume
+		};
+		}).sort(function(a, b) { return d3.ascending(accessor.d(a), accessor.d(b)); });
+		
+		svg.append("g")
+			.attr("class", "candlestick");
+		
+		svg.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")");
+		
+		svg.append("g")
+			.attr("class", "y axis")
+			.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 6)
+			.attr("dy", ".71em")
+			.style("text-anchor", "end")
+			.text("Price ($)");
+		
+		// Data to display initially
+		draw(data.slice(0, data.length-20));
+		// Only want this button to be active if the data has loaded
+		d3.select("button").on("click", function() { draw(data); }).style("display", "inline");
 });
 
-widget.onChartReady(function() {
+function draw(data) {
+	x.domain(data.map(candlestick.accessor().d));
+	y.domain(techan.scale.plot.ohlc(data, candlestick.accessor()).domain());
 	
-});
-
-
-});
-
-
+	svg.selectAll("g.candlestick").datum(data).call(candlestick);
+	svg.selectAll("g.x.axis").call(xAxis);
+	svg.selectAll("g.y.axis").call(yAxis);
+}
