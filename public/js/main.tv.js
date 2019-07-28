@@ -1,5 +1,5 @@
 // $(function () {
-
+var chart;
 
 var japi = {};
 var config = {
@@ -122,8 +122,9 @@ var widget = new TradingView.widget({
 });
 
 widget.onChartReady(function() {
-	
+	chart = widget.chart();
 });
+
 
 
 // });
