@@ -17,13 +17,13 @@ var config = {
 
 // essential:
 japi.onReady = function (callback) {
-	console.log("onReady()");
+	// console.log("onReady()");
 	
 	setTimeout(callback, 0, config);
 };
 
 japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
-	console.log("resolveSymbol()");
+	// console.log("resolveSymbol()");
 	
 	var symbolInfo = {
 		name: symbolName,
@@ -38,7 +38,7 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 };
 
 japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
-	console.log("getBars()");
+	// console.log("getBars()");
 	
 	$.ajax({
 		url: "./api",
@@ -64,25 +64,25 @@ japi.getBars = function (symbolInfo, resolution, from, to, onHistoryCallback, on
 
 // optional:
 japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
-	console.log("searchSymbols()");
+	// console.log("searchSymbols()");
 };
 japi.subscribeBars = function (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {
-	console.log("subscribeBars()");
+	// console.log("subscribeBars()");
 };
 japi.unsubscribeBars = function (subscriberUID) {
-	console.log("unsubscribeBars()");
+	// console.log("unsubscribeBars()");
 };
 japi.calculateHistoryDepth = function (resolution, resolutionBack, intervalBack) {
-	console.log("calculateHistoryDepth()");
+	// console.log("calculateHistoryDepth()");
 };
 japi.getMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
-	console.log("getMarks()");
+	// console.log("getMarks()");
 };
 japi.getTimescaleMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
-	console.log("getTimescaleMarks()");
+	// console.log("getTimescaleMarks()");
 };
 japi.getServerTime = function (callback) {
-	console.log("getServerTime()");
+	// console.log("getServerTime()");
 };
 
 
@@ -96,7 +96,7 @@ japi.getServerTime = function (callback) {
 
 var widget = new TradingView.widget({
 	symbol: "zob",
-	fullscreen: false,
+	fullscreen: true,
 	interval: "1D",
 	container_id: "tv_chart_container",
 //	datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
