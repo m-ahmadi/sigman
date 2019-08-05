@@ -1,14 +1,15 @@
 const axios = require('axios');
 
-function LastPossibleDeven() {
-	var xmlBody = `
-<?xml version="1.0" encoding="utf-8"?>
+function Instrument(DEven) {
+	var xmlBody = `<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-	<soap:Body>
-		<LastPossibleDeven xmlns="http://tsetmc.com/" />
-	</soap:Body>
+  <soap:Body>
+    <Instrument xmlns="http://tsetmc.com/">
+      <DEven>${DEven}</DEven>
+    </Instrument>
+  </soap:Body>
 </soap:Envelope>`;
-	return makeRequest("LastPossibleDeven", xmlBody);
+	return makeRequest("Instrument", xmlBody);
 }
 
 function InstrumentAndShare(DEven, LastID=0) {
@@ -22,6 +23,17 @@ function InstrumentAndShare(DEven, LastID=0) {
 	</soap:Body>
 </soap:Envelope>`;
 	return makeRequest("InstrumentAndShare", xmlBody);
+}
+
+function LastPossibleDeven() {
+	var xmlBody = `
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<LastPossibleDeven xmlns="http://tsetmc.com/" />
+	</soap:Body>
+</soap:Envelope>`;
+	return makeRequest("LastPossibleDeven", xmlBody);
 }
 
 function DecompressAndGetInsturmentClosingPrice(insCodes) {
@@ -53,7 +65,8 @@ function makeRequest(soapAction, xmlBody) {
 }
 
 module.exports = {
-	LastPossibleDeven,
+	Instrument,
 	InstrumentAndShare,
+	LastPossibleDeven,
 	DecompressAndGetInsturmentClosingPrice
 };
