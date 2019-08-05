@@ -1,20 +1,4 @@
-const router = require('express').Router();
-const convert = require('xml-js');
 const axios = require('axios');
-
-router.get('/', async function (req, res, next) {
-	// 20010321
-	var response = await InstrumentAndShare("20010321").catch(err => res.send(err.message) );
-	
-	var responseObject = convert.xml2js(response.data, {spaces: 4});
-	var text = responseObject.elements[0].elements[0].elements[0].elements[0].elements[0].text;
-	var arr = text.split(";");
-	arr.unshift( arr.length );
-	res.send( JSON.stringify(arr) );
-	
-});
-
-
 
 function LastPossibleDeven() {
 	var xmlBody = `
@@ -68,4 +52,8 @@ function makeRequest(soapAction, xmlBody) {
 	});
 }
 
-module.exports = router;
+module.exports = {
+	LastPossibleDeven,
+	InstrumentAndShare,
+	DecompressAndGetInsturmentClosingPrice
+};
