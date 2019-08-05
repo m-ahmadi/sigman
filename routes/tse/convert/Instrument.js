@@ -49,4 +49,29 @@ function names(data) {
 	};
 }
 
-module.exports = { full, names };
+function symbols(data) {
+	const InstrumentsArrStr = data.split(";");
+	
+	var Instruments = InstrumentsArrStr.map(i => i.split(",")[5]);
+	
+	return {
+		Instruments_Length: InstrumentsArrStr.length,
+		Instruments,
+	};
+}
+
+function descriptions(data) {
+	const InstrumentsArrStr = data.split(";");
+	
+	var Instruments = InstrumentsArrStr.map(i => {
+		var row = i.split(",");
+		return `${ row[5] } (${ row[10] })`;
+	});
+	
+	return {
+		Instruments_Length: InstrumentsArrStr.length,
+		Instruments,
+	};
+}
+
+module.exports = { full, names, symbols, descriptions };
