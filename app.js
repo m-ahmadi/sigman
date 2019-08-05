@@ -7,7 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api');
-var testRouter = require('./routes/test');
+var tseRouter = require('./routes/tse');
 
 var app = express();
 
@@ -24,12 +24,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRouter);
-app.use('/test', testRouter);
+app.use('/tse', tseRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
-});
+	});
 
 // error handler
 app.use(function(err, req, res, next) {
