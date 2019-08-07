@@ -19,6 +19,7 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
+    "apidoc": "^0.17.7",
     "gulp": "^4.0.2",
     "gulp-livereload": "^4.0.1"
   }
