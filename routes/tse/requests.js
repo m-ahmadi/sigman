@@ -26,8 +26,7 @@ function InstrumentAndShare(DEven, LastID=0) {
 }
 
 function LastPossibleDeven() {
-	var xmlBody = `
-<?xml version="1.0" encoding="utf-8"?>
+	var xmlBody = `<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 	<soap:Body>
 		<LastPossibleDeven xmlns="http://tsetmc.com/" />
@@ -37,8 +36,7 @@ function LastPossibleDeven() {
 }
 
 function DecompressAndGetInsturmentClosingPrice(insCodes) {
-	var xmlBody = `
-<?xml version="1.0" encoding="utf-8"?>
+	var xmlBody = `<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 	<soap:Body>
 		<DecompressAndGetInsturmentClosingPrice xmlns="http://tsetmc.com/">
