@@ -1,8 +1,6 @@
 const Base64 = require('js-base64').Base64;
 const pako = require('pako');
 
-var insCode = "44891482026867833,20190810,0";
-
 function bytesToStr(arr) {
 	let str = "";
 	arr.forEach(i => str += String.fromCharCode(i));
