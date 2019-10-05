@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start0": "nodemon ./bin/www",
-    "start": "nodemon -x node --inspect-brk ./bin/www",
+    "start": "nodemon ./bin/www",
+    "debug": "nodemon -x node --inspect-brk ./bin/www",
     "live": "gulp"
   },
   "dependencies": {
