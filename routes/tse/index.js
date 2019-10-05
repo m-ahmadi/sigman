@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const xmljs = require('xml-js');
 const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
@@ -45,7 +44,7 @@ router.get('/Instrument/:reload?', async function (req, res, next) {
 });
 
 
-router.get('/InsturmentClosingPrice', async function (req, res, next) {
+router.get('/closingPrices', async function (req, res, next) {
 	const inscode = "gwAAAB+LCAAAAAAABADtvQdgHEmWJSYvbcp7f0r1StfgdKEIgGATJNiQQBDswYjN5pLsHWlHIymrKoHKZVZlXWYWQMztnbz33nvvvffee++997o7nU4n99//P1xmZAFs9s5K2smeIYCqyB8/fnwfPyLu7+zu7Ox8und/9+Bg79Pde/dHO6Odw729T/fv73368P6nDx58ev/hzj5/+un9g4N79N8ufX5wsH/vQD7dP9jfO7j34MEufUhAHgiEh/f3Hjw8uP/p3s7D/QOCxJ/u7x883N0/2NvZ+/Tg0wcH9+7h0/8HJUcds4MAAAA=";
 	var response = await rq.DecompressAndGetInsturmentClosingPrice(inscode).catch(err => res.send(err.message) );
 	var responseObject = xmljs.xml2js(response.data, {spaces: 4});
@@ -62,24 +61,6 @@ router.get('/InsturmentClosingPrice', async function (req, res, next) {
 	// var converted = convert.Instrument.full(result);
 	res.send( JSON.stringify(instrumentsArrStr) );
 });
-
-function eachRow(row) {
-	var cell = row.split(",");
-	return {
-		InsCode        : cell[0], // int64
-		DEven          : cell[1], // int32 (the rest are all decimal)
-		PClosing       : cell[2],
-		PDrCotVal      : cell[3],
-		ZTotTran       : cell[4],
-		QTotTran5J     : cell[5],
-		QTotCap        : cell[6],
-		PriceMin       : cell[7],
-		PriceMax       : cell[8],
-		PriceYesterday : cell[9],
-		PriceFirst     : cell[10]
-	};
-}
-
 
 
 module.exports = router;
