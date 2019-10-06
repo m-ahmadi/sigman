@@ -8,7 +8,7 @@ const readFileIntoArray = require('./lib/readFileIntoArray');
 const Day = require('./Day');
 
 router.get('/', async function (req, res, next) {
-	let file = await readFileIntoArray('data/zob.csv');
+	let file = await readFileIntoArray('data/ذوب.csv');
 	
 	res.send( file.slice(1).map(convert) );
 });
