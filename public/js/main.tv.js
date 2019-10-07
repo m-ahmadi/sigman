@@ -18,7 +18,6 @@ var config = {
 // essential:
 japi.onReady = function (callback) {
 	// console.log('onReady()');
-	
 	setTimeout(callback, 0, config);
 };
 
@@ -55,15 +54,15 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 // optional:
 japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
 	console.log('searchSymbols()');
-	console.log(userInput, exchange, symbolType, onResultReadyCallback);
+	// console.log(userInput, exchange, symbolType, onResultReadyCallback);
 };
 japi.subscribeBars = function (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {
 	console.log('subscribeBars()');
-	console.log(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
+	// console.log(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
 };
 japi.unsubscribeBars = function (subscriberUID) {
 	console.log('unsubscribeBars()');
-	console.log(subscriberUID);
+	// console.log(subscriberUID);
 };
 japi.calculateHistoryDepth = function (resolution, resolutionBack, intervalBack) {
 	console.log('calculateHistoryDepth()');
@@ -71,15 +70,15 @@ japi.calculateHistoryDepth = function (resolution, resolutionBack, intervalBack)
 };
 japi.getMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
 	console.log('getMarks()');
-	console.log(symbolInfo, from, to, onDataCallback, resolution);
+	// console.log(symbolInfo, from, to, onDataCallback, resolution);
 };
 japi.getTimescaleMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
 	console.log('getTimescaleMarks()');
-	console.log(symbolInfo, from, to, onDataCallback, resolution);
+	// console.log(symbolInfo, from, to, onDataCallback, resolution);
 };
 japi.getServerTime = function (callback) {
 	console.log('getServerTime()');
-	console.log(callback);
+	// console.log(callback);
 };
 
 
