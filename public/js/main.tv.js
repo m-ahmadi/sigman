@@ -2,22 +2,22 @@
 var chart;
 
 var japi = {};
-var config = {
-	exchanges: [
-		{ value: '', name: 'All Exchanges', desc: '' }
-	],
-	symbolsTypes: [
-		{name: 'All types', value: ''},
-		{name: 'Stock', value: 'stock'},
-		{name: 'Index', value: 'index'}
-	],
-	supportedResolutions: [ '1D' ],
-	supports_marks: true
-};
 
 // essential:
 japi.onReady = function (callback) {
 	// console.log('onReady()');
+	var config = {
+		exchanges: [
+			{ value: '', name: 'All Exchanges', desc: '' }
+		],
+		symbolsTypes: [
+			{name: 'All types', value: ''},
+			{name: 'Stock', value: 'stock'},
+			{name: 'Index', value: 'index'}
+		],
+		supportedResolutions: [ '1D' ],
+		supports_marks: true
+	};
 	setTimeout(callback, 0, config);
 };
 
