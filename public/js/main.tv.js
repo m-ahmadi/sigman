@@ -38,14 +38,12 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 
 japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
 	console.log('getBars()');
-	const bars = await $.get('./api');
-	onHistoryCallback(bars, {noData: false});
-	
-	/* if (bars.length) {
-		onHistoryCallback(bars, {noData: false})
+	if (firstDataRequest) {
+		const bars = await $.get('./api').catch( err => onErrorCallback(err) );
+		onHistoryCallback(bars, { noData: false });
 	} else {
-		onHistoryCallback(bars, {noData: true})
-	} */
+		onHistoryCallback([], { noData: true });
+	}
 };
 
 
