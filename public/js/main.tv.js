@@ -24,16 +24,20 @@ japi.onReady = function (callback) {
 };
 
 japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
-	console.log('resolveSymbol()');
-	
+	// log('resolveSymbol()');
 	var symbolInfo = {
 		name: symbolName,
 		ticker: symbolName,
 		description: 'zob ahan esfahan',
-		session: '0900-1230',
+		// session: '24x7',              // works as well
+		// session: '0830-1230:1234567', // works as well
+		session: '0830-1230:1234567;7',
 		timezone: 'Asia/Tehran' ,
 		minmov: 1,
-		pricescale: 1
+		pricescale: 1,
+		// force_session_rebuild: false,
+		// has_daily: true,
+		// supportedResolutions: ['D']
 	};
 	setTimeout(onSymbolResolvedCallback, 0, symbolInfo);
 };
