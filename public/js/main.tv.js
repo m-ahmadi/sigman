@@ -1,11 +1,12 @@
 // $(function () {
-var chart;
+const log = console.log;
 
+var chart;
 var japi = {};
 
 // essential:
 japi.onReady = function (callback) {
-	// console.log('onReady()');
+	// log('onReady()');
 	var config = {
 		exchanges: [
 			{ value: '', name: 'All Exchanges', desc: '' }
@@ -47,36 +48,34 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 };
 
 
-
-
 // optional:
 japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
-	console.log('searchSymbols()');
-	// console.log(userInput, exchange, symbolType, onResultReadyCallback);
+	// log('searchSymbols()');
+	// log(userInput, exchange, symbolType, onResultReadyCallback);
 };
 japi.subscribeBars = function (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) {
-	console.log('subscribeBars()');
-	// console.log(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
+	// log('subscribeBars()');
+	// log(symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback);
 };
 japi.unsubscribeBars = function (subscriberUID) {
-	console.log('unsubscribeBars()');
-	// console.log(subscriberUID);
+	// log('unsubscribeBars()');
+	// log(subscriberUID);
 };
 japi.calculateHistoryDepth = function (resolution, resolutionBack, intervalBack) {
-	console.log('calculateHistoryDepth()');
-	// console.log(resolution, resolutionBack, intervalBack);
+	// log('calculateHistoryDepth()');
+	// log(resolution, resolutionBack, intervalBack);
 };
 japi.getMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
-	console.log('getMarks()');
-	// console.log(symbolInfo, from, to, onDataCallback, resolution);
+	// log('getMarks()');
+	// log(symbolInfo, from, to, onDataCallback, resolution);
 };
 japi.getTimescaleMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
-	console.log('getTimescaleMarks()');
-	// console.log(symbolInfo, from, to, onDataCallback, resolution);
+	// log('getTimescaleMarks()');
+	// log(symbolInfo, from, to, onDataCallback, resolution);
 };
 japi.getServerTime = function (callback) {
-	console.log('getServerTime()');
-	// console.log(callback);
+	// log('getServerTime()');
+	// log(callback);
 };
 
 
