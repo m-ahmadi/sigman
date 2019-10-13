@@ -1,5 +1,6 @@
 // $(function () {
 const log = console.log;
+let bars;
 
 var chart;
 var japi = {};
@@ -43,14 +44,26 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 };
 
 japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
-	console.log('getBars()');
-	if (firstDataRequest) {
-		const bars = await $.get('./api').catch( err => onErrorCallback(err) );
-		onHistoryCallback(bars, { noData: false });
+	// log('getBars()');
+	const _bars = await getData(from, to);
+	if (_bars.length) {
+		onHistoryCallback(_bars, {noData: false})
 	} else {
-		onHistoryCallback([], { noData: true });
+		onHistoryCallback(_bars, {noData: true})
 	}
 };
+async function getData(ferom, to) {
+	if (!bars) bars = await $.get('./api').catch( err => onErrorCallback(err) );
+	const subset = bars.filter(i => i.time >= ferom && i.time <= to).map(i => ({
+		time: i.time * 1000,
+		open: i.open,
+		high: i.high,
+		low: i.low,
+		close: i.close,
+		volume: i.volume
+	}));
+	return subset;
+}
 
 
 // optional:
