@@ -102,6 +102,17 @@ var widget = new TradingView.widget({
 	timezone: 'Asia/Tehran',
 	datafeed: japi,
 	library_path: 'lib/tradingview/charting_library/',
+	customFormatters: {
+		dateFormatter: {
+			format: function (date) {
+				const faWeek = ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'];
+				const weekday = date.getDay();
+				const j = jalaali.toJalaali(date);
+				const jdate = `${j.jd}-${j.jm}-${j.jy}`;
+				return faWeek[weekday] + ' ' + jdate;
+			}
+		}
+	},
 	disabled_features: [
 		'header_widget',
 		'left_toolbar',
