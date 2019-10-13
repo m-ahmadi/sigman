@@ -17,7 +17,8 @@ japi.onReady = function (callback) {
 			{name: 'Index', value: 'index'}
 		],
 		supportedResolutions: [ '1D' ],
-		supports_marks: true
+		supports_time: false,
+		supports_marks: false
 	};
 	setTimeout(callback, 0, config);
 };
