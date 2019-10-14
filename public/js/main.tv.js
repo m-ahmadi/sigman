@@ -32,7 +32,7 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 		description: 'zob ahan esfahan',
 		// session: '24x7',              // works as well
 		// session: '0830-1230:1234567', // works as well
-		session: '0830-1230:1234567;7',
+		session: '0830-1230:71234;7',
 		timezone: 'Asia/Tehran' ,
 		minmov: 1,
 		pricescale: 1,
