@@ -1,4 +1,5 @@
 // $(function () {
+import { randInt } from './util.js';
 const log = console.log;
 let bars;
 
