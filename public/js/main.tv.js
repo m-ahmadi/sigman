@@ -147,7 +147,7 @@ var widget = new TradingView.widget({
 	]
 });
 
-widget.onChartReady(function() {
+widget.onChartReady(function () {
 	chart = widget.chart();
 });
 
