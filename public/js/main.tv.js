@@ -54,6 +54,8 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 };
 async function getData(ferom, to) {
 	if (!bars) bars = await $.get('./api').catch( err => onErrorCallback(err) );
+	if (chart) chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
+	
 	const subset = bars.filter(i => i.time >= ferom && i.time <= to).map(i => ({
 		time: i.time * 1000,
 		open: i.open,
@@ -107,7 +109,7 @@ japi.getServerTime = function (callback) {
 
 var widget = new TradingView.widget({
 	symbol: 'zob',
-	debug: true,
+	// debug: true,
 	fullscreen: true,
 	// width: '70%',
 	interval: '1D',
