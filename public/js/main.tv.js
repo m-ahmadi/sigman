@@ -3,13 +3,13 @@ import { randInt } from './util.js';
 const log = console.log;
 let bars;
 
-var chart;
-var japi = {};
+let chart;
+const japi = {};
 
 // essential:
 japi.onReady = function (callback) {
 	// log('onReady()');
-	var config = {
+	const config = {
 		exchanges: [
 			{ value: '', name: 'All Exchanges', desc: '' }
 		],
@@ -27,7 +27,7 @@ japi.onReady = function (callback) {
 
 japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
 	// log('resolveSymbol()');
-	var symbolInfo = {
+	const symbolInfo = {
 		name: symbolName,
 		ticker: symbolName,
 		description: 'zob ahan esfahan',
