@@ -6,7 +6,6 @@ let bars;
 let chart;
 const japi = {};
 
-// essential:
 japi.onReady = function (callback) {
 	// log('onReady()');
 	const config = {
@@ -31,15 +30,13 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 		name: symbolName,
 		ticker: symbolName,
 		description: 'zob ahan esfahan',
-		// session: '24x7',              // works as well
-		// session: '0830-1230:1234567', // works as well
 		session: '0830-1230:71234;7',
 		timezone: 'Asia/Tehran' ,
 		minmov: 1,
 		pricescale: 1,
-		// force_session_rebuild: false,
-		// has_daily: true,
-		// supportedResolutions: ['D']
+		force_session_rebuild: false,
+		has_daily: true,
+		supportedResolutions: ['D']
 	};
 	setTimeout(onSymbolResolvedCallback, 0, symbolInfo);
 };
@@ -63,8 +60,6 @@ async function getData(ferom, to) {
 	return subset;
 }
 
-
-// optional:
 japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
 	// log('searchSymbols()');
 	// log(userInput, exchange, symbolType, onResultReadyCallback);
