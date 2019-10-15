@@ -42,7 +42,7 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 
 japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
 	// log('getBars()');
-	const _bars = await getData(from, to);
+	const _bars = await getData(from, to).catch( err => onErrorCallback(err) );
 	if (_bars.length) {
 		onHistoryCallback(_bars, {noData: false})
 	} else {
@@ -50,7 +50,7 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 	}
 };
 async function getData(ferom, to) {
-	if (!bars) bars = await $.get('./api').catch( err => onErrorCallback(err) );
+	if (!bars) bars = await $.get('./api');
 	if (chart) chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
 	
 	let subset = bars.filter(i => i.time >= ferom && i.time <= to);
@@ -97,7 +97,7 @@ japi.getServerTime = function (callback) {
 
 
 
-var widget = new TradingView.widget({
+const widget = new TradingView.widget({
 	symbol: 'zob',
 	// debug: true,
 	fullscreen: true,
