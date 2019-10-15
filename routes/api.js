@@ -6,7 +6,7 @@ const { parse, stringify: strify } = JSON;
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const readFileIntoArray = require('./lib/readFileIntoArray');
-const Day = require('./Day');
+const Day = require('./lib/Day');
 
 router.get('/', async function (req, res, next) {
 	let file = await readFileIntoArray('data/ذوب.csv');
