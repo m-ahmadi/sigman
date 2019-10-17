@@ -17,7 +17,7 @@ japi.onReady = function (callback) {
 			{name: 'Index', value: 'index'}
 		],
 		supportedResolutions: [ '1D' ],
-		supports_time: false,
+		supports_time: true,
 		supports_marks: false
 	};
 	setTimeout(callback, 0, config);
@@ -119,13 +119,13 @@ const widget = new TradingView.widget({
 		}
 	},
 	disabled_features: [
-		'header_widget',
-		'left_toolbar',
-		'context_menus', // timezone_menu, scales_context_menu, legend_context_menu, symbol_info, show_chart_property_page
+		// 'header_widget',
+		// 'left_toolbar',
+		// 'context_menus', // timezone_menu, scales_context_menu, legend_context_menu, symbol_info, show_chart_property_page
 		'show_chart_property_page',
 //		'remove_library_container_border',
 //		'border_around_the_chart',
-		'edit_buttons_in_legend',
+		// 'edit_buttons_in_legend',
 		'countdown',
 		'display_market_status',
 		'timeframes_toolbar',
@@ -140,6 +140,102 @@ const widget = new TradingView.widget({
 widget.onChartReady(function () {
 	chart = widget.chart();
 });
+
+
+class Instrument {
+	constructor(_row='') {
+		const row = _row.split(',');
+		
+		if (row.length !== 18) throw new Error('Invalid Instrument data!');
+
+		// unspecified ones are all string
+		this.InsCode      = row[0];  // int64 (long)
+		this.InstrumentID = row[1];
+		this.LatinSymbol  = row[2];
+		this.LatinName    = row[3];
+		this.CompanyCode  = row[4];
+		this.Symbol       = row[5];
+		this.Name         = row[6];
+		this.CIsin        = row[7];
+		this.DEven        = row[8];  // int32 (int)
+		this.Flow         = row[9];  // byte
+		this.LSoc30       = row[10];
+		this.CGdSVal      = row[11];
+		this.CGrValCot    = row[12];
+		this.YMarNSC      = row[13];
+		this.CComVal      = row[14];
+		this.CSecVal      = row[15];
+		this.CSoSecVal    = row[16];
+		this.YVal         = row[17];
+	}
+}
+const types = {
+	'67':  ['شاخص', 'شاخص قيمت']
+	'68':  ['شاخص', 'شاخص']
+	'69':  ['شاخص', 'شاخص فرابورس']
+	'70':  ['اوراق مشاركت', 'صکوک اختصاصی']
+	'200': ['اوراق مشاركت', 'اوراق مشارکت انرژی']
+	'207': ['اوراق مشاركت', 'اوراق مشارکت ارز صادراتی']
+	'208': ['اوراق مشاركت', 'اوراق صكوك']
+	'300': ['سهام عادی', 'سهام']
+	'301': ['اوراق مشاركت', 'اوراق مشارکت']
+	'303': ['سهام عادی', 'اتیسی']
+	'304': ['سهام عادی', 'آتی']
+	'305': ['صندوق سرمايه گذاري', 'صندوق سرمايه گذاري در سهام بورس']
+	'306': ['اوراق مشاركت', 'اوراق مشارکت اتیسی']
+	'307': ['سهام عادی', 'تسهیلات فرابورس']
+	'308': ['اوراق مشاركت', 'اوراق مشارکت کالا']
+	'309': ['سهام عادی', 'پایه']
+	'311': ['سهام عادی', 'اختیار خرید']
+	'312': ['سهام عادی', 'اختیار فروش']
+	'313': ['سهام عادی', 'شرکتهای کوچک و متوسط']
+	'315': ['صندوق سرمايه گذاري', 'صندوق سرمایه گذاری قابل معامله انرژی']
+	'321': ['اختیار فولاد هرمزگان', '']
+	'322': ['اختیار خ اخزا ( اسناد خزانه داری اسلامی )', '']
+	'323': ['اختیارف اخزا ( اسناد خزانه داری اسلامی )', '']
+	'400': ['حق تقدم', 'حق تقدم سهم']
+	'403': ['حق تقدم', 'حق تقدم اتیسی']
+	'404': ['حق تقدم', 'حق تقدم پایه']
+	'600': ['اختیار', 'اختیار فروش تبعی']
+	'601': ['اختیار فروش تبعی ( ذوب آهن اصفهان)', '']
+	'602': ['اختیار', 'اختیار فروش تبعی فرابورس']
+	'701': ['کالا', 'گواهی سپرده کالایی']
+	'706': ['اوراق مشاركت', 'صکوک اختصاصی']
+	'801': ['سلف بورس انرژی', '']
+	'802': ['سلف بورس انرژی', '']
+	'803': ['سلف بورس انرژی', '']
+	'804': ['سلف بورس انرژی', '']
+	'901': ['انرژی', '']
+	'902': ['انرژی', '']
+	'903': ['دارایی فکری', 'دارایی فکری']
+};
+
+const uniq = [];
+const uq = [];
+async function test() {
+	
+	let ins = await $.get('instruments.csv');
+	
+	ins = ins.split('\n').map(i => new Instrument(i));
+	ins.forEach(i => uniq.indexOf(i.YVal) === -1 ? uniq.push(i.YVal) : undefined);
+	ins.forEach(i => uniq.indexOf(i.YVal) === -1 ? uniq.push(i.YVal) : undefined);
+	// Object.keys(types).forEach(k => types[k][2] = 0);
+	// ins.forEach(i => types[i.YVal] ? types[i.YVal][2] += 1 : undefined);
+	
+	
+	log(types);
+	var x = uniq.map(i => types[i] ? $('<optgroup>', {label: types[i][0]}) : undefined).filter(i => i);
+	log(x);
+	debugger
+	$('#select').append(...x);
+	$('#select').multiSelect({ selectableOptgroup: true });
+	
+}
+test();
+
+
+
+
 
 
 // });
