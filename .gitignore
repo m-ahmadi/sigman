@@ -1,5 +1,6 @@
 node_modules/
 package-lock.json
+data/
 .sass-cache/
 src/lib/*/
 release/*
