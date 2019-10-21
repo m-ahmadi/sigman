@@ -9,7 +9,6 @@ if ( args.includes('compile=debug') ) {
 } else if ( args.includes('compile=release') ) {
 	release();
 }
-if ( args.includes('libs') ) libs();
 
 function debug() {
 	const INP = './src';
@@ -71,10 +70,4 @@ function release() {
 	fs.writeFileSync(FILE2, fs.readFileSync(FILE2, 'utf8')+"require(['main']);"); // '\n'
 	
 	shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css --style=compressed --no-source-map`);
-}
-
-function libs() {
-	require('./libs.js').forEach(i => {
-		shell.cp('-r', i, './public/lib/');
-	});
 }
