@@ -3,7 +3,7 @@ const { delimiter } = require('path');
 const shell = require('shelljs');
 process.env.path += delimiter + './node_modules/.bin';
 
-const args = process.argv.slice(3);
+const args = process.argv.slice(2);
 if ( args.includes('compile=debug') ) {
 	debug();
 } else if ( args.includes('compile=release') ) {
