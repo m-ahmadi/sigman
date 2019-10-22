@@ -24,7 +24,7 @@ function debug() {
 	fs.writeFileSync(INP+'/html/scripts/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/filename.htm', 'main.js');
-	fs.writeFileSync(INP+'/js/core/root.js', "export default ''", );
+	fs.writeFileSync(INP+'/js/core/root.js', "export default '';", );
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
 	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/js/templates.js -e hbs -o`);
@@ -48,7 +48,7 @@ function release() {
 	fs.writeFileSync(INP+'/html/scripts/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/filename.htm', FL);
-	fs.writeFileSync(INP+'/js/core/root.js', "export default '${ROOT}'");
+	fs.writeFileSync(INP+'/js/core/root.js', "export default '${ROOT}';");
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ./release/index.html`);
 	
