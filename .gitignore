@@ -1,7 +1,8 @@
 node_modules/
 package-lock.json
-data/
 .sass-cache/
-src/lib/*/
+public/js/*
+public/css/*
+public/index.html
 release/*
-dist/*
+data/
