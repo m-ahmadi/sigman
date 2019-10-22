@@ -1,5 +1,4 @@
-var inst = {},
-	modals = {};
+const inst = {};
 const DISPLAY = 'no-display';
 
 function getModal(str) {
@@ -28,7 +27,7 @@ function openModal(s) {
 		m.show();
 	}
 }
-let note = (function () {
+const note = (function () {
 	const DEFAULT_MSG = 'NO_MESSAGE_WAS_SPECIFIED';
 	const icons = {
 		INFO:    '<i class="fa  fa-info-circle           fa-lg"  aria-hidden="true"></i>',
