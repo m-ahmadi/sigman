@@ -15,21 +15,16 @@ function debug() {
 	const OUT = './public';
 	const ROOT = '';
 	
-	shell.rm('-rf', OUT);
-	shell.mkdir('-p', OUT+'/css', OUT+'/js');
-	shell.cp('-r', INP+'/lib', INP+'/images', INP+'/fonts', OUT);
-	shell.mv(OUT+'/images/favicon.ico', OUT);
-
-	fs.writeFileSync(INP+'/html/links/root.htm', ROOT);
-	fs.writeFileSync(INP+'/html/scripts/root.htm', ROOT);
-	fs.writeFileSync(INP+'/html/scripts/app/root.htm', ROOT);
-	fs.writeFileSync(INP+'/html/scripts/app/filename.htm', 'main.js');
-	fs.writeFileSync(INP+'/js/gen/root.js', "export default '';", );
+	fs.writeFileSync(INP+'/html/link-modulepreload/root.htm', ROOT);
+	fs.writeFileSync(INP+'/html/link-stylesheet/root.htm', ROOT);
+	fs.writeFileSync(INP+'/html/script-lib/root.htm', ROOT);
+	fs.writeFileSync(INP+'/html/script-app/root.htm', ROOT);
+	fs.writeFileSync(INP+'/js/gen/root.js', "export default '';");
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
 	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/js/templates.js -e hbs -o`);
 	shell.exec(`handlebars ${INP}/templates/partial/ -f ${OUT}/js/partials.js -p -e hbs -o`);
-	shell.exec(`babel ${INP}/js/ -d ${OUT}/js -s`);
+	shell.exec(`rollup -c`);
 	shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css`);
 }
 
@@ -39,11 +34,6 @@ function release() {
 	const ROOT = '/static/';
 	const FL = 'app.bundle.js';
 	
-	shell.rm('-rf', OUT);
-	shell.mkdir('-p', OUT+'/css', OUT+'/js');
-	shell.cp('-r', INP+'/lib', INP+'/images', INP+'/fonts', OUT);
-	shell.mv(OUT+'/images/favicon.ico', OUT);
-
 	fs.writeFileSync(INP+'/html/links/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/root.htm', ROOT);

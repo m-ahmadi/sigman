@@ -6,20 +6,19 @@
     "compile": "node build.js compile=debug",
     "release": "node build.js compile=release",
     "libs": "node build.js libs",
+    "debug": "nodemon -x node --inspect-brk build.js -- compile=debug",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Mohammad Ahmadi",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "latest",
-    "@babel/core": "latest",
-    "@babel/preset-env": "latest",
     "gulp": "latest",
     "gulp-cli": "latest",
     "gulp-livereload": "latest",
     "gulp-shell": "latest",
     "htmlbilder": "latest",
+    "rollup": "latest",
     "sass": "latest",
     "shelljs": "latest"
   },
@@ -27,7 +26,6 @@
     "handlebars": "latest",
     "jquery": "latest",
     "pubsub-ma": "latest",
-    "requirejs": "latest",
     "util-ma": "latest"
   }
 }
