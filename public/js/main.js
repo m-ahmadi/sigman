@@ -1,4 +1,4 @@
-import page from './mediator.js';
+import page from './page.js';
 import csvParse from './gen/csvParse.js';
 import Day from './tse/Day.js'; // 
 
