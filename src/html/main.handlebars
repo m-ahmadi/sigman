@@ -1,15 +1,22 @@
 <!DOCTYPE html>
-<html lang="en-US"> <!-- fa en en-US -->
+<html lang="en"> <!-- en en-US -->
 <head>
-	<title></title>
-	<meta charset="utf-8">
+	<title>Stosis</title>
+	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0" />
 	<link rel="icon" type="image/x-icon" href="favicon.ico" />
 	{{{ links }}}
 </head>
-
 <body>
+	<select id="select" name="cars" multiple="multiple"></select>
 	
+	<div style="position:relative; float:right;">
+		<button type="button" class="btn" style="top: 0.9rem; left: 1.4rem;">+</button>
+		<button type="button" class="btn" style="top: 3rem;   left: 1.4rem;">-</button>
+		<div id="tree-container" style="direction:rtl;"></div>
+	</div>
+	
+	<div id="tv_chart_container"></div>
 {{{ scripts }}}
 </body>
 </html>
