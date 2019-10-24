@@ -90,7 +90,7 @@ japi.getServerTime = function (callback) {
 	// log(callback);
 };
 
-export function init() {
+function init() {
 	widget = new TradingView.widget({
 			symbol: 'zob',
 		// debug: true,
@@ -135,3 +135,5 @@ export function init() {
 		chart = widget.chart();
 	});
 }
+
+export default { init }

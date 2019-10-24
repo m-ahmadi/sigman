@@ -1,12 +1,13 @@
 import page from './page.js';
+import tv from './tv/index.js';
 import csvParse from './gen/csvParse.js';
-import Day from './tse/Day.js'; // 
+import Day from './tse/Day.js';
 
 page.beforeReady();
 
 $(function () {
 	page.onReady();
-
+	
 const log = console.log;
 
 
