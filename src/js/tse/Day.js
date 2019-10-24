@@ -1,4 +1,4 @@
-class Day {
+export default class Day {
 	constructor(_row='') {
 		let row = _row.split(',');
 		if (row.length !== 8) throw new Error('Invalid Day data!');
@@ -24,5 +24,3 @@ class Day {
 		this.yesterday = row[9]; */
 	}
 }
-
-module.exports = Day;

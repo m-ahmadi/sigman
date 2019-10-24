@@ -1,4 +1,6 @@
 import page from './mediator';
+import csvParse from './gen/csvParse';
+import Day from './tse/Day';
 
 require.config({
 	baseUrl: 'js/',
@@ -63,7 +65,11 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 	}
 };
 async function getData(ferom, to) {
-	if (!bars) bars = await $.get('./api');
+	if (!bars) {
+		// bars = await $.get('./api');
+		const content = await $.get('data/ذوب.csv');
+		bars = csvParse(content).slice(1).map(convert);
+	}
 	if (chart) chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
 	
 	let subset = bars.filter(i => i.time >= ferom && i.time <= to);
@@ -230,6 +236,7 @@ const types = [
 	{ id: 801, parent: '#', node: 'سلف بورس انرژی', alias: [802,803,804] }
 ];
 
+let dd, jd;
 async function test() {
 	let ins = await $.get('instruments.csv');
 	ins = ins.split('\n').map(i => new Instrument(i));
@@ -305,3 +312,35 @@ test();
 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function convert(row) {
+	const day = new Day(row);
+	const s = day.date.toString(),
+		y = parseInt( s.slice(0, 4) ),
+		m = parseInt( s.slice(4, 6) ),
+		d = parseInt( s.slice(6, 8) ),
+		g = jalaali.toGregorian(y, m, d);
+	return {
+		// time: new Date( Date.UTC(y, m-1, d) ).setUTCHours(0,0,0,0) / 1000,
+		time: Date.UTC(y, m-1, d) / 1000,
+		open: day.open,
+		high: day.high,
+		low: day.low,
+		close: day.last,
+		volume: day.vol
+	};
+}
