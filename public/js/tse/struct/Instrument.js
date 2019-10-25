@@ -1,6 +1,6 @@
-// orig: InstrumentInfo
+const i = parseInt;
 
-class Instrument {
+export default class Instrument {
 	constructor(_row='') {
 		const row = _row.split(',');
 		
@@ -24,8 +24,6 @@ class Instrument {
 		this.CComVal      = row[14];
 		this.CSecVal      = row[15];
 		this.CSoSecVal    = row[16];
-		this.YVal         = row[17];
+		this.YVal         = i(row[17], 10);
 	}
 }
-
-module.exports = Instrument;

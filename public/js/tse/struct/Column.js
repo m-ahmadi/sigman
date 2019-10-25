@@ -1,6 +1,3 @@
-// orig: ColumnInfo
-
-// enum (orig: ColumnType)
 const names = [
 	'CompanyCode',
 	'LatinName',
@@ -37,7 +34,7 @@ const fnames = [
 	'قیمت دیروز'
 ];
 
-class Column {
+export default class Column {
 	constructor(row=[]) {
 		const len = row.length;
 		if (len > 2 || len < 1) throw new Error('Invalid Column data!');
@@ -47,5 +44,3 @@ class Column {
 		this.header = row[1];
 	}
 }
-
-module.exports = Column;

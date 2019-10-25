@@ -1,9 +1,7 @@
-// orig: ClosingPriceInfo
-
 const i = parseInt;
 const f = parseFloat;
 
-class ClosingPrice {
+export default class ClosingPrice {
 	constructor(_row='') {
 		const row = _row.split(',');
 		
@@ -22,5 +20,3 @@ class ClosingPrice {
 		this.PriceFirst     = row[10]; // first
 	}
 }
-
-module.exports = ClosingPrice;

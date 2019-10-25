@@ -1,8 +1,6 @@
-// orig: TseShareInfo
-
 const i = parseInt;
 
-class Share {
+export default class Share {
 	constructor(_row='') {
 		const row = _row.split(',');
 		
@@ -15,5 +13,3 @@ class Share {
 		this.NumberOfShareOld = i( row[4] ); // Decimal
 	}
 }
-
-module.exports = Share;

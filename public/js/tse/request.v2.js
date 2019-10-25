@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 function Instrument(DEven) {
 	const params = {
 		t: 'Instrument',
@@ -40,9 +38,9 @@ function makeRequest(params) {
 	});
 }
 
-module.exports = {
+export default {
 	Instrument,
 	InstrumentAndShare,
 	LastPossibleDeven,
 	ClosingPrices
-};
+}
