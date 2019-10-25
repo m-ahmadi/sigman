@@ -1,3 +1,4 @@
+import tree from './tree/index.js';
 import tv from './tv.js';
 
 const inst = u.extend( newPubSub() );
@@ -12,6 +13,7 @@ function beforeReady() {
 }
 function onReady() {
 	addCustomEvts();
+	tree.init();
 	tv.init();
 }
 
