@@ -19,7 +19,7 @@ function debug() {
 	fs.writeFileSync(INP+'/html/link-stylesheet/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/script-lib/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/script-app/root.htm', ROOT);
-	fs.writeFileSync(INP+'/js/gen/root.js', "export default '';");
+	fs.writeFileSync(OUT+'/js/gen/root.js', "export default '';");
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
 	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/js/_templates.js -e hbs -o`);
