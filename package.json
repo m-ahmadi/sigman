@@ -13,14 +13,14 @@
   "author": "Mohammad Ahmadi",
   "license": "MIT",
   "devDependencies": {
+    "rollup": "latest",
+    "htmlbilder": "latest",
+    "sass": "latest",
+    "shelljs": "latest",
     "gulp": "latest",
     "gulp-cli": "latest",
     "gulp-livereload": "latest",
-    "gulp-shell": "latest",
-    "htmlbilder": "latest",
-    "rollup": "latest",
-    "sass": "latest",
-    "shelljs": "latest"
+    "gulp-shell": "latest"
   },
   "dependencies": {
     "handlebars": "latest",
