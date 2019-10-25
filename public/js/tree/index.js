@@ -1,3 +1,4 @@
+import types from './types.js';
 import Instrument from '../tse/struct/Instrument.js';
 
 let dd, jd;
@@ -68,9 +69,10 @@ async function test() {
 	
 	
 }
-test();
 
-function init() {
+
+async function init() {
+	await test();
 	$('#tree-container').jstree({
 		core: { data: jd },
 		plugins: ['checkbox', ''], // 'wholerow'

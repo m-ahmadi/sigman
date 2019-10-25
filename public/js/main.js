@@ -2,9 +2,9 @@ import page from './page.js';
 
 page.beforeReady();
 
-$(function () {
+$(async function () {
 	
-	page.onReady();
+	await page.onReady();
 	
 });
 

@@ -11,10 +11,10 @@ function addCustomEvts() {
 function beforeReady() {
 	
 }
-function onReady() {
+async function onReady() {
 	addCustomEvts();
 	tree.init();
-	tv.init();
+	await tv.init();
 }
 
 export default {

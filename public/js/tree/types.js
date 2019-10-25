@@ -1,4 +1,4 @@
-export default const types = [
+export default [
 	{ id: 1,   parent: '#', node: 'سهام عادی' },
 	{ id: 300, parent: 1,   node: 'سهام' },
 	{ id: 303, parent: 1,   node: 'آتیسی' },
@@ -44,4 +44,4 @@ export default const types = [
 	{ id: 701, parent: '#', node: 'گواهی سپرده کالایی' },
 	{ id: 901, parent: '#', node: 'انرژی', alias: [902] },
 	{ id: 801, parent: '#', node: 'سلف بورس انرژی', alias: [802,803,804] }
-];
+]
