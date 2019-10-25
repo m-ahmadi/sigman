@@ -3,10 +3,8 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "compile": "node build.js compile=debug",
-    "release": "node build.js compile=release",
-    "libs": "node build.js libs",
-    "debug": "nodemon -x node --inspect-brk build.js -- compile=debug",
+    "build": "node build.js",
+    "debug": "nodemon -x node --inspect-brk build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
