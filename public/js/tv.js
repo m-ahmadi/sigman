@@ -62,7 +62,6 @@ async function getData(ferom, to) {
 	
 	let subset = bars.filter(i => i.time >= ferom && i.time <= to);
 	subset.forEach(i => i.time *= 1000);
-	console.log(subset);
 	return subset;
 }
 
