@@ -44,7 +44,7 @@ japi.resolveSymbol = function (symbolName, onSymbolResolvedCallback, onResolveEr
 
 japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) {
 	// log('getBars()');
-	const _bars = await getData(from, to).catch( err => onErrorCallback(err) );
+	const _bars = await getData(from, to).catch(log); // err => onErrorCallback(err) 
 	if (_bars.length) {
 		onHistoryCallback(_bars, {noData: false})
 	} else {
@@ -95,12 +95,12 @@ japi.getServerTime = function (callback) {
 };
 
 function convert(row) {
-	const day = new Day(row);
-	const s = day.date.toString(),
-		y = parseInt( s.slice(0, 4) ),
-		m = parseInt( s.slice(4, 6) ),
-		d = parseInt( s.slice(6, 8) ),
-		g = jalaali.toGregorian(y, m, d);
+	const day = new Day(row),
+	s = day.date.toString(),
+	y = parseInt( s.slice(0, 4) ),
+	m = parseInt( s.slice(4, 6) ),
+	d = parseInt( s.slice(6, 8) );
+	
 	return {
 		// time: new Date( Date.UTC(y, m-1, d) ).setUTCHours(0,0,0,0) / 1000,
 		time: Date.UTC(y, m-1, d) / 1000,
