@@ -3,6 +3,7 @@ package-lock.json
 .sass-cache/
 public/js/_templates.js
 public/js/_partials.js
+public/js/#.js
 public/css/*
 public/index.html
 public/data/*
