@@ -1,15 +1,12 @@
-import page from './page.js';
-
-page.beforeReady();
+import tree from './tree/index.js';
+import tv from './tv.js';
 
 $(async function () {
 	
-	await page.onReady();
+	await tree.init();
+	tv.init();
 	
 });
-
-
-
 
 
 
