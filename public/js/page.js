@@ -1,4 +1,4 @@
-import tv from 'tv/index.js';
+import tv from './tv.js';
 
 const inst = u.extend( newPubSub() );
 	

@@ -1,17 +1,10 @@
 import page from './page.js';
-import tv from './tv/index.js';
-import csvParse from './gen/csvParse.js';
-import Day from './tse/Day.js';
 
 page.beforeReady();
 
 $(function () {
 	page.onReady();
 	
-const log = console.log;
-
-
-
 class Instrument {
 	constructor(_row='') {
 		const row = _row.split(',');
@@ -89,7 +82,7 @@ const types = [
 
 let dd, jd;
 async function test() {
-	let ins = await $.get('instruments.csv');
+	let ins = await $.get('data/instruments.csv');
 	ins = ins.split('\n').map(i => new Instrument(i));
 	
 	types.forEach(i => i.count = 0);
@@ -178,20 +171,3 @@ test();
 
 
 
-function convert(row) {
-	const day = new Day(row);
-	const s = day.date.toString(),
-		y = parseInt( s.slice(0, 4) ),
-		m = parseInt( s.slice(4, 6) ),
-		d = parseInt( s.slice(6, 8) ),
-		g = jalaali.toGregorian(y, m, d);
-	return {
-		// time: new Date( Date.UTC(y, m-1, d) ).setUTCHours(0,0,0,0) / 1000,
-		time: Date.UTC(y, m-1, d) / 1000,
-		open: day.open,
-		high: day.high,
-		low: day.low,
-		close: day.last,
-		volume: day.vol
-	};
-}
