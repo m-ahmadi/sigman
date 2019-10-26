@@ -1,7 +1,22 @@
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat" && rollup -c -w
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat" && htmlbilder ./html/ -o ./public/index.html -w
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat" && sass ./sass/style.scss:./public/css/style.css --watch
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat" && gulp temp-w
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat" && gulp part-w
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat" && gulp live
-/icon "%CMDER_ROOT%\icons\cmder.ico" cmd /k "%ConEmuDir%\..\init.bat"
+shortcut:
+"D:\Program Files\cmder\Cmder.exe" /START "D:\xampp\htdocs\proj" /TASK proj
+
+(/START not needed if /dir defined in taks parameters)
+--------------------------------------------------------------------------------
+make cmder task
+Cmder -> Settings -> Tasks -> + -> taskname
+
+task parameters:
+/icon "%CMDER_ROOT%\icons\cmder.ico" /dir "D:\xampp\htdocs\proj"
+
+commands:
+>cmd /k "%ConEmuDir%\..\init.bat"
+cmd /k "%ConEmuDir%\..\init.bat" && wj
+cmd /k "%ConEmuDir%\..\init.bat" && wh
+cmd /k "%ConEmuDir%\..\init.bat" && wt
+cmd /k "%ConEmuDir%\..\init.bat" && wp
+cmd /k "%ConEmuDir%\..\init.bat" && ws
+cmd /k "%ConEmuDir%\..\init.bat" && wl
+
+Save settings
+--------------------------------------------------------------------------------
