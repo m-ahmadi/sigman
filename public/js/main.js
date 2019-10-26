@@ -7,15 +7,3 @@ $(async function () {
 	tv.init();
 	
 });
-
-
-
-
-
-
-
-
-
-
-
-
