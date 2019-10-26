@@ -1,4 +1,4 @@
-import tree from './tree/index.js';
+import tree from './tree/tree.js';
 import tv from './tv.js';
 
 $(async function () {

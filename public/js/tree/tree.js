@@ -1,27 +1,28 @@
 import types from './types.js';
 import Instrument from '../tse/Instrument.js';
 
-let dd, jd;
-async function test() {
+async function transformData(baseData) {
+	const base = baseData;
 	let ins = await $.get('data/instruments.csv');
 	ins = ins.split('\n').map(i => new Instrument(i));
 	
-	types.forEach(i => i.count = 0);
+	base.forEach(i => i.count = 0);
 	ins.forEach(i => {
-		const idx = types.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
-		if (idx !== -1) types[idx].count += 1;
+		const idx = base.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
+		if (idx !== -1) base[idx].count += 1;
 	});
 	
-	// count of categories
-	dd = types.map(i => {
+	let dd;
+	// count of categories:
+	dd = base.map(i => {
 		let count = i.count;
 		if (i.parent === '#') {
-			const children = types.filter(j => j.parent === i.id);
+			const children = base.filter(j => j.parent === i.id);
 			if (children.length) count = children.map(i=>i.count).reduce((a,c)=>a+c);
 		}
 		return Object.assign(i, { count });
 	});
-	// remove 0 counts
+	// remove 0 counts:
 	dd = dd.filter(i => i.count !== 0);
 	
 	// merge 1-child categories:
@@ -37,25 +38,14 @@ async function test() {
 	childless.map( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
 	dd = dd.concat(childless);
 	
-	// types.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
-	// types.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
-	
-	jd = dd.map(i => {
-		return {
-			id: ''+i.id,
-			text: i.node + ` <small style="color:grey;">(${i.count})</small>`,
-			parent: ''+i.parent,
-			// state: { opened: true },
-			...i.id === 300 && {state: { selected: true }},
-			...i.parent !== '#' && {icon: 'jstree-file'}
-		};
-	});
-	jd.filter(i => i.parent === '#' && !jd.filter(j=>j.parent===i.id).length).forEach(i => i.icon = 'jstree-file');
-	
-	
-	
-	var sd = types.map((v,i,a) => {
-		if (v.parent === '#') return { text: v.node, children: a.filter(j=>j.parent === v.id).map(i=>i.node) }
+	// base.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
+	// base.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
+	return dd;
+}
+
+function initMultiselect(baseData) {
+	const sd = baseData.map((v,i,a) => {
+		if (v.parent === '#') return { text: v.node, children: a.filter(j=>j.parent === v.id).map(i=>i.node) };
 	}).filter(i=>i); 
 	
 	const els = sd.map(i => {
@@ -65,19 +55,33 @@ async function test() {
 	});
 	$('#select').append(els);
 	$('#select').multiSelect({ selectableOptgroup: true });
-	
-	
-	
 }
 
-
-async function init() {
-	await test();
+function initJstree(baseData) {
+	const jd = baseData.map(i => {
+		return {
+			id: ''+i.id,
+			text: i.node + ` <small style="color:grey;">(${i.count})</small>`,
+			parent: ''+i.parent,
+			// state: { opened: true },
+			...i.id === 300 && {state: { selected: true }},
+			...i.parent !== '#' && {icon: 'jstree-file'}
+		};
+	});
+	jd.filter(i => i.parent === '#' && !jd.filter(j=>j.parent===i.id).length)
+		.forEach(i => i.icon = 'jstree-file');
+	
 	$('#tree-container').jstree({
 		core: { data: jd },
 		plugins: ['checkbox', ''], // 'wholerow'
 		types: { file: { icon: 'jstree-icon jstree-file', valid_children: ['none'] } }
 	});
+}
+
+async function init() {
+	const baseData = await transformData(types);
+	initMultiselect(baseData);
+	initJstree(baseData);
 }
 
 export default { init }
