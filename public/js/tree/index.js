@@ -1,5 +1,5 @@
 import types from './types.js';
-import Instrument from '../tse/struct/Instrument.js';
+import Instrument from '../tse/Instrument.js';
 
 let dd, jd;
 async function test() {
