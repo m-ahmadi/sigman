@@ -11,7 +11,7 @@ if ( args.includes('release') ) {
 }
 
 function debug() {
-	const INP = './src';
+	const INP = './';
 	const OUT = './public';
 	const ROOT = '';
 	

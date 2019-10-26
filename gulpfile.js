@@ -2,17 +2,17 @@ const gulp = require('gulp');
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // watching templates
 const shell = require('gulp-shell');
-const t = 'handlebars ./src/templates/template/ -f ./public/js/_templates.js -e hbs -o';
-const p = 'handlebars ./src/templates/partial/ -f ./public/js/_partials.js -p -e hbs -o';
+const t = 'handlebars ./templates/template/ -f ./public/js/_templates.js -e hbs -o';
+const p = 'handlebars ./templates/partial/ -f ./public/js/_partials.js -p -e hbs -o';
 
 gulp.task( 'part', shell.task(p) );
 gulp.task( 'temp', shell.task(t) );
 
 gulp.task('temp-w', () => {
-	gulp.watch( './src/templates/template/**', {ignoreInitial: false}, gulp.series('temp') );
+	gulp.watch( './templates/template/**', {ignoreInitial: false}, gulp.series('temp') );
 });
 gulp.task('part-w', () => {
-	gulp.watch( './src/templates/partial/**', {ignoreInitial: false}, gulp.series('part') );
+	gulp.watch( './templates/partial/**', {ignoreInitial: false}, gulp.series('part') );
 });
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // livereload
