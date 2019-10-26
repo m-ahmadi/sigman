@@ -2,8 +2,8 @@ const gulp = require('gulp');
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // watching templates
 const shell = require('gulp-shell');
-const t = 'handlebars ./templates/template/ -f ./public/js/_templates.js -e hbs -o';
-const p = 'handlebars ./templates/partial/ -f ./public/js/_partials.js -p -e hbs -o';
+const t = 'handlebars ./templates/template/ -f ./public/lib/_templates.js -e hbs -o';
+const p = 'handlebars ./templates/partial/ -f ./public/lib/_partials.js -p -e hbs -o';
 
 gulp.task( 'part', shell.task(p) );
 gulp.task( 'temp', shell.task(t) );

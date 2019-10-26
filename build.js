@@ -22,8 +22,8 @@ function debug() {
 	fs.writeFileSync(OUT+'/js/gen/root.js', "export default '';");
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
-	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/js/_templates.js -e hbs -o`);
-	shell.exec(`handlebars ${INP}/templates/partial/ -f ${OUT}/js/_partials.js -p -e hbs -o`);
+	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/lib/_templates.js -e hbs -o`);
+	shell.exec(`handlebars ${INP}/templates/partial/ -f ${OUT}/lib/_partials.js -p -e hbs -o`);
 	shell.exec(`rollup -c`);
 	shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css`);
 }

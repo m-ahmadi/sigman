@@ -2,8 +2,8 @@ const { relative } = require('path');
 const { writeFileSync } = require('fs');
 
 const temps = ''+
-'<script src="{{root}}js/_templates.js"></script>\n'+
-'<script src="{{root}}js/_partials.js"></script>\n';
+'<script src="{{root}}lib/_templates.js"></script>\n'+
+'<script src="{{root}}lib/_partials.js"></script>\n';
 
 const modulepreloadPlugin = {
 	name: 'modulepreload',
