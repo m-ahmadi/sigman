@@ -1,8 +1,8 @@
 node_modules/
 package-lock.json
 .sass-cache/
-src/html/link-modulepreload/*
-src/html/script-app/*
+html/link-modulepreload/*
+html/script-app/*
 public/js/_templates.js
 public/js/_partials.js
 public/js/#.js

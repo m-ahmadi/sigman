@@ -1,4 +1,4 @@
 @echo off
 PATH=%PATH%;./node_modules/.bin/
-set INP=./src
+set INP=./
 set OUT=./public
