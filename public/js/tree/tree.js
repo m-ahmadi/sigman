@@ -1,10 +1,9 @@
 import types from './types.js';
-import Instrument from '../tse/Instrument.js';
+import tse from '../tse/tse.js';
 
-async function transformData(baseData) {
+function transformData(baseData) {
 	const base = baseData;
-	let ins = await $.get('data/instruments.csv');
-	ins = ins.split('\n').map( i => new Instrument(i) );
+	let ins = tse.getInstruments(true, true);
 	
 	base.forEach(i => i.count = 0);
 	ins.forEach(i => {
@@ -78,8 +77,8 @@ function initJstree(baseData) {
 	});
 }
 
-async function init() {
-	const baseData = await transformData(types);
+function init() {
+	const baseData = transformData(types);
 	initMultiselect(baseData);
 	initJstree(baseData);
 	

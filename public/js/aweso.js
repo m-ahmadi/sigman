@@ -1,4 +1,4 @@
-import Instrument from './tse/Instrument.js';
+import tse from './tse/tse.js';
 
 let awesomplete;
 let data;
@@ -26,11 +26,8 @@ function search(obj, str) {
 
 async function init() {
 	const base = baseData;
-	let ins = await $.get('data/instruments.csv');
-	data = ins.split('\n').map(i => {
-		const j = new Instrument(i);
-		return `${j.Symbol} (${j.Name})`;
-	});
+	let ins = tse.getInstruments(true, true);
+	data = ins.map(i => `${i.Symbol} (${i.Name})`);
 	
 	awesomplete = new Awesomplete('#aweso', {
 		minChars: 2,

@@ -155,6 +155,7 @@ function init() {
 
 	widget.onChartReady(function () {
 		chart = widget.chart();
+		window.chart = chart;
 	});
 }
 
