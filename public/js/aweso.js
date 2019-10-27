@@ -32,25 +32,29 @@ async function init() {
 		return `${j.Symbol} (${j.Name})`;
 	});
 	
-	awesomplete = new Awesomplete('#myInput', {
+	awesomplete = new Awesomplete('#aweso', {
 		minChars: 2,
 		maxItems: 20,
-		list: []
+		list: [],
+		/* item: function (text, input) {
+			const highlighted = text.replace(new RegExp(input, 'ig'), `<mark>${input}</mark>`);
+			return $.parseHTML(`<li>${highlighted}</li>`)[0];
+		} */
 	});
 
-	$('#myInput').on('input', function (e) {
+	$('#aweso').on('input', function (e) {
 		const inpText = $(e.target).val();
 		if (inpText.length > 1) {
 			awesomplete.list = data.filter( i => i.includes(inpText) );
 		}
 	});
 
-	$('#myInput').on('awesomplete-select', function (e) {
+	$('#aweso').on('awesomplete-select', function (e) {
 		const item = e.originalEvent.text.value;
 		console.log(item);
 	});
 
-	$('#myInput').on('awesomplete-selectcomplete', function (e) {
+	$('#aweso').on('awesomplete-selectcomplete', function (e) {
 		
 	});
 }
