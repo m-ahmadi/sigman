@@ -4,7 +4,7 @@ import Instrument from '../tse/Instrument.js';
 async function transformData(baseData) {
 	const base = baseData;
 	let ins = await $.get('data/instruments.csv');
-	ins = ins.split('\n').map(i => new Instrument(i));
+	ins = ins.split('\n').map( i => new Instrument(i) );
 	
 	base.forEach(i => i.count = 0);
 	ins.forEach(i => {
@@ -68,7 +68,7 @@ function initJstree(baseData) {
 			...i.parent !== '#' && {icon: 'jstree-file'}
 		};
 	});
-	jd.filter(i => i.parent === '#' && !jd.filter(j=>j.parent===i.id).length)
+	jd.filter(i => i.parent === '#' && !jd.filter(j => j.parent === i.id).length)
 		.forEach(i => i.icon = 'jstree-file');
 	
 	$('#tree-container').jstree({
@@ -82,6 +82,9 @@ async function init() {
 	const baseData = await transformData(types);
 	initMultiselect(baseData);
 	initJstree(baseData);
+	
+	window.types = types;
+	window.baseData = baseData;
 }
 
 export default { init }
