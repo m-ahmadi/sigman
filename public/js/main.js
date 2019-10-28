@@ -8,5 +8,4 @@ $(async function () {
 	tree.init();
 	tv.init();
 	aweso.init();
-	
 });

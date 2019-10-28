@@ -116,13 +116,13 @@ function init() {
 			// 'header_widget',
 			// 'left_toolbar',
 			// 'context_menus', // timezone_menu, scales_context_menu, legend_context_menu, symbol_info, show_chart_property_page
-			'show_chart_property_page',
+			// 'show_chart_property_page',
 	//		'remove_library_container_border',
 	//		'border_around_the_chart',
 			// 'edit_buttons_in_legend',
 			'countdown',
 			'display_market_status',
-			'timeframes_toolbar',
+			// 'timeframes_toolbar',
 			'go_to_date',
 			'control_bar'
 		],
@@ -133,7 +133,24 @@ function init() {
 
 	widget.onChartReady(function () {
 		chart = widget.chart();
+		
+		
+		// const bars = tse.getPrices();
+		const res = [];
+		for (let i=0; i<bars.length; i+=1) {
+			const item = bars[i];
+			const found = bars.slice(i, i+400).filter(j => j.low < item.low).length;
+			if (!found) res.push(item.time/1000);
+		}
+		console.log(res);
+		// res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
+		res.forEach( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: 'green'} }) );
+		
+		
+		window.res = res;
 		window.chart = chart;
+		window.bars = bars;
+		window.tse = tse;
 	});
 }
 
