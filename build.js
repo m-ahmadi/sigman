@@ -20,11 +20,11 @@ function debug() {
 	fs.writeFileSync(INP+'/html/script-lib/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/script-app/root.htm', ROOT);
 	fs.writeFileSync(OUT+'/js/gen/root.js', `export default '${ROOT}';`);
-
+	
+	shell.exec('rollup -c');
 	shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
 	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/lib/_templates.js -e hbs -o`);
 	shell.exec(`handlebars ${INP}/templates/partial/ -f ${OUT}/lib/_partials.js -p -e hbs -o`);
-	shell.exec(`rollup -c`);
 	shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css`);
 }
 
