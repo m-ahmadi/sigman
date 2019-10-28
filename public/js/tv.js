@@ -1,5 +1,4 @@
-import csvParse from './gen/csvParse.js';
-import Day from './tse/Day.js';
+import tse from './tse/tse.js';
 
 let widget;
 let bars;
@@ -52,12 +51,7 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 	}
 };
 async function getData(ferom, to) {
-	if (!bars) {
-		// bars = await $.get('./api');
-		const content = await $.get('data/ذوب.csv');
-		bars = csvParse(content).slice(1).map(convert);
-	}
-	
+	if (!bars) bars = tse.getPrices();
 	if (chart) chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
 	
 	let subset = bars.filter(i => i.time >= ferom && i.time <= to);
@@ -94,23 +88,7 @@ japi.getServerTime = function (callback) {
 	// log(callback);
 };
 
-function convert(row) {
-	const day = new Day(row),
-	s = day.date.toString(),
-	y = parseInt( s.slice(0, 4) ),
-	m = parseInt( s.slice(4, 6) ),
-	d = parseInt( s.slice(6, 8) );
-	
-	return {
-		// time: new Date( Date.UTC(y, m-1, d) ).setUTCHours(0,0,0,0) / 1000,
-		time: Date.UTC(y, m-1, d) / 1000,
-		open: day.open,
-		high: day.high,
-		low: day.low,
-		close: day.last,
-		volume: day.vol
-	};
-}
+
 
 function init() {
 	widget = new TradingView.widget({
