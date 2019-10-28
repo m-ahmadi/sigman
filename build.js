@@ -11,15 +11,15 @@ if ( args.includes('release') ) {
 }
 
 function debug() {
-	const INP = './';
+	const INP = '.';
 	const OUT = './public';
-	const ROOT = '';
+	const ROOT = '.';
 	
 	fs.writeFileSync(INP+'/html/link-modulepreload/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/link-stylesheet/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/script-lib/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/script-app/root.htm', ROOT);
-	fs.writeFileSync(OUT+'/js/gen/root.js', "export default '';");
+	fs.writeFileSync(OUT+'/js/gen/root.js', `export default '${ROOT}';`);
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
 	shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/lib/_templates.js -e hbs -o`);
@@ -31,14 +31,14 @@ function debug() {
 function release() {
 	const INP = './src';
 	const OUT = './public/static';
-	const ROOT = '/static/';
+	const ROOT = '/static';
 	const FL = 'app.bundle.js';
 	
 	fs.writeFileSync(INP+'/html/links/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/root.htm', ROOT);
 	fs.writeFileSync(INP+'/html/scripts/app/filename.htm', FL);
-	fs.writeFileSync(INP+'/js/gen/root.js', "export default '${ROOT}';");
+	fs.writeFileSync(INP+'/js/gen/root.js', `export default '${ROOT}';`);
 
 	shell.exec(`htmlbilder ${INP}/html/ -o ./release/index.html`);
 	
