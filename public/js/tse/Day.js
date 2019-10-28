@@ -22,5 +22,7 @@ export default class Day {
 		this.vol = row[7];
 		this.count = row[8];
 		this.yesterday = row[9]; */
+		
+		// ohlc4: (open + high + low + close) / 4
 	}
 }
