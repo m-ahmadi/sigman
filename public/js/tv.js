@@ -5,6 +5,7 @@ let bars;
 let chart;
 const japi = {};
 const log = console.log;
+const evt = newPubSub();
 
 japi.onReady = function (callback) {
 	// log('onReady()');
@@ -45,9 +46,9 @@ japi.getBars = async function (symbolInfo, resolution, from, to, onHistoryCallba
 	// log('getBars()');
 	const _bars = await getData(from, to).catch(log); // err => onErrorCallback(err) 
 	if (_bars.length) {
-		onHistoryCallback(_bars, {noData: false})
+		onHistoryCallback(_bars, {noData: false});
 	} else {
-		onHistoryCallback(_bars, {noData: true})
+		onHistoryCallback(_bars, {noData: true});
 	}
 };
 async function getData(ferom, to) {
@@ -133,25 +134,28 @@ function init() {
 
 	widget.onChartReady(function () {
 		chart = widget.chart();
+		// chart.removeAllShapes();
+		$('#draw-btn').on('click', draw);
+		$('#clear-btn').on('click', () => chart.removeAllShapes() );
 		
-		
-		// const bars = tse.getPrices();
-		const res = [];
-		for (let i=0; i<bars.length; i+=1) {
-			const item = bars[i];
-			const found = bars.slice(i, i+400).filter(j => j.low < item.low).length;
-			if (!found) res.push(item.time/1000);
-		}
-		console.log(res);
-		// res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
-		res.forEach( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: 'green'} }) );
-		
-		
-		window.res = res;
 		window.chart = chart;
 		window.bars = bars;
 		window.tse = tse;
 	});
+	
+}
+
+function draw() {
+	const rand = () => '#' + Math.random().toString(16).substr(-6);
+	const _bars = tse.getPrices();
+	const res = [];
+	for (let i=0; i<_bars.length; i+=1) {
+		const item = _bars[i];
+		const found = _bars.slice(i, i+400).filter(j => j.low < item.low).length;
+		if (!found) res.push(item.time);
+	}
+	// res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
+	res.forEach( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: rand()} }) );
 }
 
 export default { init }
