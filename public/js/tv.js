@@ -156,6 +156,37 @@ const fns = [
 		for (let i=0; i<chunks.length; i++) {
 			const chunk = chunks[i];
 			const prices = chunk.map(i => i.close);
+			const min = chunk.find( i => i.close === Math.min(...prices) );
+			const max = chunk.find( i => i.close === Math.max(...prices) );
+			res.push({ min, max });
+			const points = [
+				{ time: chunk[0].time, price: max.close },
+				{ time: chunk[chunk.length-1].time , price: max.close }
+			];
+			chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: 'blue', linewidth: 4, linestyle: 0} });
+		}
+		
+		res.forEach(i => {
+			const maxIdx = bars.findIndex(j => j.time === i.max.time);
+			const minIdx = bars.findIndex(j => j.time === i.min.time);
+			const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
+			const pointB = { time: bars[maxIdx+10].time, price: i.max.close };
+			const points = [pointA, pointB];
+			chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: 'red', linewidth: 4, linestyle: 0} });
+		});
+		window.res = res;
+		/* chart.createMultipointShape([
+			{time: bars[0].time, price: bars[14].high},
+			{time: bars[14].time, channel: 'high'}
+		], { shape: 'extended', overrides: {linecolor: 'red', linewidth: 4, linestyle: 0} }); */
+	},
+	function () {
+		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
+		const chunks = splitArr(bars, 100);
+		const res = [];
+		for (let i=0; i<chunks.length; i++) {
+			const chunk = chunks[i];
+			const prices = chunk.map(i => i.close);
 			res.push({
 				min: chunk.find( i => i.close === Math.min(...prices) ),
 				max: chunk.find( i => i.close === Math.max(...prices) )
