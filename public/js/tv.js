@@ -55,9 +55,10 @@ async function getData(ferom, to) {
 	if (!bars) bars = tse.getPrices();
 	if (chart) chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
 	
-	let subset = bars.filter(i => i.time >= ferom && i.time <= to);
-	subset.forEach(i => i.time *= 1000);
-	return subset;
+	const subset = bars.filter(i => i.time >= ferom && i.time <= to);
+	// subset.forEach(i => i.time *= 1000);
+	// return subset;
+	return subset.map( i => Object.assign({}, i, {time: i.time*1000}) );
 }
 
 japi.searchSymbols = function (userInput, exchange, symbolType, onResultReadyCallback) {
