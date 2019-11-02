@@ -1,4 +1,5 @@
 import tse from './tse/tse.js';
+import { randColor, splitArr } from './gen/util.js';
 
 let widget;
 let bars;
@@ -137,7 +138,8 @@ function init() {
 		chart = widget.chart();
 		// chart.removeAllShapes();
 		$('#draw-btn').on('click', draw);
-		$('#clear-btn').on('click', () => chart.removeAllShapes() );
+		$('#clear-btn').on( 'click', () => chart.removeAllShapes() );
+		$('#zoomout-btn').on('click', zoomout);
 		
 		window.chart = chart;
 		window.bars = bars;
@@ -146,17 +148,52 @@ function init() {
 	
 }
 
-function draw() {
-	const rand = () => '#' + Math.random().toString(16).substr(-6);
-	const _bars = tse.getPrices();
-	const res = [];
-	for (let i=0; i<_bars.length; i+=1) {
-		const item = _bars[i];
-		const found = _bars.slice(i, i+400).filter(j => j.low < item.low).length;
-		if (!found) res.push(item.time);
+const fns = [
+	function () {
+		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
+		const chunks = splitArr(bars, 100);
+		const res = [];
+		for (let i=0; i<chunks.length; i++) {
+			const chunk = chunks[i];
+			const prices = chunk.map(i => i.close);
+			res.push({
+				min: chunk.find( i => i.close === Math.min(...prices) ),
+				max: chunk.find( i => i.close === Math.max(...prices) )
+			});
+		}
+		
+		res.forEach(i => {
+			const pointA = { time: i.min.time, price: i.max.close };
+			const pointB = { time: i.max.time, channel: 'close' };
+			const points = [pointA, pointB];
+			chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: 'red', linewidth: 4, linestyle: 0} });
+		});
+		window.res = res;
+		/* chart.createMultipointShape([
+			{time: bars[0].time, price: bars[14].high},
+			{time: bars[14].time, channel: 'high'}
+		], { shape: 'extended', overrides: {linecolor: 'red', linewidth: 4, linestyle: 0} }); */
+	},
+	function () {
+		const res = [];
+		for (let i=0; i<bars.length; i+=1) {
+			const item = bars[i];
+			const found = bars.slice(i, i+400).filter(j => j.low < item.low).length;
+			if (!found) res.push(item.time);
+		}
+		// res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
+		res.forEach( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: randColor()} }) );
 	}
-	// res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
-	res.forEach( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: rand()} }) );
+];
+function draw() {
+	fns[ $('#pattern').val() ]();
+}
+
+function zoomout() {
+	chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
+}
+function rand() {
+	return '#' + Math.random().toString(16).substr(-6);
 }
 
 export default { init }
