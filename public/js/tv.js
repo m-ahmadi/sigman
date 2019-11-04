@@ -148,22 +148,24 @@ function init() {
 	
 }
 
+/* const chunks = splitArr(_bars, 3);
+ for (let i=0; i<chunks.length; i++) {
+	const chunk = chunks[i];
+	const prices = chunk.map(i => i.close);
+	const first = prices[0];
+	const middle = prices[ Math.floor(prices.length/2) ];
+	const last = prices[prices.length-1];
+	if (middle > first && middle > last) {
+		res.push( chunk.find(i => i.close === middle) );
+	}
+} */
+const start = 174;
+const end = 247;
 const patterns = [
 	function () {
-		const _bars = bars.slice(174, 247);
+		const _bars = bars.slice(start, end);
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
-		// const chunks = splitArr(_bars, 3);
 		const res = [];
-		/* for (let i=0; i<chunks.length; i++) {
-			const chunk = chunks[i];
-			const prices = chunk.map(i => i.close);
-			const first = prices[0];
-			const middle = prices[ Math.floor(prices.length/2) ];
-			const last = prices[prices.length-1];
-			if (middle > first && middle > last) {
-				res.push( chunk.find(i => i.close === middle) );
-			}
-		} */
 		for (let i=0; i<_bars.length; i++) {
 			const curr = _bars[i];
 			const next = _bars[i+1];
@@ -172,20 +174,30 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		window.bbars = _bars;
-		window.res = res;
-		res.forEach( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) ); // 0xf175
-		var x = res.filter((v, i) => {
+		res.filter((v, i) => {
 			const { close } = v;
 			const n = 1;
 			const rest = res.filter((v,j) => j !== i);
 			const found = rest.findIndex( j=> inRange(j.close, perc(close, -n), perc(close, n)) );
 			return found !== -1;
-		});
-		x.forEach( i => chart.createShape({time: i.time,price: i.close-40}, { shape: 'icon', overrides: {icon: 0xf062, color: 'pink'} }) ); // 0xf176
+		}).forEach( i => chart.createShape({time: i.time,price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) ); // 0xf176
 	},
 	function () {
-		const _bars = bars.slice(174, 247);
+		const _bars = bars.slice(start, end);
+		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
+		const res = [];
+		for (let i=0; i<_bars.length; i++) {
+			const curr = _bars[i];
+			const next = _bars[i+1];
+			const prev = _bars[i-1];
+			if (next && prev && curr.close > prev.close && curr.close > next.close) {
+				res.push(curr);
+			}
+		}
+		res.forEach( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) ); // 0xf175
+	},
+	function () {
+		const _bars = bars.slice(start, end);
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
 		const res = [];
 		for (let i=0; i<_bars.length; i++) {
