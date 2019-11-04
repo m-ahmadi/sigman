@@ -148,7 +148,7 @@ function init() {
 	
 }
 
-const fns = [
+const patterns = [
 	function () {
 		const _bars = bars.slice(174, 247);
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
@@ -175,6 +175,20 @@ const fns = [
 		window.bbars = _bars;
 		window.res = res;
 		res.forEach( i => chart.createShape({ time: i.time, price: i.close+20 }, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) );
+	},
+	function () {
+		const _bars = bars.slice(174, 247);
+		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
+		const res = [];
+		for (let i=0; i<_bars.length; i++) {
+			const curr = _bars[i];
+			const next = _bars[i+1];
+			const prev = _bars[i-1];
+			if (next && prev && curr.close < prev.close && curr.close < next.close) {
+				res.push(curr);
+			}
+		}
+		res.forEach( i => chart.createShape({ time: i.time, price: i.close-20 }, { shape: 'icon', overrides: {icon: 0xf062, color: 'blue'} }) );
 	},
 	function () {
 		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
@@ -234,7 +248,7 @@ const fns = [
 	}
 ];
 function draw() {
-	fns[ $('#pattern').val() ]();
+	patterns[ $('#pattern').val() ]();
 }
 
 function zoomout() {
