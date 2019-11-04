@@ -174,7 +174,16 @@ const patterns = [
 		}
 		window.bbars = _bars;
 		window.res = res;
-		res.forEach( i => chart.createShape({ time: i.time, price: i.close+20 }, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) );
+		res.forEach( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) );
+		var x = res.filter((v, i) => {
+			const { close } = v;
+			const n = 1;
+			const rest = res.filter((v,j) => j !== i);
+			const found = rest.findIndex( j=> inRange(j.close, perc(close, -n), perc(close, n)) );
+			return found !== -1;
+		});
+		x.forEach( i => chart.createShape({time: i.time,price: i.close-40}, { shape: 'icon', overrides: {icon: 0xf062, color: 'pink'} }) );;
+		console.log(x);
 	},
 	function () {
 		const _bars = bars.slice(174, 247);
@@ -188,7 +197,7 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		res.forEach( i => chart.createShape({ time: i.time, price: i.close-20 }, { shape: 'icon', overrides: {icon: 0xf062, color: 'blue'} }) );
+		res.forEach( i => chart.createShape({ time: i.time, price: i.close-40 }, { shape: 'icon', overrides: {icon: 0xf062, color: 'blue'} }) );
 	},
 	function () {
 		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
@@ -256,6 +265,12 @@ function zoomout() {
 }
 function rand() {
 	return '#' + Math.random().toString(16).substr(-6);
+}
+function perc(n, per) {
+	return n + Math.floor((n/100) * per);
+}
+function inRange(n, min, max) {
+	return n >= min && n <= max;
 }
 
 export default { init }
