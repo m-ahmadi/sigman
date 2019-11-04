@@ -180,7 +180,7 @@ const patterns = [
 			const rest = res.filter((v,j) => j !== i);
 			const found = rest.findIndex( j=> inRange(j.close, perc(close, -n), perc(close, n)) );
 			return found !== -1;
-		}).forEach( i => chart.createShape({time: i.time,price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) ); // 0xf176
+		}).forEach( i => chart.createShape({time: i.time,price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf063, color: color(1)} }) ); // 0xf176
 	},
 	function () {
 		const _bars = bars.slice(start, end);
@@ -194,7 +194,7 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		res.forEach( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: 'red'} }) ); // 0xf175
+		res.forEach( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: color(1)} }) ); // 0xf175
 	},
 	function () {
 		const _bars = bars.slice(start, end);
@@ -208,7 +208,7 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		res.forEach( i => chart.createShape({ time: i.time, price: i.close-40 }, { shape: 'icon', overrides: {icon: 0xf062, color: 'blue'} }) ); // 0xf176
+		res.forEach( i => chart.createShape({ time: i.time, price: i.close-40 }, { shape: 'icon', overrides: {icon: 0xf062, color: color(2)} }) ); // 0xf176
 	},
 	function () {
 		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
@@ -276,6 +276,9 @@ function zoomout() {
 }
 function rand() {
 	return '#' + Math.random().toString(16).substr(-6);
+}
+function color(n) {
+	return '#' + $('#colorpick'+n).spectrum('get').toHex();
 }
 function perc(n, per) {
 	return n + Math.floor((n/100) * per);
