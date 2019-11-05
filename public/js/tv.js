@@ -163,13 +163,13 @@ function init() {
 		res.push( chunk.find(i => i.close === middle) );
 	}
 } */
-const start = 170; // 174
-const end = 300; // 247
+const start = 0; // 170 174
+const end = 1600; // 300 247
 const shapes = {};
 window.inRange = inRange;
 window.perc = perc;
 const patterns = [
-	function () {
+	function () { // most in-range occurrences
 		const _bars = bars.slice(start, end);
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
 		let res = [];
@@ -181,7 +181,56 @@ const patterns = [
 				res.push( Object.assign({}, curr) );
 			}
 		}
+		
 		shapes[0] = [];
+		const counts = {};
+		res.map((bar, i) => {
+			const { close } = bar;
+			const n = 1;
+			const rest = res.filter((v,j) => j !== i);
+			const count = rest.filter( j => inRange(j.close, perc(close, -n), perc(close, n)) ).length;
+			return [count, i];
+		})
+		.sort((a, b) => b[0]-a[0])
+		.forEach(i => {
+			const [count, index] = i;
+			if ( !counts[count] ) counts[count] = [];
+			counts[count].push(index);
+		});
+		
+		Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
+			const bars = counts[k].map(i => res[i]);
+			const prices = bars.map(i => i.close);
+			const min = Math.min(...prices);
+			const max = Math.max(...prices);
+			
+			let id;
+			id = chart.createShape({price: min}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 4, showLabel: true, textcolor: 'black', fontsize: 20} });
+			chart.getShapeById(id).setProperties({ text: 'min' });
+			id = chart.createShape({price: max}, { shape: 'horizontal_line', overrides: {linecolor: 'red', linewidth: 2, showLabel: true, textcolor: 'black', fontsize: 20} });
+			chart.getShapeById(id).setProperties({ text: 'max' });
+			
+			bars.forEach(bar => {
+				const id = chart.createShape({time: bar.time, price: bar.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
+				shapes[0].push(id);
+				// let id = chart.createShape({time: bar.time, price: bar.close+130}, { shape: 'text', overrides: {color: 'black', bold: true} });
+				// chart.getShapeById(id).setProperties({ text: bar.count });
+			});
+		});
+	},
+	function () { // highs & count of in-range occurrences
+		const _bars = bars.slice(start, end);
+		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
+		let res = [];
+		for (let i=0; i<_bars.length; i++) {
+			const curr = _bars[i];
+			const next = _bars[i+1];
+			const prev = _bars[i-1];
+			if (next && prev && curr.close > prev.close && curr.close > next.close) {
+				res.push( Object.assign({}, curr) );
+			}
+		}
+		shapes[1] = [];
 		res.forEach((bar, i) => {
 			const { close } = bar;
 			const n = 1;
@@ -191,9 +240,9 @@ const patterns = [
 			bar.count = rest.filter( j => inRange(j.close, perc(close, -n), perc(close, n)) ).length;
 			let id;
 			id = chart.createShape({time: bar.time, price: bar.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }) // 0xf063
-			shapes[0].push(id);
+			shapes[1].push(id);
 			id = chart.createShape({time: bar.time, price: bar.close+130}, { shape: 'text', overrides: {color: 'black', bold: true} });
-			shapes[0].push(id);
+			shapes[1].push(id);
 			chart.getShapeById(id).setProperties({ text: bar.count });
 		});
 	},
@@ -209,7 +258,7 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		shapes[1] = res.map( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: _color || color(1)} }) ); // 0xf175
+		shapes[2] = res.map( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: _color || color(1)} }) ); // 0xf175
 	},
 	function () { // lows
 		const _bars = bars.slice(start, end);
@@ -223,7 +272,7 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		shapes[2] = res.map( i => chart.createShape({ time: i.time, price: i.close-40 }, { shape: 'icon', overrides: {icon: 0xf062, color: color(2)} }) ); // 0xf176
+		shapes[3] = res.map( i => chart.createShape({ time: i.time, price: i.close-40 }, { shape: 'icon', overrides: {icon: 0xf062, color: color(2)} }) ); // 0xf176
 	},
 	function () { // local maxima
 		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
@@ -241,10 +290,10 @@ const patterns = [
 				{ time: chunk[chunk.length-1].time , price: max.close }
 			];
 			const shapeId = chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: color(2), linewidth: 4, linestyle: 0} });
-			shapes[3].push(shapeId);
+			shapes[4].push(shapeId);
 		}
 		
-		shapes[3] = shapes[3].concat(res.map(i => {
+		shapes[4] = shapes[4].concat(res.map(i => {
 			const maxIdx = bars.findIndex(j => j.time === i.max.time);
 			const minIdx = bars.findIndex(j => j.time === i.min.time);
 			const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
@@ -261,7 +310,7 @@ const patterns = [
 			if (!found) res.push(item.time);
 		}
 		// res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
-		shapes[4] = res.map( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: randColor()} }) );
+		shapes[5] = res.map( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: randColor()} }) );
 	}
 ];
 function draw() {
