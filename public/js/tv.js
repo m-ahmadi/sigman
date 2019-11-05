@@ -141,7 +141,10 @@ function init() {
 		$('#clear-btn').on('click', clear);
 		$('#clear-all-btn').on( 'click', () => chart.removeAllShapes() );
 		$('#zoomout-btn').on('click', zoomout);
-		
+		setTimeout(() => {
+			// patterns[1]('orange');
+			patterns[0]();
+		}, 1000);
 		window.chart = chart;
 		window.bars = bars;
 		window.tse = tse;
@@ -160,31 +163,41 @@ function init() {
 		res.push( chunk.find(i => i.close === middle) );
 	}
 } */
-const start = 174;
-const end = 247;
+const start = 170; // 174
+const end = 300; // 247
 const shapes = {};
+window.inRange = inRange;
+window.perc = perc;
 const patterns = [
 	function () {
 		const _bars = bars.slice(start, end);
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
-		const res = [];
+		let res = [];
 		for (let i=0; i<_bars.length; i++) {
 			const curr = _bars[i];
 			const next = _bars[i+1];
 			const prev = _bars[i-1];
 			if (next && prev && curr.close > prev.close && curr.close > next.close) {
-				res.push(curr);
+				res.push( Object.assign({}, curr) );
 			}
 		}
-		shapes[0] = res.filter((v, i) => {
-			const { close } = v;
+		shapes[0] = [];
+		res.forEach((bar, i) => {
+			const { close } = bar;
 			const n = 1;
 			const rest = res.filter((v,j) => j !== i);
-			const found = rest.findIndex( j=> inRange(j.close, perc(close, -n), perc(close, n)) );
-			return found !== -1;
-		}).map( i => chart.createShape({time: i.time,price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf063, color: color(1)} }) ); // 0xf176
+			// const found = rest.findIndex( j => inRange(j.close, perc(close, -n), perc(close, n)) ); // at least one other high in n% range
+			// return found !== -1;
+			bar.count = rest.filter( j => inRange(j.close, perc(close, -n), perc(close, n)) ).length;
+			let id;
+			id = chart.createShape({time: bar.time, price: bar.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }) // 0xf063
+			shapes[0].push(id);
+			id = chart.createShape({time: bar.time, price: bar.close+130}, { shape: 'text', overrides: {color: 'black', bold: true} });
+			shapes[0].push(id);
+			chart.getShapeById(id).setProperties({ text: bar.count });
+		});
 	},
-	function () { // highs
+	function (_color) { // highs
 		const _bars = bars.slice(start, end);
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
 		const res = [];
@@ -196,7 +209,7 @@ const patterns = [
 				res.push(curr);
 			}
 		}
-		shapes[1] = res.map( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: color(1)} }) ); // 0xf175
+		shapes[1] = res.map( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: _color || color(1)} }) ); // 0xf175
 	},
 	function () { // lows
 		const _bars = bars.slice(start, end);
