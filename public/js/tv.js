@@ -4,6 +4,7 @@ import { randColor, splitArr } from './gen/util.js';
 let widget;
 let bars;
 let chart;
+let $$;
 const japi = {};
 const log = console.log;
 const evt = newPubSub();
@@ -137,10 +138,10 @@ function init() {
 	widget.onChartReady(function () {
 		chart = widget.chart();
 		// chart.removeAllShapes();
-		$('#draw-btn').on('click', draw);
-		$('#clear-btn').on('click', clear);
-		$('#clear-all-btn').on( 'click', () => chart.removeAllShapes() );
-		$('#zoomout-btn').on('click', zoomout);
+		$$.draw.on('click', draw);
+		$$.clear.on('click', clear);
+		$$.clearAll.on( 'click', () => chart.removeAllShapes() );
+		$$.zoomOut.on('click', zoomout);
 		setTimeout(() => {
 			// patterns[1]('orange');
 			patterns[0]();
@@ -149,7 +150,9 @@ function init() {
 		window.bars = bars;
 		window.tse = tse;
 	});
-	
+	$$ = __els('body');
+	$$.start.val(start);
+	$$.end.val(end);
 }
 
 /* const chunks = splitArr(_bars, 3);
@@ -170,7 +173,7 @@ window.isInRange = isInRange;
 window.perc = perc;
 const patterns = [
 	function () { // most in-range occurrences
-		const _bars = bars.slice(start, end);
+		const _bars = bars.slice($$.start.val(), $$.end.val());
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
 		let res = [];
 		for (let i=0; i<_bars.length; i++) {
@@ -329,10 +332,10 @@ const patterns = [
 	}
 ];
 function draw() {
-	patterns[ $('#pattern').val() ]();
+	patterns[ $$.pattern.val() ]();
 }
 function clear() {
-	const arr = shapes[ $('#pattern').val() ];
+	const arr = shapes[ $$.pattern.val() ];
 	if (arr) arr.forEach( i => chart.removeEntity(i) );
 }
 function zoomout() {

@@ -9,9 +9,9 @@
 	{{{ link-stylesheet }}}
 </head>
 <body>
-	<button id="draw-btn" class="uk-button">Draw</button>
-	<button id="clear-btn" class="uk-button">Clear</button>
-	<select id="pattern" class="uk-select uk-width-1-6" name="pattern">
+	<button class="uk-button" data-el="draw">Draw</button>
+	<button class="uk-button" data-el="clear">Clear</button>
+	<select class="uk-select uk-width-1-6" name="pattern" data-el="pattern">
 		<option value="0">most in-range occurrences</option>
 		<option value="1">highs & count of in-range occurrences</option>
 		<option value="2">highs</option>
@@ -21,9 +21,10 @@
 	</select>
 	<input type='text' id="colorpick1" />
 	<input type='text' id="colorpick2" />
-	<button id="clear-all-btn" class="uk-button">Clear All</button>
-	<button id="zoomout-btn" class="uk-button">Zoom out</button>
-	
+	<button id="clear-all-btn" class="uk-button" data-el="clearAll">Clear All</button>
+	<button id="zoomout-btn" class="uk-button" data-el="zoomOut">Zoom out</button>
+	<input type="text" class="uk-input uk-form-small	" style="width:70px" value="0" data-el="start" />
+	<input type="text" class="uk-input uk-form-small	" style="width:70px" value="0" data-el="end" />
 	<!-- <ul class="uk-tab-right" uk-tab="connect: #component-tab-right; animation: uk-animation-fade">
 		<li><a href="#">Active</a></li>
 		<li><a href="#">Item</a></li>
