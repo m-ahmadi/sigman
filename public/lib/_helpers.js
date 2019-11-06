@@ -21,7 +21,7 @@ function __els(root, obj) {
 	}
 	el.each(function (i, domEl) {
 		const $el = $(domEl);
-		res[ $el.data('el') ] = j;
+		res[ $el.data('el') ] = $el;
 	});
 	els.each(function (i, domEl) {
 		const $el = $(domEl);
