@@ -181,9 +181,7 @@ const patterns = [
 				res.push( Object.assign({}, curr) );
 			}
 		}
-		const getInRangeBars = (bars, price, n=1) => {
-			return bars.filter( j => isInRange(j.close, perc(price, -n), perc(price, n)) );
-		};
+		const getInRangeBars = (bars, price, n=1) => bars.filter( j => isInRange(j.close, perc(price, -n), perc(price, n)) );
 		shapes[0] = [];
 		const counts = res.map((bar, i) => {
 			const { close } = bar;
@@ -201,33 +199,11 @@ const patterns = [
 		
 		Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
 			const bars = counts[k].map(i => res[i]);
-			const prices = bars.map(i => i.close);
-			const min = Math.min(...prices);
-			const max = Math.max(...prices);
-			// let id;
-			// id = chart.createShape({price: min}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 4, showLabel: true, textcolor: 'black', fontsize: 20} });
-			// chart.getShapeById(id).setProperties({ text: 'min' });
-			// id = chart.createShape({price: max}, { shape: 'horizontal_line', overrides: {linecolor: 'red', linewidth: 2, showLabel: true, textcolor: 'black', fontsize: 20} });
-			// chart.getShapeById(id).setProperties({ text: 'max' });
-			
 			bars.forEach((bar, i) => {
-				const inRangeBars = getInRangeBars(res, bar.close);
-				
-				inRangeBars.forEach(i => {
+				getInRangeBars(res, bar.close).forEach(i => {
 					const id = chart.createShape({time: i.time, price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
 					shapes[0].push(id);
 				});
-				/* const average = Math.floor( inRangeBars.map(i=>i.close).reduce((a,c)=>a+c) / (inRangeBars.length-1) );
-				const id = chart.createShape({price: average}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
-				chart.getShapeById(id).setProperties({ text: 'average' });
-				
-				inRangeBars.forEach(i => {
-					const id = chart.createShape({time: i.time, price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
-					shapes[0].push(id);
-				}); */
-				
-				// let id = chart.createShape({time: bar.time, price: bar.close+130}, { shape: 'text', overrides: {color: 'black', bold: true} });
-				// chart.getShapeById(id).setProperties({ text: bar.count });
 			});
 			const uniqAvgs = bars.map(i => {
 				const prices = getInRangeBars(res, i.close).map(i => i.close);
