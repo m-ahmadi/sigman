@@ -2,6 +2,7 @@ import tse from './tse/tse.js';
 import colorpick from './colorpick.js';
 import tree from './tree/tree.js';
 import tv from './tv.js';
+import panel from './panel.js';
 import aweso from './aweso.js';
 
 $(async function () {
@@ -9,5 +10,6 @@ $(async function () {
 	colorpick.init();
 	tree.init();
 	tv.init();
+	tv.once('bars_ready', e => panel.init(e));
 	aweso.init();
 });
