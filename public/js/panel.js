@@ -7,8 +7,7 @@ let bars;
 const start = 0; // 170 174
 const end = 1620; // 300 247
 const shapes = {};
-window.isInRange = isInRange;
-window.perc = perc;
+const log = console.log;
 
 function init(e) {
 	chart = e.chart;
@@ -53,7 +52,7 @@ const patterns = [
 				highs.push( Object.assign({}, curr) );
 			}
 		}
-		const getInRangeBars = (bars, price, n=1) => bars.filter( j => isInRange(j.close, perc(price, -n), perc(price, n)) );
+		
 		shapes[0] = [];
 		const counts = highs.map((bar, i) => {
 			const { close } = bar;
@@ -69,18 +68,20 @@ const patterns = [
 			return acc;
 		}, {});
 		
+		let mostOccurredBars;
 		let uniqAvgs;
 		let uniqRanges;
 		
 		Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
-			const bars = counts[k].map(i => highs[i]);
-			bars.forEach((bar, i) => {
+			mostOccurredBars = counts[k].map(i => highs[i]);
+			mostOccurredBars.forEach((bar, i) => {
+				console.log( getInRangeBars(highs, bar.close).map(i=>i.close) ); // redundant data
 				getInRangeBars(highs, bar.close).forEach(i => {
 					const id = chart.createShape({time: i.time, price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
 					shapes[0].push(id);
 				});
 			});
-			uniqAvgs = bars.map(i => {
+			uniqAvgs = mostOccurredBars.map(i => {
 				const prices = getInRangeBars(highs, i.close).map(i => i.close);
 				return Math.floor( prices.reduce((a,c)=>a+c) / (prices.length -1) );
 			}).filter((v,i,a) => a.indexOf(v) === i);
@@ -103,10 +104,28 @@ const patterns = [
 			});
 		});
 		
+		/*
+		Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)                      // sum of all counts
+		mostOccurredBars = counts[12].map(i => highs[i])                                       // bars with most occurrence
 		
+		mostOccurredBars.map(bar => getInRangeBars(highs, bar.close).map(i => i.close).reduce((a,c)=>a+c))
+		mostOccurredBars.map(bar => getInRangeBars(highs, bar.close).map(i => i.close).reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
 		
+		getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
+		getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)
+			.reduce((a,c)=>a+c)
+		*/
+		
+		mostOccurredBars = counts[12].map(parseFloat);
+		log('===================================================================================', '\n');
+		log(counts);
+		log(mostOccurredBars);
+		log('------------------------------------------------------------------------------------', '\n');
+		log(  getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)  );
+		log(  getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)  );
 		window.highs = highs;
 		window.counts = counts;
+		window.mostOccurredBars = mostOccurredBars;
 		window.uniqAvgs = uniqAvgs;
 		window.uniqRanges = uniqRanges;
 	},
@@ -228,5 +247,15 @@ function perc(n, per) {
 function isInRange(n, min, max) {
 	return n >= min && n <= max;
 }
+function getInRangeBars(bars, price, n=1) {
+	const min = perc(price, -n);
+	const max = perc(price, n);
+	return bars.filter( j => isInRange(j.close, min, max) );
+}
+
+window.perc = perc;
+window.isInRange = isInRange;
+window.getInRangeBars = getInRangeBars;
+
 
 export default { init }
