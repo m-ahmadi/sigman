@@ -167,7 +167,7 @@ function init() {
 	}
 } */
 const start = 0; // 170 174
-const end = 1600; // 300 247
+const end = 1620; // 300 247
 const shapes = {};
 window.isInRange = isInRange;
 window.perc = perc;
@@ -175,20 +175,20 @@ const patterns = [
 	function () { // most in-range occurrences
 		const _bars = bars.slice($$.start.val(), $$.end.val());
 		chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
-		let res = [];
+		const highs = [];
 		for (let i=0; i<_bars.length; i++) {
 			const curr = _bars[i];
 			const next = _bars[i+1];
 			const prev = _bars[i-1];
 			if (next && prev && curr.close > prev.close && curr.close > next.close) {
-				res.push( Object.assign({}, curr) );
+				highs.push( Object.assign({}, curr) );
 			}
 		}
 		const getInRangeBars = (bars, price, n=1) => bars.filter( j => isInRange(j.close, perc(price, -n), perc(price, n)) );
 		shapes[0] = [];
-		const counts = res.map((bar, i) => {
+		const counts = highs.map((bar, i) => {
 			const { close } = bar;
-			const rest = res.filter((v,j) => j !== i);
+			const rest = highs.filter((v,j) => j !== i);
 			const count = getInRangeBars(rest, close).length;
 			return [count, i];
 		})
@@ -200,20 +200,23 @@ const patterns = [
 			return acc;
 		}, {});
 		
+		let uniqAvgs;
+		let uniqRanges;
+		
 		Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
-			const bars = counts[k].map(i => res[i]);
+			const bars = counts[k].map(i => highs[i]);
 			bars.forEach((bar, i) => {
-				getInRangeBars(res, bar.close).forEach(i => {
+				getInRangeBars(highs, bar.close).forEach(i => {
 					const id = chart.createShape({time: i.time, price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
 					shapes[0].push(id);
 				});
 			});
-			const uniqAvgs = bars.map(i => {
-				const prices = getInRangeBars(res, i.close).map(i => i.close);
+			uniqAvgs = bars.map(i => {
+				const prices = getInRangeBars(highs, i.close).map(i => i.close);
 				return Math.floor( prices.reduce((a,c)=>a+c) / (prices.length -1) );
 			}).filter((v,i,a) => a.indexOf(v) === i);
 			
-			const uniqRanges = uniqAvgs.map(i => {
+			uniqRanges = uniqAvgs.map(i => {
 				const rest = uniqAvgs.filter(j => j !== i);
 				const inRangeEls =  rest.filter( j => isInRange(j, perc(i,-1), perc(i,1)) ); // get those that are in this element's range
 				if (inRangeEls.length === 0) {
@@ -233,8 +236,10 @@ const patterns = [
 		
 		
 		
+		window.highs = highs;
 		window.counts = counts;
-		window.res = res;
+		window.uniqAvgs = uniqAvgs;
+		window.uniqRanges = uniqRanges;
 	},
 	function () { // highs & count of in-range occurrences
 		const _bars = bars.slice(start, end);
