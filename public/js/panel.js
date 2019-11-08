@@ -105,24 +105,30 @@ const patterns = [
 		});
 		
 		/*
-		Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)                      // sum of all counts
-		mostOccurredBars = counts[12].map(i => highs[i])                                       // bars with most occurrence
+		sum of all counts
+		Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)
+		bars with most occurrence
+		mostOccurredBars = counts[12].map(i => highs[i])
 		
+		sum of most occurred close prices
 		mostOccurredBars.map(bar => getInRangeBars(highs, bar.close).map(i => i.close).reduce((a,c)=>a+c))
+		sum of uniq most occurred close prices
 		mostOccurredBars.map(bar => getInRangeBars(highs, bar.close).map(i => i.close).reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
 		
+		bars that share the specified range
 		getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
 		getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)
 			.reduce((a,c)=>a+c)
 		*/
-		
-		mostOccurredBars = counts[12].map(parseFloat);
-		log('===================================================================================', '\n');
 		log(counts);
-		log(mostOccurredBars);
-		log('------------------------------------------------------------------------------------', '\n');
-		log(  getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)  );
-		log(  getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)  );
+		
+		var _mostOccurredBars = counts[12];
+		var _sharedRangeBars = getInRangeBars(highs, highs[_mostOccurredBars[0]].close).map(i => i.close)
+		log('===================================================================================', '\n');
+		log('most occurred bars:', _mostOccurredBars);
+		log('bars that share a range:', _sharedRangeBars);
+		
+		
 		window.highs = highs;
 		window.counts = counts;
 		window.mostOccurredBars = mostOccurredBars;
