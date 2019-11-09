@@ -76,10 +76,7 @@ const patterns = [
 			mostOccurredBars = counts[k].map(i => highs[i]);
 			mostOccurredBars.forEach((bar, i) => {
 				console.log( getInRangeBars(highs, bar.close).map(i=>i.close) ); // redundant data
-				getInRangeBars(highs, bar.close).forEach(i => {
-					const id = chart.createShape({time: i.time, price: i.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
-					shapes[0].push(id);
-				});
+				getInRangeBars(highs, bar.close).forEach( bar => shapes[0].push(createArrow(bar.time, bar.close+40)) );
 			});
 			uniqAvgs = mostOccurredBars.map(i => {
 				const prices = getInRangeBars(highs, i.close).map(i => i.close);
@@ -97,41 +94,68 @@ const patterns = [
 				}
 			}).filter((v,i,a) => a.indexOf(v) === i);
 			
-			uniqRanges.forEach(i => {
-				const id = chart.createShape({price: i}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
-				chart.getShapeById(id).setProperties({ text: 'max' });
-				shapes[0].push(id);
-			});
+			uniqRanges.forEach( price => shapes[0].push(createLine(price, 'max')) );
 		});
 		
-		/*
-		sum of all counts
-		Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)
-		bars with most occurrence
-		mostOccurredBars = counts[12].map(i => highs[i])
-		
-		sum of most occurred close prices
-		mostOccurredBars.map(bar => getInRangeBars(highs, bar.close).map(i => i.close).reduce((a,c)=>a+c))
-		sum of uniq most occurred close prices
-		mostOccurredBars.map(bar => getInRangeBars(highs, bar.close).map(i => i.close).reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
-		
-		bars that share the specified range
-		getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
-		getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)
-			.reduce((a,c)=>a+c)
-		*/
+/*
+sum of all counts
+Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)
+
+bars with most occurrence
+mostOccurredBars.map(i=>highs[i].close)
+mostOccurredBars = counts[12].map(i => highs[i])
+
+inRange bars of each bar
+
+t = mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i).map(i=>i.close))
+[1809, 1823, 1790, 1795, 1790, 1821, 1826, 1820, 1810, 1826, 1817, 1827, 1796]
+[2655, 2680, 2630, 2670, 2681, 2644, 2640, 2644, 2630, 2650, 2681, 2661, 2660]
+[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
+[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
+[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
+[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
+[819, 819, 815, 807, 808, 816, 805, 811, 805, 802, 808, 819, 812]
+[820, 819, 819, 815, 807, 808, 816, 805, 811, 805, 808, 819, 812]
+max = Math.max(...t[0]) // 1827
+min = Math.min(...t[0]) // 1790
+percDiff(min, max)      // 2.07
+
+Math.max(...i) - Math.min(...i)
+Math.abs()
+
+t.map(i=>Math.max(...i))
+[1827, 2681, 2670, 2670, 822, 822, 819, 820]
+
+t.map(i=>Math.min(...i))
+[1790, 2630, 2619, 2619, 807, 807, 802, 805]
+
+sum of most occurred close prices
+mostOccurredBars.map(i=>getInRangeBars(highs, highs[i].close).map(i => i.close).reduce((a,c)=>a+c))
+
+sum of uniq most occurred close prices
+mostOccurredBars.map(i=>getInRangeBars(highs, highs[i].close).map(i=>i.close).reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
+
+bars that share the specified range
+getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
+getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)
+	.reduce((a,c)=>a+c)
+*/
 		log(counts);
 		
-		var _mostOccurredBars = counts[12];
-		var _sharedRangeBars = getInRangeBars(highs, highs[_mostOccurredBars[0]].close).map(i => i.close)
+		mostOccurredBars = counts[12];
+		var sharedRangeBars = getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
 		log('===================================================================================', '\n');
-		log('most occurred bars:', _mostOccurredBars);
-		log('bars that share a range:', _sharedRangeBars);
+		log('most occurred bars - index:', mostOccurredBars);
+		log('most occurred bars - close:', mostOccurredBars.map(i=>highs[i].close) );
+		log('most occurred bars - bars:', mostOccurredBars.map(i=>highs[i]) );
+		// log('bars that share a range:', sharedRangeBars);
+		log('inRange bars of each bar:', mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i).map(i=>i.close)) );
 		
 		
 		window.highs = highs;
 		window.counts = counts;
 		window.mostOccurredBars = mostOccurredBars;
+		window.sharedRangeBars = sharedRangeBars;
 		window.uniqAvgs = uniqAvgs;
 		window.uniqRanges = uniqRanges;
 	},
@@ -250,6 +274,17 @@ function color(n) {
 function perc(n, per) {
 	return n + Math.floor((n/100) * per);
 }
+function percDiff(n1, n2) {
+	// percentage difference of n2 in relation to n1
+	const diff = n2 - n1;
+	const n = (diff / n1) * 100;
+	return parseFloat( n.toFixed(2) );
+}
+function whatPerc(y, n) {
+	// y is what percentage of n?
+	const num = (y / n) * 100;
+	return parseFloat( num.toFixed(2) );
+}
 function isInRange(n, min, max) {
 	return n >= min && n <= max;
 }
@@ -260,8 +295,19 @@ function getInRangeBars(bars, price, n=1) {
 }
 
 window.perc = perc;
+window.whatPerc = whatPerc;
+window.percDiff = percDiff;
 window.isInRange = isInRange;
 window.getInRangeBars = getInRangeBars;
 
+//shapes
+function createArrow(time, price) {
+	return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
+}
+function createLine(price, text) {
+	const id = chart.createShape({price}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
+	chart.getShapeById(id).setProperties({text});
+	return id;
+}
 
 export default { init }
