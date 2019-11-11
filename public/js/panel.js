@@ -97,67 +97,38 @@ const patterns = [
 			uniqRanges.forEach( price => shapes[0].push(createLine(price, 'max')) );
 		});
 		
-/*
-sum of all counts
-Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)
-
-bars with most occurrence
-mostOccurredBars.map(i=>highs[i].close)
-mostOccurredBars = counts[12].map(i => highs[i])
-
-inRange bars of each bar
-
-t = mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i).map(i=>i.close))
-[1809, 1823, 1790, 1795, 1790, 1821, 1826, 1820, 1810, 1826, 1817, 1827, 1796]
-[2655, 2680, 2630, 2670, 2681, 2644, 2640, 2644, 2630, 2650, 2681, 2661, 2660]
-[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
-[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
-[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
-[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
-[819, 819, 815, 807, 808, 816, 805, 811, 805, 802, 808, 819, 812]
-[820, 819, 819, 815, 807, 808, 816, 805, 811, 805, 808, 819, 812]
-max = Math.max(...t[0]) // 1827
-min = Math.min(...t[0]) // 1790
-percDiff(min, max)      // 2.07
-
-Math.max(...i) - Math.min(...i)
-Math.abs()
-
-t.map(i=>Math.max(...i))
-[1827, 2681, 2670, 2670, 822, 822, 819, 820]
-
-t.map(i=>Math.min(...i))
-[1790, 2630, 2619, 2619, 807, 807, 802, 805]
-
-sum of most occurred close prices
-mostOccurredBars.map(i=>getInRangeBars(highs, highs[i].close).map(i => i.close).reduce((a,c)=>a+c))
-
-sum of uniq most occurred close prices
-mostOccurredBars.map(i=>getInRangeBars(highs, highs[i].close).map(i=>i.close).reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
-
-bars that share the specified range
-getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
-getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)
-	.reduce((a,c)=>a+c)
-*/
 		log(counts);
 		
 		mostOccurredBars = counts[12];
-		var sharedRangeBars = getInRangeBars(highs, highs[mostOccurredBars[0]].close).map(i => i.close)
+		var t0 = mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i));
+		var t = t0.map(i =>i.map(j=>j.close));
+		var t1 = t.map(i=>Math.min(...i));
+		var t2 = t.map(i=>Math.max(...i));
+		var t3 = t.map(i=> percDiff(Math.min(...i), Math.max(...i)) );
+		var t4 = t.map(i=> Math.max(...i) - Math.min(...i));
+		var t5 = t.map(i=> i.reduce((a,c)=>a+c));
+		var t6 = t.map(i=> i.reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i);
+		
 		log('===================================================================================', '\n');
 		log('most occurred bars - index:', mostOccurredBars);
 		log('most occurred bars - close:', mostOccurredBars.map(i=>highs[i].close) );
 		log('most occurred bars - bars:', mostOccurredBars.map(i=>highs[i]) );
-		// log('bars that share a range:', sharedRangeBars);
-		log('inRange bars of each bar:', mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i).map(i=>i.close)) );
+		log('inRange bars of each bar - bar:', t0);
+		log('inRange bars of each bar - close:', t);
+		log('inRange bars of each bar - min:', t1);
+		log('inRange bars of each bar - max:', t2);
+		log('inRange bars of each bar - percDiff:', t3);
+		log('inRange bars of each bar - range:', t4);
+		log('inRange bars of each bar - sum:', t5);
+		log('inRange bars of each bar - uniq sum:', t6);
 		
 		
 		window.highs = highs;
 		window.counts = counts;
 		window.mostOccurredBars = mostOccurredBars;
-		window.sharedRangeBars = sharedRangeBars;
 		window.uniqAvgs = uniqAvgs;
 		window.uniqRanges = uniqRanges;
+		window.t = t;
 	},
 	function () { // highs & count of in-range occurrences
 		const _bars = bars.slice(start, end);
@@ -255,6 +226,50 @@ getInRangeBars(highs, highs[mostOccurredBars[1]].close).map(i => i.close)
 	}
 ];
 
+/*
+sum of all counts
+Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)
+
+bars with most occurrence
+mostOccurredBars.map(i=>highs[i].close)
+mostOccurredBars = counts[12].map(i => highs[i])
+
+inRange bars of each bar
+
+t = mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i).map(i=>i.close))
+[1809, 1823, 1790, 1795, 1790, 1821, 1826, 1820, 1810, 1826, 1817, 1827, 1796]
+[2655, 2680, 2630, 2670, 2681, 2644, 2640, 2644, 2630, 2650, 2681, 2661, 2660]
+[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
+[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
+[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
+[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
+[819, 819, 815, 807, 808, 816, 805, 811, 805, 802, 808, 819, 812]
+[820, 819, 819, 815, 807, 808, 816, 805, 811, 805, 808, 819, 812]
+max = Math.max(...t[0])
+min = Math.min(...t[0])
+percDiff(min, max)
+
+t.map(i=>Math.max(...i))
+[1827, 2681, 2670, 2670, 822, 822, 819, 820]
+
+t.map(i=>Math.min(...i))
+[1790, 2630, 2619, 2619, 807, 807, 802, 805]
+
+t.map(i=> percDiff(Math.min(...i), Math.max(...i)) )
+[2.07, 1.94, 1.95, 1.95, 1.86, 1.86, 2.12, 1.86]
+
+t.map(i=> ({
+	min: Math.min(...i),
+	max: Math.max(...i),
+	range:  Math.max(...i) - Math.min(...i)
+}))
+
+t.map(i=> i.reduce((a,c)=>a+c))
+[23550, 34526, 34355, 34355, 10597, 10597, 10546, 10564]
+
+t.map(i=> i.reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
+[23550, 34526, 34355, 10597, 10546, 10564]
+*/
 function draw() {
 	patterns[ $$.pattern.val() ]();
 }
@@ -271,14 +286,17 @@ function rand() {
 function color(n) {
 	return '#' + $('#colorpick'+n).spectrum('get').toHex();
 }
+
 function perc(n, per) {
 	return n + Math.floor((n/100) * per);
 }
-function percDiff(n1, n2) {
-	// percentage difference of n2 in relation to n1
-	const diff = n2 - n1;
-	const n = (diff / n1) * 100;
-	return parseFloat( n.toFixed(2) );
+function roundDown(n, d=0) {
+	return parseFloat( Big(n).round(d, 0).toString() );
+}
+function percDiff(from, to) {
+	const diff = to - from;
+	const res = (diff / from) * 100;
+	return roundDown(res, 2); // parseFloat( res.toFixed(2) );
 }
 function whatPerc(y, n) {
 	// y is what percentage of n?
@@ -299,6 +317,8 @@ window.whatPerc = whatPerc;
 window.percDiff = percDiff;
 window.isInRange = isInRange;
 window.getInRangeBars = getInRangeBars;
+
+
 
 //shapes
 function createArrow(time, price) {
