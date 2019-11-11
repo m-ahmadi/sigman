@@ -69,15 +69,24 @@ const patterns = [
 		}, {});
 		
 		let mostOccurredBars;
+		let allInRanges;
 		let uniqAvgs;
 		let uniqRanges;
 		
 		Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
 			mostOccurredBars = counts[k].map(i => highs[i]);
-			mostOccurredBars.forEach((bar, i) => {
-				console.log( getInRangeBars(highs, bar.close).map(i=>i.close) ); // redundant data
-				getInRangeBars(highs, bar.close).forEach( bar => shapes[0].push(createArrow(bar.time, bar.close+40)) );
+			const mostOccurred = counts[k].map(i => highs[i].close);
+			
+			allInRanges = mostOccurred
+				.map( close => getInRangeBars(highs, close) )                                // in range bars for each item
+				.map( inRanges => inRanges.map(i => highs.findIndex(j=>j.close===i.close)) ) // replace bar with index of highs array
+				.reduce((a,c) => a.concat(c), [])                                            // combine all items into one array
+				.filter((v,i,a) => a.indexOf(v) === i);                                      // deduplicate
+			
+			allInRanges.forEach(idx => {
+				shapes[0].push(createArrow(highs[idx].time, highs[idx].close+40));
 			});
+			
 			uniqAvgs = mostOccurredBars.map(i => {
 				const prices = getInRangeBars(highs, i.close).map(i => i.close);
 				return Math.floor( prices.reduce((a,c)=>a+c) / (prices.length -1) );
@@ -97,6 +106,7 @@ const patterns = [
 			uniqRanges.forEach( price => shapes[0].push(createLine(price, 'max')) );
 		});
 		
+		log(allInRanges);
 		log(counts);
 		
 		mostOccurredBars = counts[12];
@@ -126,8 +136,10 @@ const patterns = [
 		window.highs = highs;
 		window.counts = counts;
 		window.mostOccurredBars = mostOccurredBars;
+		window.allInRanges = allInRanges;
 		window.uniqAvgs = uniqAvgs;
 		window.uniqRanges = uniqRanges;
+		window.t0 = t0;
 		window.t = t;
 	},
 	function () { // highs & count of in-range occurrences
