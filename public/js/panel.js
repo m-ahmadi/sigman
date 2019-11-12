@@ -68,86 +68,27 @@ const patterns = [
 			return acc;
 		}, {});
 		
-		let mostOccurredBars;
-		let allInRanges;
-		let uniqAvgs;
-		let uniqRanges;
-		
 		Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
-			mostOccurredBars = counts[k].map(i => highs[i]);
 			const mostOccurred = counts[k].map(i => highs[i].close);
 			
-			allInRanges = mostOccurred
+			const allInRanges = mostOccurred
 				.map( close => getInRangeBars(highs, close) )                                // in range bars for each item
 				.map( inRanges => inRanges.map(i => highs.findIndex(j=>j.close===i.close)) ) // replace bar with index of highs array
 				.reduce((a,c) => a.concat(c), [])                                            // combine all items into one array
 				.filter((v,i,a) => a.indexOf(v) === i);                                      // deduplicate
 			
-			allInRanges.forEach(idx => {
+			const allInRanges.forEach(idx => {
 				shapes[0].push(createArrow(highs[idx].time, highs[idx].close+40));
 			});
 			
-			uniqAvgs = mostOccurredBars.map(i => {
-				const prices = getInRangeBars(highs, i.close).map(i => i.close);
-				return Math.floor( prices.reduce((a,c)=>a+c) / (prices.length -1) );
-			}).filter((v,i,a) => a.indexOf(v) === i);
+			const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
+			const ranges = getRanges(nums, 1);
+			const rangeAvgs = ranges
+				.map( i => [i.reduce((a,c)=>a+c), i.length-1] ) // [sum, count]
+				.map( i => Math.floor(i[0] / i[1]) );
 			
-			uniqRanges = uniqAvgs.map(i => {
-				const rest = uniqAvgs.filter(j => j !== i);
-				const inRangeEls =  rest.filter( j => isInRange(j, perc(i,-1), perc(i,1)) ); // get those that are in this element's range
-				if (inRangeEls.length === 0) {
-					return i;
-				} else {
-					inRangeEls.push(i);
-					return Math.floor( (Math.min(...inRangeEls) + Math.max(...inRangeEls)) / 2 );
-				}
-			}).filter((v,i,a) => a.indexOf(v) === i);
-			
-			uniqRanges.forEach( price => shapes[0].push(createLine(price, 'max')) );
+			rangeAvgs.forEach( price => shapes[0].push(createLine(price, 'max')) );
 		});
-		
-		log(counts);
-		
-		mostOccurredBars = counts[12];
-		var t0 = mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i));
-		var t = t0.map(i =>i.map(j=>j.close));
-		var t1 = t.map(i=>Math.min(...i));
-		var t2 = t.map(i=>Math.max(...i));
-		var t3 = t.map(i=> percDiff(Math.min(...i), Math.max(...i)) );
-		var t4 = t.map(i=> Math.max(...i) - Math.min(...i));
-		var t5 = t.map(i=> i.reduce((a,c)=>a+c));
-		var t6 = t.map(i=> i.reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i);
-		var tx = t.map(i=> ({
-			min: Math.min(...i),
-			max: Math.max(...i),
-			range: Math.max(...i) - Math.min(...i),
-			percDiff: percDiff(Math.min(...i), Math.max(...i))
-		}));
-		
-		log('===================================================================================', '\n');
-		log('most occurred bars - index:', mostOccurredBars);
-		log('most occurred bars - close:', mostOccurredBars.map(i=>highs[i].close) );
-		log('most occurred bars - bars:', mostOccurredBars.map(i=>highs[i]) );
-		log('inRange bars of each bar - bar:', t0);
-		log('inRange bars of each bar - close:', t);
-		log('inRange bars of each bar - min:', t1);
-		log('inRange bars of each bar - max:', t2);
-		log('inRange bars of each bar - percDiff:', t3);
-		log('inRange bars of each bar - range:', t4);
-		log('inRange bars of each bar - sum:', t5);
-		log('inRange bars of each bar - uniq sum:', t6);
-		log(allInRanges);
-		
-		
-		window.highs = highs;
-		window.counts = counts;
-		window.mostOccurredBars = mostOccurredBars;
-		window.allInRanges = allInRanges;
-		window.uniqAvgs = uniqAvgs;
-		window.uniqRanges = uniqRanges;
-		window.t0 = t0;
-		window.t = t;
-		window.tx = tx;
 	},
 	function () { // highs & count of in-range occurrences
 		const _bars = bars.slice(start, end);
@@ -245,95 +186,7 @@ const patterns = [
 	}
 ];
 
-/*
-sum of all counts
-Object.keys(counts).map(i => counts[i].length).reduce((a,c)=>a+c)
 
-bars with most occurrence
-mostOccurredBars.map(i=>highs[i].close)
-mostOccurredBars = counts[12].map(i => highs[i])
-
-inRange bars of each bar
-
-t = mostOccurredBars.map(i=>highs[i].close).map(i=>getInRangeBars(highs, i).map(i=>i.close))
-[1809, 1823, 1790, 1795, 1790, 1821, 1826, 1820, 1810, 1826, 1817, 1827, 1796]
-[2655, 2680, 2630, 2670, 2681, 2644, 2640, 2644, 2630, 2650, 2681, 2661, 2660]
-[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
-[2655, 2626, 2630, 2670, 2619, 2644, 2640, 2644, 2626, 2630, 2650, 2661, 2660]
-[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
-[820, 819, 819, 815, 807, 808, 816, 821, 811, 808, 819, 822, 812]
-[819, 819, 815, 807, 808, 816, 805, 811, 805, 802, 808, 819, 812]
-[820, 819, 819, 815, 807, 808, 816, 805, 811, 805, 808, 819, 812]
-max = Math.max(...t[0])
-min = Math.min(...t[0])
-percDiff(min, max)
-
-t.map(i=>Math.max(...i))
-[1827, 2681, 2670, 2670, 822, 822, 819, 820]
-
-t.map(i=>Math.min(...i))
-[1790, 2630, 2619, 2619, 807, 807, 802, 805]
-
-t.map(i=> percDiff(Math.min(...i), Math.max(...i)) )
-[2.07, 1.94, 1.95, 1.95, 1.86, 1.86, 2.12, 1.86]
-
-t.map(i=> ({
-	min: Math.min(...i),
-	max: Math.max(...i),
-	range:  Math.max(...i) - Math.min(...i)
-}))
-
-t.map(i=> i.reduce((a,c)=>a+c))
-[23550, 34526, 34355, 34355, 10597, 10597, 10546, 10564]
-
-t.map(i=> i.reduce((a,c)=>a+c)).filter((v,i,a)=>a.indexOf(v)===i)
-[23550, 34526, 34355, 10597, 10546, 10564]
-
-allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b)
-[802, 805, 807, 808, 811, 812, 815, 816, 819, 820, 821, 822, 1790, 1795, 1796, 1809, 1810, 1817, 1820, 1821, 1823, 1826, 1827, 2619, 2626, 2630, 2640, 2644, 2650, 2655, 2660, 2661, 2670, 2680, 2681]
-
-
-allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b).map((v,i,a) => {
-	const rest = a.filter(j=>j!==v);
-	return rest.filter(j=> isInRange(j, perc(v, -1), perc(v, 1)) );
-})
-
-0:  [805, 807, 808]
-1:  [802, 807, 808, 811, 812]
-2:  [802, 805, 808, 811, 812, 815]
-3:  [802, 805, 807, 811, 812, 815, 816]
-4:  [802, 805, 807, 808, 812, 815, 816, 819]
-5:  [805, 807, 808, 811, 815, 816, 819, 820]
-6:  [807, 808, 811, 812, 816, 819, 820, 821, 822]
-7:  [807, 808, 811, 812, 815, 819, 820, 821, 822]
-8:  [811, 812, 815, 816, 820, 821, 822]
-9:  [811, 812, 815, 816, 819, 821, 822]
-10: [812, 815, 816, 819, 820, 822]
-11: [815, 816, 819, 820, 821]
-12: [1795, 1796]
-13: [1790, 1796, 1809, 1810]
-14: [1790, 1795, 1809, 1810]
-15: (10) [1790, 1795, 1796, 1810, 1817, 1820, 1821, 1823, 1826, 1827]
-16: [1795, 1796, 1809, 1817, 1820, 1821, 1823, 1826, 1827]
-17: [1809, 1810, 1820, 1821, 1823, 1826, 1827]
-18: [1809, 1810, 1817, 1821, 1823, 1826, 1827]
-19: [1809, 1810, 1817, 1820, 1823, 1826, 1827]
-20: [1809, 1810, 1817, 1820, 1821, 1826, 1827]
-21: [1809, 1810, 1817, 1820, 1821, 1823, 1827]
-22: [1809, 1810, 1817, 1820, 1821, 1823, 1826]
-23: [2626, 2630, 2640, 2644]
-24: [2619, 2630, 2640, 2644, 2650]
-25: [2619, 2626, 2640, 2644, 2650, 2655]
-26: [2619, 2626, 2630, 2644, 2650, 2655, 2660, 2661]
-27: [2619, 2626, 2630, 2640, 2650, 2655, 2660, 2661, 2670]
-28: [2626, 2630, 2640, 2644, 2655, 2660, 2661, 2670]
-29: [2630, 2640, 2644, 2650, 2660, 2661, 2670, 2680, 2681]
-30: [2640, 2644, 2650, 2655, 2661, 2670, 2680, 2681]
-31: [2640, 2644, 2650, 2655, 2660, 2670, 2680, 2681]
-32: [2644, 2650, 2655, 2660, 2661, 2680, 2681]
-33: [2655, 2660, 2661, 2670, 2681]
-34: [2655, 2660, 2661, 2670, 2680]
-*/
 function draw() {
 	patterns[ $$.pattern.val() ]();
 }
@@ -351,8 +204,8 @@ function color(n) {
 	return '#' + $('#colorpick'+n).spectrum('get').toHex();
 }
 
-function perc(n, per) {
-	return n + Math.floor((n/100) * per);
+function perc(n, percent) {
+	return n + Math.floor((n/100) * percent);
 }
 function roundDown(n, d=0) {
 	return parseFloat( Big(n).round(d, 0).toString() );
@@ -375,12 +228,28 @@ function getInRangeBars(bars, price, n=1) {
 	const max = perc(price, n);
 	return bars.filter( j => isInRange(j.close, min, max) );
 }
+function getRanges(nums, range=1, percent=true) {
+	const ranges = [];
+	const len = nums.length;
+	for (let i=0; i<len; i+=1) {
+		const v = nums[i];
+		const min = percent ? perc(v, -range) : v - range;
+		const max = percent ? perc(v, +range) : v + range;
+		const inRanges = nums.slice(i).filter( j => isInRange(j, min, max) );
+		if (inRanges.length) {
+			ranges.push(inRanges);
+			i = nums.findIndex(j => j === inRanges[inRanges.length-1]);
+		}
+	}
+	return ranges;
+}
 
 window.perc = perc;
 window.whatPerc = whatPerc;
 window.percDiff = percDiff;
 window.isInRange = isInRange;
 window.getInRangeBars = getInRangeBars;
+window.getRanges = getRanges;
 
 
 
