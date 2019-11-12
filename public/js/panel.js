@@ -150,7 +150,7 @@ const patterns = [
 		// chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
 		const chunks = splitArr(bars, 100);
 		const res = [];
-		if ( !Array.isArray(shapes[3]) ) shapes[3] = [];
+		if ( !Array.isArray(shapes[4]) ) shapes[4] = [];
 		for (let i=0; i<chunks.length; i++) {
 			const chunk = chunks[i];
 			const closePrices = chunk.map(i => i.close);
