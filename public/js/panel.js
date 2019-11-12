@@ -77,7 +77,7 @@ const patterns = [
 				.reduce((a,c) => a.concat(c), [])                                            // combine all items into one array
 				.filter((v,i,a) => a.indexOf(v) === i);                                      // deduplicate
 			
-			const allInRanges.forEach(idx => {
+			allInRanges.forEach(idx => {
 				shapes[0].push(createArrow(highs[idx].time, highs[idx].close+40));
 			});
 			
