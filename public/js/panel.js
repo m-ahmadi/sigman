@@ -90,7 +90,15 @@ const patterns = [
 				.map( i => Math.floor(i[0] / i[1]) );
 			
 			rangeAvgs.forEach( price => shapes[0].push(createLine(price)) );
+			
+			window.ranges = ranges;
+			window.rangeAvgs = rangeAvgs;
 		});
+		
+		log(ranges);
+		log(rangeAvgs);
+		window.highs = highs;
+		window.counts = counts;
 	},
 	function () { // highs & count of in-range occurrences
 		const _bars = bars.slice(start, end);
