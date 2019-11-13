@@ -84,10 +84,10 @@ const patterns = [
 			const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
 			const ranges = getRanges(nums, 1);
 			const rangeAvgs = ranges
-				.map( i => [i.reduce((a,c)=>a+c), i.length-1] ) // [sum, count]
+				.map( i => [i.reduce((a,c)=>a+c), i.length] ) // [sum, count]
 				.map( i => Math.floor(i[0] / i[1]) );
 			
-			rangeAvgs.forEach( price => shapes[0].push(createLine(price, 'max')) );
+			rangeAvgs.forEach( price => shapes[0].push(createLine(price)) );
 		});
 	},
 	function () { // highs & count of in-range occurrences
