@@ -78,7 +78,9 @@ const patterns = [
 				.filter((v,i,a) => a.indexOf(v) === i);                                      // deduplicate
 			
 			allInRanges.forEach(idx => {
-				shapes[0].push(createArrow(highs[idx].time, highs[idx].close+40));
+				const { time, close } = highs[idx];
+				shapes[0].push(createArrow(time, close+40));
+				// shapes[0].push(createText(time, close+150, ''+close));
 			});
 			
 			const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
@@ -259,7 +261,12 @@ function createArrow(time, price) {
 }
 function createLine(price, text) {
 	const id = chart.createShape({price}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
-	chart.getShapeById(id).setProperties({text});
+	if (text) chart.getShapeById(id).setProperties({text});
+	return id;
+}
+function createText(time, price, text) {
+	const id = chart.createShape({time, price}, { shape: 'text', overrides: {color: 'black', bold: false, fontsize: 12} });
+	chart.getShapeById(id).setProperties({ text: text });
 	return id;
 }
 
