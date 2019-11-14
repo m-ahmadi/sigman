@@ -133,10 +133,23 @@ function init() {
     enabled_features: [
       'move_logo_to_main_pane'
     ]
+    /* overrides: {
+      'mainSeriesProperties.style': 3,
+      'mainSeriesProperties.showPriceLine': false,
+      'mainSeriesProperties.areaStyle.color1': 'rgba(60,60,90,0.5)',
+      'mainSeriesProperties.areaStyle.color2': 'rgba(1,246,245,0.5)',
+      'mainSeriesProperties.areaStyle.linecolor': 'black',
+      'mainSeriesProperties.areaStyle.linestyle': 0,
+      'mainSeriesProperties.areaStyle.linewidth': 2,
+      'mainSeriesProperties.areaStyle.priceSource': 'close'
+    } */
   });
 
   widget.onChartReady(function () {
     chart = widget.chart();
+    
+    window.widget = widget;
+    window.chart = chart;
   });
 }
 
