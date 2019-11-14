@@ -1,66 +1,26 @@
 <!DOCTYPE html>
 <html lang="en"> <!-- en en-US -->
 <head>
-	{{{ link-modulepreload }}}
-	<title>Stosis</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0" />
-	<link rel="icon" type="image/x-icon" href="favicon.ico" />
-	{{{ link-stylesheet }}}
+  {{{ link-modulepreload }}}
+  <title>Stosis</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  {{{ link-stylesheet }}}
 </head>
 <body>
-	<button class="uk-button" data-el="draw">Draw</button>
-	<button class="uk-button" data-el="clear">Clear</button>
-	<select class="uk-select uk-width-1-6" name="pattern" data-el="pattern">
-		<option value="0">most in-range occurrences</option>
-		<option value="1">highs & count of in-range occurrences</option>
-		<option value="2">highs</option>
-		<option value="3">lows</option>
-		<option value="4">local maxima</option>
-		<option value="5">dummy</option>
-	</select>
-	<input type='text' id="colorpick1" />
-	<input type='text' id="colorpick2" />
-	<button id="clear-all-btn" class="uk-button" data-el="clearAll">Clear All</button>
-	<button id="zoomout-btn" class="uk-button" data-el="zoomOut">Zoom out</button>
-	<input type="text" class="uk-input uk-form-small	" style="width:70px" value="0" data-el="start" />
-	<input type="text" class="uk-input uk-form-small	" style="width:70px" value="0" data-el="end" />
-	<!-- <ul class="uk-tab-right" uk-tab="connect: #component-tab-right; animation: uk-animation-fade">
-		<li><a href="#">Active</a></li>
-		<li><a href="#">Item</a></li>
-		<li><a href="#">Item</a></li>
-	</ul>
-	<ul id="component-tab-right" class="uk-switcher">
-		<li>
-			<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
-				<h3 class="uk-card-title">Default</h3>
-				<p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			</div>
-		</li>
-		<li>
-			<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
-				<h3 class="uk-card-title">Default</h3>
-				<p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			</div>
-		</li>
-		<li>
-			<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
-				<h3 class="uk-card-title">Default</h3>
-				<p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			</div>
-		</li>
-	</ul> -->
-	
-	<div id="tv_chart_container"></div>
-	
-	<select id="select" name="cars" multiple="multiple"></select>
-	
-	<input id="aweso" />
-	
-	<div id="tree-container"></div>
+  {{{ panel }}}
+  
+  <div id="tv_chart_container"></div>
+  
+  <select id="select" name="cars" multiple="multiple"></select>
+  
+  <input id="aweso" />
+  
+  <div id="tree-container"></div>
 
-	{{{ script-lib }}}
+  {{{ script-lib }}}
 
-	{{{ script-app }}}
+  {{{ script-app }}}
 </body>
-</html>
+</html
