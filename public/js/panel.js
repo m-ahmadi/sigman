@@ -12,7 +12,7 @@ const log = console.log;
 function init(e) {
   chart = e.chart;
   bars = e.bars;
-  $$ = __els('body');
+  $$ = __els('[data-root="panel"]');
   $$.start.val(start);
   $$.end.val(end);
   
