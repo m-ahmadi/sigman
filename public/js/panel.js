@@ -25,6 +25,15 @@ function init(e) {
     // patterns[1]('orange');
     patterns[0]();
   }, 1500);
+  
+  noUiSlider.create($$.slider[0], {
+    start: [20, 80],
+    connect: true,
+    range: {
+      min: 0,
+      max: 100
+    }
+  });
 }
 
 /* const chunks = splitArr(_bars, 3);
