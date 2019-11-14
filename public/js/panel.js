@@ -72,10 +72,10 @@ const patterns = [
 			const mostOccurred = counts[k].map(i => highs[i].close);
 			
 			const allInRanges = mostOccurred
-				.map( close => getInRangeBars(highs, close) )                                // in range bars for each item
-				.map( inRanges => inRanges.map(i => highs.findIndex(j=>j.close===i.close)) ) // replace bar with index of highs array
-				.reduce((a,c) => a.concat(c), [])                                            // combine all items into one array
-				.filter((v,i,a) => a.indexOf(v) === i);                                      // deduplicate
+				.map( close => getInRangeBars(highs, close) )                        // in range bars for each item
+				.map( bars => bars.map(i => highs.findIndex(j=>j.close===i.close)) ) // replace bar with index of highs array
+				.reduce((a,c) => a.concat(c), [])                                    // combine all items into one array
+				.filter((v,i,a) => a.indexOf(v) === i);                              // deduplicate
 			
 			allInRanges.forEach(idx => {
 				const { time, close } = highs[idx];
