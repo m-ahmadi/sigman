@@ -19,7 +19,8 @@ function init(e) {
   $$.draw.on('click', draw);
   $$.clear.on('click', clear);
   $$.clearAll.on( 'click', () => chart.removeAllShapes() );
-  $$.zoomOut.on('click', zoomout);
+  $$.zoomOut.on('click', zoomOut);
+  $$.zoomIn.on('click', zoomIn);
   setTimeout(() => {
     // patterns[1]('orange');
     patterns[0]();
@@ -122,7 +123,7 @@ const patterns = [
     window.counts = counts;
   },
   function () { // highs & count of in-range occurrences
-    const _bars = bars.slice(start, end);
+    const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     let res = [];
     for (let i=0; i<_bars.length; i++) {
@@ -225,8 +226,11 @@ function clear() {
   const arr = shapes[ $$.pattern.val() ];
   if (arr) arr.forEach( i => chart.removeEntity(i) );
 }
-function zoomout() {
+function zoomOut() {
   chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
+}
+function zoomIn() {
+  chart.setVisibleRange({ from: bars[$$.start.val()].time, to: bars[$$.end.val()].time });
 }
 function rand() {
   return '#' + Math.random().toString(16).substr(-6);
@@ -256,7 +260,7 @@ function isInRange(n, min, max) {
 }
 function getInRangeBars(bars, price, n=1) {
   const min = perc(price, -n);
-  const max = perc(price, n);
+  const max = perc(price, +n);
   return bars.filter( j => isInRange(j.close, min, max) );
 }
 function getRanges(nums, range=1, percent=true) {
