@@ -1,4 +1,4 @@
-<div class="uk-width-1-1" data-root="panel">
+<div class="uk-width-1-1 uk-height-small uk-card uk-card-body uk-padding-small white" data-root="panel">
   <button class="uk-button" data-el="draw">Draw</button>
   <button class="uk-button" data-el="clear">Clear</button>
   <select class="uk-select uk-width-1-6" name="pattern" data-el="pattern">
@@ -9,37 +9,37 @@
     <option value="4">local maxima</option>
     <option value="5">dummy</option>
   </select>
-  <input type='text' id="colorpick1" />
-  <input type='text' id="colorpick2" />
+  <input type='text' data-el="colorpick1" />
+  <input type='text' data-el="colorpick2" />
   <button id="clear-all-btn" class="uk-button" data-el="clearAll">Clear All</button>
   <button id="zoomout-btn" class="uk-button" data-el="zoomOut">Zoom out</button>
   <input type="text" class="uk-input uk-form-small	" style="width:70px" value="0" data-el="start" />
   <input type="text" class="uk-input uk-form-small	" style="width:70px" value="0" data-el="end" />
   
-  <div data-el="slider"></div>
+  <div class="uk-width-1-3" data-el="slider"></div>
 </div>
 
-<!-- <ul class="uk-tab-right" uk-tab="connect: #component-tab-right; animation: uk-animation-fade">
+<!-- <ul uk-tab>
   <li><a href="#">Active</a></li>
   <li><a href="#">Item</a></li>
   <li><a href="#">Item</a></li>
 </ul>
-<ul id="component-tab-right" class="uk-switcher">
+<ul class="uk-switcher">
   <li>
-    <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
+    <div class="uk-card uk-card-default uk-card-body">
       <h3 class="uk-card-title">Default</h3>
       <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
   </li>
   <li>
-    <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
-      <h3 class="uk-card-title">Default</h3>
+    <div class="uk-card uk-card-default uk-card-body">
+      <h3 class="uk-card-title">Default2</h3>
       <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
   </li>
   <li>
-    <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
-      <h3 class="uk-card-title">Default</h3>
+    <div class="uk-card uk-card-default uk-card-body">
+      <h3 class="uk-card-title">Default33</h3>
       <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
   </li>

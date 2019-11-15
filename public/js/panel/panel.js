@@ -1,11 +1,10 @@
-import { randColor, splitArr } from './gen/util.js';
+import { randColor, splitArr } from '../gen/util.js';
+import initColorpick from './initColorpick.js';
 
 let $$;
 let chart;
 let bars;
 
-const start = 0; // 170 174
-const end = 1620; // 300 247
 const shapes = {};
 const log = console.log;
 
@@ -13,8 +12,8 @@ function init(e) {
   chart = e.chart;
   bars = e.bars;
   $$ = __els('[data-root="panel"]');
-  $$.start.val(start);
-  $$.end.val(end);
+  $$.start.val(0);
+  $$.end.val(bars.length);
   
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
@@ -26,15 +25,24 @@ function init(e) {
     patterns[0]();
   }, 1500);
   
+  initColorpick($$.colorpick1, 'red');
+  initColorpick($$.colorpick2, 'blue');
+  /* const formatter = {
+    from: value => value,
+    to: value => Math.floor( parseFloat(value) )
+  };
   noUiSlider.create($$.slider[0], {
-    start: [20, 80],
+    start: [0, bars.length],
     connect: true,
+    tooltips: [formatter, formatter],
     range: {
       min: 0,
-      max: 100
-    }
-  });
+      max: bars.length
+    },
+    format: formatter
+  }); */
 }
+
 
 /* const chunks = splitArr(_bars, 3);
  for (let i=0; i<chunks.length; i++) {
@@ -224,7 +232,7 @@ function rand() {
   return '#' + Math.random().toString(16).substr(-6);
 }
 function color(n) {
-  return '#' + $('#colorpick'+n).spectrum('get').toHex();
+  return '#' + $$['colorpick'+n].spectrum('get').toHex();
 }
 
 function perc(n, percent) {
