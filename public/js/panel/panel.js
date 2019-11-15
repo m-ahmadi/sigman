@@ -150,7 +150,7 @@ const patterns = [
     });
   },
   function (_color) { // highs
-    const _bars = bars.slice(start, end);
+    const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const res = [];
     for (let i=0; i<_bars.length; i++) {
@@ -164,7 +164,7 @@ const patterns = [
     shapes[2] = res.map( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: _color || color(1)} }) ); // 0xf175
   },
   function () { // lows
-    const _bars = bars.slice(start, end);
+    const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const res = [];
     for (let i=0; i<_bars.length; i++) {
