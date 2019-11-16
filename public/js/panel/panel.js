@@ -1,4 +1,4 @@
-import { randColor, splitArr } from '../gen/util.js';
+import { randColor, splitArr, isOdd } from '../gen/util.js';
 import initColorpick from './initColorpick.js';
 
 let $$;
@@ -42,6 +42,16 @@ function init(e) {
     },
     format: formatter
   }); */
+  $$.period.on('input blur change', function (e) {
+    const el = $(this);
+    const v = +el.val();
+    const n =
+      v < 3       ? 3   :
+      v > 999     ? 999 :
+      v % 2 === 0 ? v-1 :
+      0;
+    if (n) el.val(n);
+  });
   window.$$ = $$;
 }
 
@@ -57,23 +67,22 @@ function init(e) {
     res.push( chunk.find(i => i.close === middle) );
   }
 } */
+// const type = parseInt( $$.type.filter(':checked').val() );
 
 const patterns = [
   function () { // most in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
-    const period = parseInt( $$.period.val() );
-    // const type = parseInt( $$.type.filter(':checked').val() );
+    const period = Math.floor(+$$.period.val() / 2);
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = [];
-    for (let i=0; i<_bars.length; i+=1) {
+    for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
-      const next = _bars[i+period];
       const prev = _bars[i-period];
+      const next = _bars[i+period];
       if (next && prev && curr.close > prev.close && curr.close > next.close) {
         highs.push( Object.assign({}, curr) );
       }
     }
-    
     shapes[0] = [];
     const counts = highs.map((bar, i) => {
       const { close } = bar;
@@ -156,9 +165,9 @@ const patterns = [
   function (_color) { // highs
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
-    const period = parseInt( $$.period.val() );
+    const period = Math.floor(+$$.period.val() / 2);
     const res = [];
-    for (let i=0; i<_bars.length; i+=1) {
+    for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
@@ -171,11 +180,12 @@ const patterns = [
   function () { // lows
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
+    const period = Math.floor(+$$.period.val() / 2);
     const res = [];
-    for (let i=0; i<_bars.length; i++) {
+    for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
-      const next = _bars[i+1];
-      const prev = _bars[i-1];
+      const next = _bars[i+period];
+      const prev = _bars[i-period];
       if (next && prev && curr.close < prev.close && curr.close < next.close) {
         res.push(curr);
       }

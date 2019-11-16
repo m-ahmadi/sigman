@@ -23,9 +23,10 @@
   
   <div class="uk-margin-small">
     <label class="uk-form-label" for="period-input">Period:</label>
-    <input id="period-input" type="text" class="uk-input uk-form-small uk-form-width-xsmall" value="1" data-el="period" />
+    <input id="period-input" type="number" class="uk-input uk-form-small" style="width:60px" min="3" max="999" value="3" step="2" data-el="period" />
+    <label class="uk-form-label" for="period-input">days.</label>
     
-    <label class="uk-form-label" for="high-input">High</label>
+    <label class="uk-form-label uk-margin-large-left" for="high-input">High</label>
     <input id="high-input" type="radio" class="uk-radio" name="type" value="0" data-els="type" checked />
     <label class="uk-form-label" for="low-input">Low</label>
     <input id="low-input" type="radio" class="uk-radio" name="type" value="1" data-els="type" />

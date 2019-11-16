@@ -12,4 +12,8 @@ export function splitArr(arr, size){
   return arr
     .map( (v, i) => i % size === 0 ? arr.slice(i, i+size) : undefined )
     .filter(i => i);
+}
+
+export function isOdd(n) {
+  return n % 2 !== 0;
 
