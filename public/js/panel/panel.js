@@ -20,7 +20,7 @@ function init(e) {
   $$.clear.on('click', clear);
   $$.clearAll.on( 'click', () => chart.removeAllShapes() );
   $$.zoomOut.on('click', zoomOut);
-  $$.zoomIn.on('click', zoomIn);
+  $$.zoomTo.on('click', zoomTo);
   setTimeout(() => {
     // patterns[1]('orange');
     patterns[0]();
@@ -42,6 +42,7 @@ function init(e) {
     },
     format: formatter
   }); */
+  window.$$ = $$;
 }
 
 
@@ -60,12 +61,14 @@ function init(e) {
 const patterns = [
   function () { // most in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
+    const period = parseInt( $$.period.val() );
+    // const type = parseInt( $$.type.filter(':checked').val() );
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = [];
-    for (let i=0; i<_bars.length; i++) {
+    for (let i=0; i<_bars.length; i+=1) {
       const curr = _bars[i];
-      const next = _bars[i+1];
-      const prev = _bars[i-1];
+      const next = _bars[i+period];
+      const prev = _bars[i-period];
       if (next && prev && curr.close > prev.close && curr.close > next.close) {
         highs.push( Object.assign({}, curr) );
       }
@@ -153,11 +156,12 @@ const patterns = [
   function (_color) { // highs
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
+    const period = parseInt( $$.period.val() );
     const res = [];
-    for (let i=0; i<_bars.length; i++) {
+    for (let i=0; i<_bars.length; i+=1) {
       const curr = _bars[i];
-      const next = _bars[i+1];
-      const prev = _bars[i-1];
+      const next = _bars[i+period];
+      const prev = _bars[i-period];
       if (next && prev && curr.close > prev.close && curr.close > next.close) {
         res.push(curr);
       }
@@ -229,7 +233,7 @@ function clear() {
 function zoomOut() {
   chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
 }
-function zoomIn() {
+function zoomTo() {
   chart.setVisibleRange({ from: bars[$$.start.val()].time, to: bars[$$.end.val()].time });
 }
 function rand() {
