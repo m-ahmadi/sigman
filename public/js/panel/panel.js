@@ -52,6 +52,15 @@ function init(e) {
       0;
     if (n) el.val(n);
   });
+  $$.distance.on('input blur change', function (e) {
+    const el = $(this);
+    const v = +el.val();
+    const n =
+      v < 0   ? 0   :
+      v > 100 ? 100 :
+      0;
+    if (n) el.val(n);
+  });
   window.$$ = $$;
 }
 
@@ -73,16 +82,21 @@ const patterns = [
   function () { // most in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
     const period = Math.floor(+$$.period.val() / 2);
+    const distance = +$$.distance.val();
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const prev = _bars[i-period];
       const next = _bars[i+period];
-      if (next && prev && curr.close > prev.close && curr.close > next.close) {
+      /* if (next && prev && curr.close > prev.close && curr.close > next.close) {
+        highs.push( Object.assign({}, curr) );
+      } */
+      if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         highs.push( Object.assign({}, curr) );
       }
     }
+    log(highs);
     shapes[0] = [];
     const counts = highs.map((bar, i) => {
       const { close } = bar;
