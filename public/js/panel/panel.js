@@ -137,11 +137,12 @@ const patterns = [
   function () { // highs & count of in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
-    let res = [];
-    for (let i=0; i<_bars.length; i++) {
+    const period = Math.floor(+$$.period.val() / 2);
+    const res = [];
+    for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
-      const next = _bars[i+1];
-      const prev = _bars[i-1];
+      const next = _bars[i+period];
+      const prev = _bars[i-period];
       if (next && prev && curr.close > prev.close && curr.close > next.close) {
         res.push( Object.assign({}, curr) );
       }
