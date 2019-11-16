@@ -92,7 +92,7 @@ const patterns = [
       /* if (next && prev && curr.close > prev.close && curr.close > next.close) {
         highs.push( Object.assign({}, curr) );
       } */
-      if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
+      if (next && prev && curr.close > perc(prev.close, -distance) && curr.close > perc(next.close, distance)) {
         highs.push( Object.assign({}, curr) );
       }
     }
@@ -177,20 +177,21 @@ const patterns = [
       chart.getShapeById(id).setProperties({ text: count });
     });
   },
-  function (_color) { // highs
+  function () { // highs
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
+    const distance = +$$.distance.val();
     const res = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
-      if (next && prev && curr.close > prev.close && curr.close > next.close) {
+      if (next && prev && curr.close > perc(prev.close, -distance) && curr.close > perc(next.close, distance)) {
         res.push(curr);
       }
     }
-    shapes[2] = res.map( i => chart.createShape({ time: i.time, price: i.close+40 }, { shape: 'icon', overrides: {icon: 0xf063, color: _color || color(1)} }) ); // 0xf175
+    shapes[2] = res.map( i => createArrow(i.time, i.close+40) );
   },
   function () { // lows
     const _bars = bars.slice($$.start.val(), $$.end.val());
