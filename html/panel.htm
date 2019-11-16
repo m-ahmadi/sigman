@@ -8,7 +8,7 @@
       <option value="4">local maxima</option>
       <option value="5">dummy</option>
     </select>
-
+    
     <button class="uk-button uk-text-capitalize light-green lighten-4" data-el="draw">Draw</button>
     <button class="uk-button uk-text-capitalize red lighten-5" data-el="clear">Clear</button>
 
@@ -17,16 +17,24 @@
 
     <div class="uk-width-1-6" data-el="slider"></div>
 
-    <div class="uk-margin-small">
-      <label class="uk-form-label" for="period-input">Period:</label>
-      <input id="period-input" type="number" class="uk-input uk-form-small" style="width:60px" min="3" max="999"
-        value="3" step="2" data-el="period" />
-      <label class="uk-form-label" for="period-input">days.</label>
-
-      <label class="uk-form-label uk-margin-large-left" for="high-input">High</label>
-      <input id="high-input" type="radio" class="uk-radio" name="type" value="0" data-els="type" checked />
-      <label class="uk-form-label" for="low-input">Low</label>
-      <input id="low-input" type="radio" class="uk-radio" name="type" value="1" data-els="type" />
+    <div class="uk-grid-collapse uk-child-width-1-2 uk-margin-small uk-width-1-4" uk-grid>
+      <div>
+        <label class="uk-form-label" for="period-input">Period:</label>
+      </div>
+      
+      <div>
+        <input id="period-input" type="number" class="uk-input uk-form-small" style="width:60px" min="3" max="999" value="3" step="2" data-el="period" />
+        <label class="uk-form-label" for="period-input">days.</label>
+      </div>
+      
+      <div>
+        <label class="uk-form-label" for="distance-input">Distance:</label>
+      </div>
+      
+      <div>
+        <input id="distance-input" type="number" class="uk-input uk-form-small" style="width:60px" min="0" max="100" value="0" data-el="distance" />
+        <label class="uk-form-label" for="distance-input">%</label>
+      </div>
     </div>
   </div>
 
