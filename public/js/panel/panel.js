@@ -170,16 +170,20 @@ const patterns = [
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
-    const res = [];
+    // const res = [];
+    shapes[2] = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
       if (next && prev && curr.close > perc(prev.close, -distance) && curr.close > perc(next.close, distance)) {
-        res.push(curr);
+        // res.push(curr);
+        shapes[2].push( createArrow(curr.time, curr.close+40) );
+        shapes[2].push( createArrow(prev.time, prev.close-40, true) );
+        shapes[2].push( createArrow(next.time, next.close-40, true) );
       }
     }
-    shapes[2] = res.map( i => createArrow(i.time, i.close+40) );
+    // shapes[2] = res.map( i => createArrow(i.time, i.close+40) );
   },
   function () { // lows
     const _bars = bars.slice($$.start.val(), $$.end.val());
