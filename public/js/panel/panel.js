@@ -14,7 +14,7 @@ function init(e) {
   bars = e.bars;
   $$ = __els('[data-root="panel"]');
   $$.start.val(0);
-  $$.end.val(bars.length);
+  $$.end.val(100); // bars.length
   
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
@@ -23,8 +23,8 @@ function init(e) {
   $$.zoomOut.on('click', zoomOut);
   $$.zoomTo.on('click', zoomTo);
   setTimeout(() => {
-    // patterns[1]('orange');
-    patterns[2]();
+    $$.pattern.prop({selectedIndex: 2});
+    draw();
   }, 1500);
   
   initColorpick($$.colorpick1, 'red');
