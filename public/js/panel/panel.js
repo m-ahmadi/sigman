@@ -206,7 +206,7 @@ const patterns = [
         res.push(curr);
       }
     }
-    shapes[3] = res.map( i => chart.createShape({ time: i.time, price: i.close-40 }, { shape: 'icon', overrides: {icon: 0xf062, color: color(2)} }) ); // 0xf176
+    shapes[3] = res.map( i => createArrow(i.time, i.close-50, true) );
   },
   function () { // local maxima
     // chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
@@ -319,8 +319,8 @@ window.getRanges = getRanges;
 
 
 //shapes
-function createArrow(time, price) {
-  return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }); // 0xf063
+function createArrow(time, price, up) {
+  return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: up ? 0xf176 : 0xf175, color: color(up ? 2 : 1)} }); // up=0xf062 down=0xf063
 }
 function createLine(price, text) {
   const id = chart.createShape({price}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
