@@ -23,7 +23,7 @@ function init(e) {
   $$.zoomOut.on('click', zoomOut);
   $$.zoomTo.on('click', zoomTo);
   setTimeout(() => {
-    $$.pattern.prop({selectedIndex: 2});
+    $$.pattern[0].selectedIndex = 0;
     draw();
   }, 1500);
   
@@ -84,8 +84,6 @@ const patterns = [
         highs.push( Object.assign({}, curr) );
       }
     }
-    log(highs);
-    shapes[0] = [];
     const counts = highs.map((bar, i) => {
       const { close } = bar;
       const rest = highs.filter((v,j) => j !== i);
@@ -100,6 +98,7 @@ const patterns = [
       return acc;
     }, {});
     
+    shapes[0] = [];
     Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
       const mostOccurred = counts[k].map(i => highs[i].close);
       
@@ -111,8 +110,17 @@ const patterns = [
       
       allInRanges.forEach(idx => {
         const { time, close } = highs[idx];
-        shapes[0].push(createArrow(time, close+40));
-        // shapes[0].push(createText(time, close+150, ''+close));
+        shapes[0].push( createArrow(time, close+40) );
+        // shapes[0].push( createText(time, close+150, ''+close) );
+        
+        // expr
+        if ($$.guide[0].checked) {
+          const barIdx = _bars.findIndex(j=>j.time===time);
+          const prev = _bars[barIdx-period];
+          const next = _bars[barIdx+period];
+          shapes[0].push( createArrow(prev.time, prev.close-40, true) );
+          shapes[0].push( createArrow(next.time, next.close-40, true) );
+        }
       });
       
       const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
