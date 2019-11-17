@@ -1,5 +1,6 @@
 import { randColor, splitArr, isOdd } from '../gen/util.js';
 import initColorpick from './initColorpick.js';
+import initSlider from './initSlider.js';
 
 let $$;
 let chart;
@@ -23,25 +24,12 @@ function init(e) {
   $$.zoomTo.on('click', zoomTo);
   setTimeout(() => {
     // patterns[1]('orange');
-    patterns[0]();
+    patterns[2]();
   }, 1500);
   
   initColorpick($$.colorpick1, 'red');
   initColorpick($$.colorpick2, 'blue');
-  /* const formatter = {
-    from: value => value,
-    to: value => Math.floor( parseFloat(value) )
-  };
-  noUiSlider.create($$.slider[0], {
-    start: [0, bars.length],
-    connect: true,
-    tooltips: [formatter, formatter],
-    range: {
-      min: 0,
-      max: bars.length
-    },
-    format: formatter
-  }); */
+  
   $$.period.on('input blur change', function (e) {
     const el = $(this);
     const v = +el.val();
