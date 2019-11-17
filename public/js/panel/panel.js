@@ -80,7 +80,7 @@ const patterns = [
       /* if (next && prev && curr.close > prev.close && curr.close > next.close) {
         highs.push( Object.assign({}, curr) );
       } */
-      if (next && prev && curr.close > perc(prev.close, -distance) && curr.close > perc(next.close, distance)) {
+      if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         highs.push( Object.assign({}, curr) );
       }
     }
@@ -176,7 +176,7 @@ const patterns = [
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
-      if (next && prev && curr.close > perc(prev.close, -distance) && curr.close > perc(next.close, distance)) {
+      if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         // res.push(curr);
         shapes[2].push( createArrow(curr.time, curr.close+40) );
         shapes[2].push( createArrow(prev.time, prev.close-40, true) );
