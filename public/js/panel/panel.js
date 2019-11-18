@@ -29,6 +29,7 @@ function init(e) {
   
   initColorpick($$.colorpick1, 'red');
   initColorpick($$.colorpick2, 'blue');
+  initColorpick($$.colorpick3, 'pink');
   
   $$.period.on('input blur change', function (e) {
     const el = $(this);
@@ -50,6 +51,7 @@ function init(e) {
     if (n) el.val(n);
   });
   window.$$ = $$;
+  window.bars = bars;
 }
 
 
@@ -189,6 +191,11 @@ const patterns = [
         if ($$.guide[0].checked) {
           shapes[2].push( createArrow(prev.time, prev.close-40, true) );
           shapes[2].push( createArrow(next.time, next.close-40, true) );
+          
+          const sorted = sort([prev, next]);
+          shapes[2].push(
+            createRect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close})
+          );
         }
       }
     }
@@ -207,6 +214,11 @@ const patterns = [
         if ($$.guide[0].checked) {
           shapes[3].push( createArrow(prev.time, prev.close+40) );
           shapes[3].push( createArrow(next.time, next.close+40) );
+          
+          const sorted = sort([prev, next]);
+          shapes[3].push(
+            createRect({time: sorted[1].time, channel: 'close'}, {time: sorted[0].time, price: curr.close})
+          );
         }
       }
     }
@@ -272,6 +284,10 @@ function color(n) {
   return '#' + $$['colorpick'+n].spectrum('get').toHex();
 }
 
+
+function sort(bars, asc=true, prop='close') {
+  return bars.sort((a,b) => asc ? a[prop] - b[prop] : b[prop] - a[prop]);
+}
 function perc(n, percent) {
   return n + Math.floor((n/100) * percent);
 }
@@ -324,6 +340,9 @@ window.getRanges = getRanges;
 //shapes
 function createArrow(time, price, up) {
   return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: up ? 0xf176 : 0xf175, color: color(up ? 2 : 1)} }); // up=0xf062 down=0xf063
+}
+function createRect(p1, p2, _color) {
+  return chart.createMultipointShape([p1, p2], { shape: 'rectangle', overrides: {backgroundColor: _color || color(3)} });
 }
 function createLine(price, text) {
   const id = chart.createShape({price}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
