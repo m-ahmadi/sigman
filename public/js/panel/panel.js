@@ -29,7 +29,8 @@ function init(e) {
   
   initColorpick($$.colorpick1, 'red');
   initColorpick($$.colorpick2, 'blue');
-  initColorpick($$.colorpick3, 'pink');
+  initColorpick($$.colorpick3, '#ffe599');
+  initColorpick($$.colorpick4, '#cc0000');
   
   $$.period.on('input blur change', function (e) {
     const el = $(this);
@@ -341,8 +342,8 @@ window.getRanges = getRanges;
 function createArrow(time, price, up) {
   return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: up ? 0xf176 : 0xf175, color: color(up ? 2 : 1)} }); // up=0xf062 down=0xf063
 }
-function createRect(p1, p2, _color) {
-  return chart.createMultipointShape([p1, p2], { shape: 'rectangle', overrides: {backgroundColor: _color || color(3)} });
+function createRect(p1, p2, _bgcolor, _color) {
+  return chart.createMultipointShape([p1, p2], { shape: 'rectangle', overrides: {backgroundColor: _bgcolor || color(3), color: _color || color(4)} });
 }
 function createLine(price, text) {
   const id = chart.createShape({price}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
