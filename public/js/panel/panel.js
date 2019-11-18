@@ -14,7 +14,9 @@ function init(e) {
   bars = e.bars;
   $$ = __els('[data-root="panel"]');
   $$.start.val(0);
-  $$.end.val(100); // bars.length
+  $$.end.val(bars.length); // bars.length
+  $$.period.val(61);
+  $$.guide[0].checked = true;
   
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
@@ -23,7 +25,7 @@ function init(e) {
   $$.zoomOut.on('click', zoomOut);
   $$.zoomTo.on('click', zoomTo);
   setTimeout(() => {
-    $$.pattern[0].selectedIndex = 0;
+    $$.pattern[0].selectedIndex = 3;
     draw();
   }, 1500);
   
