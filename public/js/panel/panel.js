@@ -178,7 +178,6 @@ const patterns = [
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
-    // const res = [];
     shapes[2] = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
@@ -193,22 +192,24 @@ const patterns = [
         }
       }
     }
-    // shapes[2] = res.map( i => createArrow(i.time, i.close+40) );
   },
   function () { // lows
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
-    const res = [];
+    shapes[3] = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
       if (next && prev && curr.close < prev.close && curr.close < next.close) {
-        res.push(curr);
+        shapes[3].push( createArrow(curr.time, curr.close-50, true) );
+        if ($$.guide[0].checked) {
+          shapes[3].push( createArrow(prev.time, prev.close+40) );
+          shapes[3].push( createArrow(next.time, next.close+40) );
+        }
       }
     }
-    shapes[3] = res.map( i => createArrow(i.time, i.close-50, true) );
   },
   function () { // local maxima
     // chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
