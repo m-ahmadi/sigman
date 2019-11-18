@@ -345,10 +345,28 @@ function createArrow(time, price, up) {
   return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: up ? 0xf176 : 0xf175, color: color(up ? 2 : 1)} }); // up=0xf062 down=0xf063
 }
 function createRect(p1, p2, _bgcolor, _color) {
-  return chart.createMultipointShape([p1, p2], { shape: 'rectangle', overrides: {backgroundColor: _bgcolor || color(3), color: _color || color(4)} });
+  const opts = {
+    shape: 'rectangle',
+    overrides: {
+      backgroundColor: _bgcolor || color(3),
+      color: _color || color(4),
+      // linewidth: 4,
+    }
+  };
+  return chart.createMultipointShape([p1, p2], opts);
 }
 function createLine(price, text) {
-  const id = chart.createShape({price}, { shape: 'horizontal_line', overrides: {linecolor: 'blue', linewidth: 1, showLabel: true, textcolor: 'black', fontsize: 20} });
+  const opts = {
+    shape: 'horizontal_line',
+    overrides: {
+      linecolor: 'blue',
+      linewidth: 1,
+      showLabel: true,
+      textcolor: 'black',
+      fontsize: 20
+    }
+  };
+  const id = chart.createShape({price}, opts);
   if (text) chart.getShapeById(id).setProperties({text});
   return id;
 }
