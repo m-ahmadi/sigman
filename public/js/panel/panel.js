@@ -187,8 +187,10 @@ const patterns = [
       if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         // res.push(curr);
         shapes[2].push( createArrow(curr.time, curr.close+40) );
-        shapes[2].push( createArrow(prev.time, prev.close-40, true) );
-        shapes[2].push( createArrow(next.time, next.close-40, true) );
+        if ($$.guide[0].checked) {
+          shapes[2].push( createArrow(prev.time, prev.close-40, true) );
+          shapes[2].push( createArrow(next.time, next.close-40, true) );
+        }
       }
     }
     // shapes[2] = res.map( i => createArrow(i.time, i.close+40) );
