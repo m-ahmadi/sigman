@@ -6,7 +6,7 @@ function __temps(name) {
   return res;
 }
 
-function __els(root, obj) {
+function __els(root, obj, overwrite=false) {
   if (!root) return;
   const res = {};
   let el, els;
@@ -32,7 +32,7 @@ function __els(root, obj) {
   });
   if (obj) {
     Object.keys(res).forEach(k => {
-      if (!obj[k]) obj[k] = res[k];
+      if (!obj[k] || overwrite) obj[k] = res[k];
     });
   } else {
     return res;
