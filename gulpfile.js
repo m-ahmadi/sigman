@@ -20,6 +20,7 @@ const livereload = require('gulp-livereload');
 const h = './public/index.html';
 const c = './public/css/**/*.css';
 const j = './public/js/**/*.js';
+const l = './public/lib/_*';
 
 gulp.task('live-html', cb => {
   gulp.src(h)
@@ -36,11 +37,17 @@ gulp.task('live-js', cb => {
     .pipe( livereload() );
   cb();
 });
+gulp.task('live-lib', cb => {
+  gulp.src(l)
+    .pipe( livereload() );
+  cb();
+});
 gulp.task('live', () => {
   livereload.listen();
   
   gulp.watch( h, gulp.series('live-html') );
   gulp.watch( c, gulp.series('live-css') );
   gulp.watch( j, gulp.series('live-js') );
+  gulp.watch( l, gulp.series('live-lib') );
 });
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
