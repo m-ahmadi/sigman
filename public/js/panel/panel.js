@@ -2,7 +2,7 @@ import { randColor, splitArr, isOdd } from '../gen/util.js';
 import initColorpick from './initColorpick.js';
 import initSlider from './initSlider.js';
 
-let $$;
+let $$, v;
 let chart;
 let bars;
 
@@ -13,10 +13,11 @@ function init(e) {
   chart = e.chart;
   bars = e.bars;
   $$ = __els('[data-root="panel"]');
+  v = __temps('panel');
+  
   $$.start.val(0);
   $$.end.val(bars.length); // bars.length
-  $$.period.val(61);
-  $$.guide[0].checked = true;
+  
   
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
@@ -25,8 +26,8 @@ function init(e) {
   $$.zoomOut.on('click', zoomOut);
   $$.zoomTo.on('click', zoomTo);
   setTimeout(() => {
-    $$.pattern[0].selectedIndex = 3;
-    draw();
+    // $$.pattern[0].selectedIndex = 3;
+    // draw();
   }, 1500);
   
   initColorpick($$.colorpick1, 'red');
@@ -34,7 +35,24 @@ function init(e) {
   initColorpick($$.colorpick3, '#ffe599');
   initColorpick($$.colorpick4, '#cc0000');
   
-  $$.period.on('input blur change', function (e) {
+  // initSlider($$.slider[0], bars.length);
+  
+  $$.pattern.on('change', function (e) {
+    $$.controlsContainer.empty();
+    $$.controlsContainer.html( v[this.selectedIndex]() );
+    __els($$.controlsContainer, $$);
+    $$.period.val(61);
+    $$.guide[0].checked = true;
+    customEvents[this.selectedIndex]();
+  });
+  
+  window.$$ = $$;
+  window.bars = bars;
+}
+
+const customEvents = [
+  function () {
+    $$.period.on('input blur change', function (e) {
     const el = $(this);
     const v = +el.val();
     const n =
@@ -43,19 +61,18 @@ function init(e) {
       v % 2 === 0 ? v-1 :
       0;
     if (n) el.val(n);
-  });
-  $$.distance.on('input blur change', function (e) {
-    const el = $(this);
-    const v = +el.val();
-    const n =
-      v < 0   ? 0   :
-      v > 100 ? 100 :
-      0;
-    if (n) el.val(n);
-  });
-  window.$$ = $$;
-  window.bars = bars;
-}
+    });
+    $$.distance.on('input blur change', function (e) {
+      const el = $(this);
+      const v = +el.val();
+      const n =
+        v < 0   ? 0   :
+        v > 100 ? 100 :
+        0;
+      if (n) el.val(n);
+    });
+  }
+];
 
 
 /* const chunks = splitArr(_bars, 3);
