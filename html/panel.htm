@@ -1,23 +1,17 @@
 <div class="uk-grid-collapse uk-grid-divider uk-child-width-1-2 uk-padding-small white" uk-grid uk-sticky style="border:1px solid #e3e3e3;" data-root="panel">
   <div>
-    <select class="uk-select uk-width-1-3" name="pattern" data-el="pattern">
+    <select class="uk-select uk-width-1-2" name="pattern" data-el="pattern">
       <option value="0">most in-range occurrences</option>
-      <option value="1" selected>highs & count of in-range occurrences</option>
+      <option value="1">highs & count of in-range occurrences</option>
       <option value="2">highs</option>
       <option value="3">lows</option>
       <option value="4">local maxima</option>
       <option value="5">dummy</option>
     </select>
     
-    <button class="uk-button uk-text-capitalize light-green lighten-4" data-el="draw">Draw</button>
-    <button class="uk-button uk-text-capitalize red lighten-5" data-el="clear">Clear</button>
-
-    <input type='text' data-el="colorpick1" />
-    <input type='text' data-el="colorpick2" />
-    <input type='text' data-el="colorpick3" />
-    <input type='text' data-el="colorpick4" />
-    
-    <button class="uk-button uk-text-capitalize red lighten-5" data-el="clearAll">Clear All</button>
+    <button class="uk-button uk-button-default uk-text-capitalize light-green lighten-4" data-el="draw">Draw</button>
+    <button class="uk-button uk-button-default uk-text-capitalize orange lighten-5" data-el="clear">Clear</button>
+    <button class="uk-button uk-button-default uk-text-capitalize red lighten-5" data-el="clearAll">Clear All</button>
     
     <div class="uk-margin-small" data-el="controlsContainer"></div>
   </div>

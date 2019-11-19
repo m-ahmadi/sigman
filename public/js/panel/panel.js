@@ -1,6 +1,7 @@
 import { randColor, splitArr, isOdd } from '../gen/util.js';
-import initColorpick from './initColorpick.js';
+import { initColorpick, destroyColorpick, getColor } from './colorpick.js';
 import initSlider from './initSlider.js';
+import { arrow, rect, line, text } from './shapes.js';
 
 let $$, v;
 let chart;
@@ -30,69 +31,93 @@ function init(e) {
     // draw();
   }, 1500);
   
-  initColorpick($$.colorpick1, 'red');
-  initColorpick($$.colorpick2, 'blue');
-  initColorpick($$.colorpick3, '#ffe599');
-  initColorpick($$.colorpick4, '#cc0000');
-  
   // initSlider($$.slider[0], bars.length);
   
   $$.pattern.on('change', function (e) {
-    $$.controlsContainer.empty();
-    $$.controlsContainer.html( v[this.selectedIndex]() );
-    __els($$.controlsContainer, $$);
-    $$.period.val(61);
-    $$.guide[0].checked = true;
-    customEvents[this.selectedIndex]();
+    $$.controlsContainer.empty().html( v[this.selectedIndex]() );
+    __els($$.controlsContainer, $$, true);
+    inits[this.selectedIndex]();
   });
+  $$.pattern.trigger('change');
   
   window.$$ = $$;
   window.bars = bars;
 }
 
-const customEvents = [
-  function () {
-    $$.period.on('input blur change', function (e) {
+function addEvents() {
+  $$.period.on('input blur change', function (e) {
+  const el = $(this);
+  const v = +el.val();
+  const n =
+    v < 3       ? 3   :
+    v > 999     ? 999 :
+    v % 2 === 0 ? v-1 :
+    0;
+  if (n) el.val(n);
+  });
+  $$.distance.on('input blur change', function (e) {
     const el = $(this);
     const v = +el.val();
     const n =
-      v < 3       ? 3   :
-      v > 999     ? 999 :
-      v % 2 === 0 ? v-1 :
+      v < 0   ? 0   :
+      v > 100 ? 100 :
       0;
     if (n) el.val(n);
-    });
-    $$.distance.on('input blur change', function (e) {
-      const el = $(this);
-      const v = +el.val();
-      const n =
-        v < 0   ? 0   :
-        v > 100 ? 100 :
-        0;
-      if (n) el.val(n);
-    });
+  });
+}
+const inits = [
+  function () { // most in-range occurrences
+    $$.period.val(3);
+    $$.guide[0].checked = true;
+    if ($$.colorpick1) destroyColorpick($$.colorpick1);
+    if ($$.colorpick2) destroyColorpick($$.colorpick2);
+    initColorpick($$.colorpick1, 'red');
+    initColorpick($$.colorpick2, 'blue');
+    addEvents();
+  },
+  function () { // highs & count of in-range occurrences
+    if ($$.colorpick1) destroyColorpick($$.colorpick1);
+    initColorpick($$.colorpick1, 'red');
+    addEvents();
+  },
+  function () { // highs
+    $$.period.val(61);
+    $$.guide[0].checked = true;
+    if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
+    initColorpick($$.colorpick1, 'red');
+    initColorpick($$.colorpick2, 'blue');
+    initColorpick($$.colorpick3, '#ffe599');
+    initColorpick($$.colorpick4, '#cc0000');
+    addEvents();
+  },
+  function () { // lows
+    $$.period.val(31);
+    $$.guide[0].checked = true;
+    if ($$.colorpick1) destroyColorpick($$.colorpick1);
+    if ($$.colorpick2) destroyColorpick($$.colorpick2);
+    if ($$.colorpick3) destroyColorpick($$.colorpick3);
+    if ($$.colorpick4) destroyColorpick($$.colorpick4);
+    initColorpick($$.colorpick1, 'blue');
+    initColorpick($$.colorpick2, 'red');
+    initColorpick($$.colorpick3, '#ffe599');
+    initColorpick($$.colorpick4, '#cc0000');
+    addEvents();
+  },
+  function () { // local maxima
+    
+  },
+  function () { // dummy
+    
   }
 ];
-
-
-/* const chunks = splitArr(_bars, 3);
- for (let i=0; i<chunks.length; i++) {
-  const chunk = chunks[i];
-  const prices = chunk.map(i => i.close);
-  const first = prices[0];
-  const middle = prices[ Math.floor(prices.length/2) ];
-  const last = prices[prices.length-1];
-  if (middle > first && middle > last) {
-    res.push( chunk.find(i => i.close === middle) );
-  }
-} */
-// const type = parseInt( $$.type.filter(':checked').val() );
 
 const patterns = [
   function () { // most in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
+    const color1 = getColor($$.colorpick1);
+    const color2 = getColor($$.colorpick2);
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = [];
     for (let i=0; i<_bars.length; i+=period) {
@@ -132,16 +157,16 @@ const patterns = [
       
       allInRanges.forEach(idx => {
         const { time, close } = highs[idx];
-        shapes[0].push( createArrow(time, close+40) );
-        // shapes[0].push( createText(time, close+150, ''+close) );
+        shapes[0].push( arrow(time, close+40, color1) );
+        // shapes[0].push( text(time, close+150, ''+close) );
         
         // expr
         if ($$.guide[0].checked) {
           const barIdx = _bars.findIndex(j=>j.time===time);
           const prev = _bars[barIdx-period];
           const next = _bars[barIdx+period];
-          shapes[0].push( createArrow(prev.time, prev.close-40, true) );
-          shapes[0].push( createArrow(next.time, next.close-40, true) );
+          shapes[0].push( arrow(prev.time, prev.close-40, color2, true) );
+          shapes[0].push( arrow(next.time, next.close-40, color2, true) );
         }
       });
       
@@ -149,13 +174,13 @@ const patterns = [
       const ranges = getRanges(nums, 1);
       /* ranges.forEach(i => {
         const avg = Math.floor(i.reduce((a,c)=>a+c) / i.length);
-        shapes[0].push( createLine(avg, i.length) );
+        shapes[0].push( line(avg, i.length) );
       }); */
       const rangeAvgs = ranges
         .map( i => [i.reduce((a,c)=>a+c), i.length] ) // [sum, count]
         .map( i => Math.floor(i[0] / i[1]) );
       
-      rangeAvgs.forEach( price => shapes[0].push(createLine(price)) );
+      rangeAvgs.forEach( price => shapes[0].push(line(price)) );
       
       window.ranges = ranges;
       window.rangeAvgs = rangeAvgs;
@@ -170,6 +195,7 @@ const patterns = [
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
+    const color1 = getColor($$.colorpick1);
     const res = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
@@ -187,18 +213,15 @@ const patterns = [
       // const found = rest.findIndex( j => isInRange(j.close, perc(close, -n), perc(close, n)) ); // at least one other high in n% range
       // return found !== -1;
       const count = rest.filter( j => isInRange(j.close, perc(close, -n), perc(close, n)) ).length;
-      let id;
-      id = chart.createShape({time: bar.time, price: bar.close+40}, { shape: 'icon', overrides: {icon: 0xf175, color: color(1)} }) // 0xf063
-      shapes[1].push(id);
-      id = chart.createShape({time: bar.time, price: bar.close+130}, { shape: 'text', overrides: {color: 'black', bold: true} });
-      shapes[1].push(id);
-      chart.getShapeById(id).setProperties({ text: count });
+      shapes[1].push( arrow(bar.time, bar.close+40, color1) );
+      shapes[1].push( text(bar.time, bar.close+130, count, {bold:true, fontsize:20}) );
     });
   },
   function () { // highs
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
+    const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     const distance = +$$.distance.val();
     shapes[2] = [];
     for (let i=0; i<_bars.length; i+=period) {
@@ -207,14 +230,14 @@ const patterns = [
       const prev = _bars[i-period];
       if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         // res.push(curr);
-        shapes[2].push( createArrow(curr.time, curr.close+40) );
+        shapes[2].push( arrow(curr.time, curr.close+40, colors[0]) );
         if ($$.guide[0].checked) {
-          shapes[2].push( createArrow(prev.time, prev.close-40, true) );
-          shapes[2].push( createArrow(next.time, next.close-40, true) );
+          shapes[2].push( arrow(prev.time, prev.close-40, colors[1], true) );
+          shapes[2].push( arrow(next.time, next.close-40, colors[1], true) );
           
           const sorted = sort([prev, next]);
           shapes[2].push(
-            createRect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close})
+            rect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close}, colors[2], colors[3])
           );
         }
       }
@@ -224,20 +247,21 @@ const patterns = [
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
+    const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     shapes[3] = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
       if (next && prev && curr.close < prev.close && curr.close < next.close) {
-        shapes[3].push( createArrow(curr.time, curr.close-50, true) );
+        shapes[3].push( arrow(curr.time, curr.close-50, colors[0], true) );
         if ($$.guide[0].checked) {
-          shapes[3].push( createArrow(prev.time, prev.close+40) );
-          shapes[3].push( createArrow(next.time, next.close+40) );
+          shapes[3].push( arrow(prev.time, prev.close+40, colors[1]) );
+          shapes[3].push( arrow(next.time, next.close+40, colors[1]) );
           
           const sorted = sort([prev, next]);
           shapes[3].push(
-            createRect({time: sorted[1].time, channel: 'close'}, {time: sorted[0].time, price: curr.close})
+            rect({time: sorted[1].time, channel: 'close'}, {time: sorted[0].time, price: curr.close}, colors[2], colors[3])
           );
         }
       }
@@ -283,6 +307,19 @@ const patterns = [
   }
 ];
 
+/* const chunks = splitArr(_bars, 3);
+ for (let i=0; i<chunks.length; i++) {
+  const chunk = chunks[i];
+  const prices = chunk.map(i => i.close);
+  const first = prices[0];
+  const middle = prices[ Math.floor(prices.length/2) ];
+  const last = prices[prices.length-1];
+  if (middle > first && middle > last) {
+    res.push( chunk.find(i => i.close === middle) );
+  }
+} */
+// const type = parseInt( $$.type.filter(':checked').val() );
+
 
 function draw() {
   patterns[ $$.pattern.val() ]();
@@ -300,10 +337,6 @@ function zoomTo() {
 function rand() {
   return '#' + Math.random().toString(16).substr(-6);
 }
-function color(n) {
-  return '#' + $$['colorpick'+n].spectrum('get').toHex();
-}
-
 
 function sort(bars, asc=true, prop='close') {
   return bars.sort((a,b) => asc ? a[prop] - b[prop] : b[prop] - a[prop]);
@@ -354,43 +387,5 @@ window.percDiff = percDiff;
 window.isInRange = isInRange;
 window.getInRangeBars = getInRangeBars;
 window.getRanges = getRanges;
-
-
-
-//shapes
-function createArrow(time, price, up) {
-  return chart.createShape({time, price}, { shape: 'icon', overrides: {icon: up ? 0xf176 : 0xf175, color: color(up ? 2 : 1)} }); // up=0xf062 down=0xf063
-}
-function createRect(p1, p2, _bgcolor, _color) {
-  const opts = {
-    shape: 'rectangle',
-    overrides: {
-      backgroundColor: _bgcolor || color(3),
-      color: _color || color(4),
-      // linewidth: 4,
-    }
-  };
-  return chart.createMultipointShape([p1, p2], opts);
-}
-function createLine(price, text) {
-  const opts = {
-    shape: 'horizontal_line',
-    overrides: {
-      linecolor: 'blue',
-      linewidth: 1,
-      showLabel: true,
-      textcolor: 'black',
-      fontsize: 20
-    }
-  };
-  const id = chart.createShape({price}, opts);
-  if (text) chart.getShapeById(id).setProperties({text});
-  return id;
-}
-function createText(time, price, text) {
-  const id = chart.createShape({time, price}, { shape: 'text', overrides: {color: 'black', bold: false, fontsize: 12} });
-  chart.getShapeById(id).setProperties({ text: text });
-  return id;
-}
 
 export default { init 
