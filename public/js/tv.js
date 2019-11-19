@@ -101,7 +101,7 @@ function init() {
     fullscreen: true,
     // width: '70%',
     interval: '1D',
-    container_id: 'tv_chart_container',
+    container_id: 'tvchart-container',
     timezone: 'Asia/Tehran',
     datafeed: japi,
     library_path: 'lib/tradingview/charting_library/',
