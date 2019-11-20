@@ -34,9 +34,11 @@ function init(e) {
   // initSlider($$.slider[0], bars.length);
   
   $$.pattern.on('change', function (e) {
-    $$.controlsContainer.empty().html( v[this.selectedIndex]() );
+    const idx = this.selectedIndex;
+    $$.controlsContainer.empty();
+    if (v[idx]) $$.controlsContainer.html( v[idx]() );
     __els($$.controlsContainer, $$, true);
-    inits[this.selectedIndex]();
+    if (inits[idx]) inits[idx]();
   });
   $$.pattern.trigger('change');
   
@@ -93,10 +95,7 @@ const inits = [
   function () { // lows
     $$.period.val(31);
     $$.guide[0].checked = true;
-    if ($$.colorpick1) destroyColorpick($$.colorpick1);
-    if ($$.colorpick2) destroyColorpick($$.colorpick2);
-    if ($$.colorpick3) destroyColorpick($$.colorpick3);
-    if ($$.colorpick4) destroyColorpick($$.colorpick4);
+    if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'blue');
     initColorpick($$.colorpick2, 'red');
     initColorpick($$.colorpick3, '#ffe599');
@@ -104,7 +103,8 @@ const inits = [
     addEvents();
   },
   function () { // local maxima
-    
+    initColorpick($$.colorpick1, 'red');
+    initColorpick($$.colorpick2, 'blue');
   },
   function () { // dummy
     
@@ -270,6 +270,7 @@ const patterns = [
   function () { // local maxima
     // chart.setVisibleRange({ from: bars[0].time, to: bars[100].time });
     const chunks = splitArr(bars, 100);
+    const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     const res = [];
     if ( !Array.isArray(shapes[4]) ) shapes[4] = [];
     for (let i=0; i<chunks.length; i++) {
@@ -282,7 +283,7 @@ const patterns = [
         { time: chunk[0].time, price: max.close },
         { time: chunk[chunk.length-1].time , price: max.close }
       ];
-      const shapeId = chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: color(2), linewidth: 4, linestyle: 0} });
+      const shapeId = chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: colors[1], linewidth: 4, linestyle: 0} });
       shapes[4].push(shapeId);
     }
     
@@ -292,7 +293,7 @@ const patterns = [
       const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
       const pointB = { time: bars[maxIdx+10].time, price: i.max.close };
       const points = [pointA, pointB];
-      return chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: color(1), linewidth: 4, linestyle: 0} });
+      return chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: colors[0], linewidth: 4, linestyle: 0} });
     }));
   },
   function () { // dummy
