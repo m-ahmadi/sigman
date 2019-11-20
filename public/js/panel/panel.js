@@ -273,7 +273,7 @@ const patterns = [
     const chunks = splitArr(bars, 100);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     const res = [];
-    if ( !Array.isArray(shapes[4]) ) shapes[4] = [];
+    shapes[4] = [];
     for (let i=0; i<chunks.length; i++) {
       const chunk = chunks[i];
       const closePrices = chunk.map(i => i.close);
@@ -286,15 +286,14 @@ const patterns = [
       ];
       shapes[4].push( line(points, colors[1]) );
     }
-    
-    shapes[4] = shapes[4].concat(res.map(i => {
+    res.forEach(i => {
       const maxIdx = bars.findIndex(j => j.time === i.max.time);
       const minIdx = bars.findIndex(j => j.time === i.min.time);
       const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
       const pointB = { time: bars[maxIdx+10].time, price: i.max.close };
       const points = [pointA, pointB];
-      return line(points, colors[0]);
-    }));
+      shapes[4].push( line(points, colors[0]) );
+    })
   },
   function () { // dummy
     const res = [];
