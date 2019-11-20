@@ -1,4 +1,4 @@
-function __temps(name) {
+function __temps(name='') {
   const res = {};
   Object.keys(Handlebars.templates)
     .filter( i => new RegExp(name).test(i) )
