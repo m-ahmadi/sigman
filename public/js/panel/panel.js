@@ -1,7 +1,7 @@
 import { randColor, splitArr, isOdd } from '../gen/util.js';
 import { initColorpick, destroyColorpick, getColor } from './colorpick.js';
 import initSlider from './initSlider.js';
-import { arrow, rect, line, text } from './shapes.js';
+import { arrow, rect, line, horzline, text } from './shapes.js';
 
 let $$, v;
 let chart;
@@ -175,13 +175,13 @@ const patterns = [
       const ranges = getRanges(nums, 1);
       /* ranges.forEach(i => {
         const avg = Math.floor(i.reduce((a,c)=>a+c) / i.length);
-        shapes[0].push( line(avg, i.length) );
+        shapes[0].push( horzline(avg, i.length) );
       }); */
       const rangeAvgs = ranges
         .map( i => [i.reduce((a,c)=>a+c), i.length] ) // [sum, count]
         .map( i => Math.floor(i[0] / i[1]) );
       
-      rangeAvgs.forEach( price => shapes[0].push(line(price)) );
+      rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
       window.ranges = ranges;
       window.rangeAvgs = rangeAvgs;
@@ -284,8 +284,7 @@ const patterns = [
         { time: chunk[0].time, price: max.close },
         { time: chunk[chunk.length-1].time , price: max.close }
       ];
-      const shapeId = chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: colors[1], linewidth: 4, linestyle: 0} });
-      shapes[4].push(shapeId);
+      shapes[4].push( line(points, colors[1]) );
     }
     
     shapes[4] = shapes[4].concat(res.map(i => {
@@ -294,7 +293,7 @@ const patterns = [
       const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
       const pointB = { time: bars[maxIdx+10].time, price: i.max.close };
       const points = [pointA, pointB];
-      return chart.createMultipointShape(points, { shape: 'extended', overrides: {linecolor: colors[0], linewidth: 4, linestyle: 0} });
+      return line(points, colors[0]);
     }));
   },
   function () { // dummy
@@ -305,7 +304,7 @@ const patterns = [
       if (!found) res.push(item.time);
     }
     // res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
-    shapes[5] = res.map( i => chart.createShape({ time: i }, { shape: 'icon', overrides: {icon: 0xf062, color: randColor()} }) );
+    shapes[5] = res.map( i => arrow(i, undefined, randColor(), true, true) );
   }
 ];
 
