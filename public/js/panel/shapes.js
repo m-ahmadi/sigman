@@ -1,9 +1,23 @@
-export function arrow(time, price, color, up=false) {
+export function arrow(time, price, color, up=false, thick=false) {
+  const upIcon   = thick ? 0xf062 : 0xf176;
+  const downIcon = thick ? 0xf063 : 0xf175;
   const opts = {
     shape: 'icon',
-    overrides: { icon: up ? 0xf176 : 0xf175, color }
+    overrides: { icon: up ? upIcon : downIcon, color }
   };
-  return chart.createShape({time, price}, opts); // up=0xf062 down=0xf063
+  return chart.createShape({time, price}, opts);
+}
+
+export function line(points, color) {
+  const opts = {
+    shape: 'extended', // trend_line
+    overrides: {
+      linecolor: color,
+      linewidth: 4,
+      linestyle: 0
+    }
+  };
+  return chart.createMultipointShape(points, opts);
 }
 
 export function rect(p1, p2, bgcolor, color) {
@@ -18,7 +32,7 @@ export function rect(p1, p2, bgcolor, color) {
   return chart.createMultipointShape([p1, p2], opts);
 }
 
-export function line(price, text) {
+export function horzline(price, text) {
   const opts = {
     shape: 'horizontal_line',
     overrides: {
