@@ -34,11 +34,12 @@ function init(e) {
   // initSlider($$.slider[0], bars.length);
   
   $$.pattern.on('change', function (e) {
-    const idx = this.selectedIndex;
+    const i = this.selectedIndex;
     $$.controlsContainer.empty();
-    if (v[idx]) $$.controlsContainer.html( v[idx]() );
+    if (!v[i]) return;
+    $$.controlsContainer.html( v[i]() );
     __els($$.controlsContainer, $$, true);
-    if (inits[idx]) inits[idx]();
+    inits[i]();
   });
   $$.pattern.trigger('change');
   
@@ -70,7 +71,7 @@ function addEvents() {
 const inits = [
   function () { // most in-range occurrences
     $$.period.val(3);
-    $$.guide[0].checked = true;
+    $$.guide[0].checked = false;
     if ($$.colorpick1) destroyColorpick($$.colorpick1);
     if ($$.colorpick2) destroyColorpick($$.colorpick2);
     initColorpick($$.colorpick1, 'red');
