@@ -177,10 +177,8 @@ const patterns = [
         const avg = Math.floor(i.reduce((a,c)=>a+c) / i.length);
         shapes[0].push( horzline(avg, i.length) );
       }); */
-      const rangeAvgs = ranges
-        .map( i => [i.reduce((a,c)=>a+c), i.length] ) // [sum, count]
-        .map( i => Math.floor(i[0] / i[1]) );
-    
+      const rangeAvgs = ranges.map( i => Math.floor(i.reduce((a,c)=>a+c) / i.length) ); // sum / count
+      
       rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
       window.ranges = ranges;
