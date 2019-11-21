@@ -77,6 +77,8 @@ const inits = [
     addEvents();
   },
   function () { // highs & count of in-range occurrences
+    $$.start.val(150);
+    $$.end.val(250);
     if ($$.colorpick1) destroyColorpick($$.colorpick1);
     initColorpick($$.colorpick1, 'red');
     addEvents();
