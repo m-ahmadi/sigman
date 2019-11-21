@@ -53,8 +53,8 @@ function addEvents() {
     v < 3       ? 3   :
     v > 999     ? 999 :
     v % 2 === 0 ? v-1 :
-    0;
-  if (n) el.val(n);
+    undefined;
+  if (n !== undefined) el.val(n);
   });
   $$.distance.on('input blur change', function (e) {
     const el = $(this);
@@ -62,8 +62,9 @@ function addEvents() {
     const n =
       v < 0   ? 0   :
       v > 100 ? 100 :
-      0;
-    if (n) el.val(n);
+      v === 0 ? 0   :
+      undefined;
+    if (n !== undefined) el.val(n);
   });
 }
 const inits = [
@@ -75,6 +76,16 @@ const inits = [
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
     addEvents();
+    $$.rangeDistance.on('input blur change', function (e) {
+      const el = $(this);
+      const v = +el.val();
+      const n =
+        v < 0   ? 0   :
+        v > 100 ? 100 :
+        v === 0 ? 0   :
+        undefined;
+      if (n !== undefined) el.val(n);
+    });
   },
   function () { // highs & count of in-range occurrences
     $$.start.val(150);
@@ -117,6 +128,7 @@ const patterns = [
     const _bars = bars.slice($$.start.val(), $$.end.val());
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
+    const rangeDistance = +$$.rangeDistance.val();
     const color1 = getColor($$.colorpick1);
     const color2 = getColor($$.colorpick2);
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
@@ -172,7 +184,7 @@ const patterns = [
       });
       
       const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
-      const ranges = getRanges(nums, 1);
+      const ranges = getRanges(nums, rangeDistance);
       /* ranges.forEach(i => {
         const avg = Math.floor(i.reduce((a,c)=>a+c) / i.length);
         shapes[0].push( horzline(avg, i.length) );
