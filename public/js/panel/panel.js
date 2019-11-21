@@ -71,10 +71,11 @@ const inits = [
   function () { // most in-range occurrences
     $$.period.val(3);
     $$.guide[0].checked = false;
-    if ($$.colorpick1) destroyColorpick($$.colorpick1);
-    if ($$.colorpick2) destroyColorpick($$.colorpick2);
+    if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
+    initColorpick($$.colorpick3, '#ffe599');
+    initColorpick($$.colorpick4, '#cc0000');
     addEvents();
     $$.rangeDistance.on('input blur change', function (e) {
       const el = $(this);
@@ -129,8 +130,7 @@ const patterns = [
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
     const rangeDistance = +$$.rangeDistance.val();
-    const color1 = getColor($$.colorpick1);
-    const color2 = getColor($$.colorpick2);
+    const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = [];
     for (let i=0; i<_bars.length; i+=period) {
@@ -166,18 +166,34 @@ const patterns = [
         .reduce((a,c) => a.concat(c), [])                                    // combine all items into one array
         .filter((v,i,a) => a.indexOf(v) === i);                              // deduplicate
       
+      //=============================================================================
+      var a = mostOccurred.map(close => getInRangeBars(highs, close));
+      var b = a.map(bars => bars.map(i => highs.findIndex(j=>j.close===i.close)));
+      var c = b.reduce((a,c) => a.concat(c), []);
+      var d = c.filter((v,i,a) => a.indexOf(v) === i);
+      log ('in range bars for each item:', a);
+      log ('replace bar with index of highs array: ', b);
+      log ('combine all items into one array: ', c);
+      log ('deduplicate: ', d);
+      
+      //=============================================================================
       allInRanges.forEach(idx => {
         const { time, close } = highs[idx];
-        shapes[0].push( arrow(time, close+40, color1) );
+        shapes[0].push( arrow(time, close+40, colors[0]) );
         // shapes[0].push( text(time, close+150, ''+close) );
         
         // expr
         if ($$.guide[0].checked) {
           const barIdx = _bars.findIndex(j=>j.time===time);
+          const curr = _bars[barIdx];
           const prev = _bars[barIdx-period];
           const next = _bars[barIdx+period];
-          shapes[0].push( arrow(prev.time, prev.close-40, color2, true) );
-          shapes[0].push( arrow(next.time, next.close-40, color2, true) );
+          shapes[0].push( arrow(prev.time, prev.close-40, colors[1], true) );
+          shapes[0].push( arrow(next.time, next.close-40, colors[1], true) );
+          const sorted = sort([prev, next]);
+          shapes[0].push(
+            rect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close}, colors[2], colors[3])
+          );
         }
       });
       
@@ -187,17 +203,26 @@ const patterns = [
         const avg = Math.floor(i.reduce((a,c)=>a+c) / i.length);
         shapes[0].push( horzline(avg, i.length) );
       }); */
+      //============================================================================
+      const rangeIndexes = ranges.map(i => i.map(j => highs.findIndex(b=>b.close===j)) );
+      //============================================================================
       const rangeAvgs = ranges.map( i => Math.floor(i.reduce((a,c)=>a+c) / i.length) ); // sum / count
       
       rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
+      window.mostOccurred = mostOccurred;
+      window.allInRanges = allInRanges;
       window.ranges = ranges;
+      window.rangeIndexes = rangeIndexes;
       window.rangeAvgs = rangeAvgs;
     });
     
+    log('mostOccurred: ', mostOccurred);
+    log('allInRanges: ', allInRanges);
     log('highs: ', highs);
     log('counts: ', counts);
     log('ranges: ', ranges);
+    log('rangeIndexes: ', rangeIndexes);
     log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
     window.counts = counts;
