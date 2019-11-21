@@ -137,9 +137,7 @@ const patterns = [
       const curr = _bars[i];
       const prev = _bars[i-period];
       const next = _bars[i+period];
-      /* if (next && prev && curr.close > prev.close && curr.close > next.close) {
-        highs.push( Object.assign({}, curr) );
-      } */
+      // if (next && prev && curr.close > prev.close && curr.close > next.close) {
       if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         highs.push( Object.assign({}, curr) );
       }
@@ -197,6 +195,8 @@ const patterns = [
       window.rangeAvgs = rangeAvgs;
     });
     
+    log('highs: ', highs);
+    log('counts: ', counts);
     log('ranges: ', ranges);
     log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
@@ -331,6 +331,7 @@ const patterns = [
 // const type = parseInt( $$.type.filter(':checked').val() );
 
 
+// chart action
 function draw() {
   patterns[ $$.pattern.val() ]();
 }
@@ -344,10 +345,8 @@ function zoomOut() {
 function zoomTo() {
   chart.setVisibleRange({ from: bars[$$.start.val()].time, to: bars[$$.end.val()].time });
 }
-function rand() {
-  return '#' + Math.random().toString(16).substr(-6);
-}
 
+// calcy
 function sort(bars, asc=true, prop='close') {
   return bars.sort((a,b) => asc ? a[prop] - b[prop] : b[prop] - a[prop]);
 }
@@ -379,9 +378,9 @@ function getRanges(nums, range=1, percent=true) {
   const ranges = [];
   const len = nums.length;
   for (let i=0; i<len; i+=1) {
-    const v = nums[i];
-    const min = percent ? perc(v, -range) : v - range;
-    const max = percent ? perc(v, +range) : v + range;
+    const num = nums[i];
+    const min = percent ? perc(num, -range) : num - range;
+    const max = percent ? perc(num, +range) : num + range;
     const inRanges = nums.slice(i).filter( j => isInRange(j, min, max) );
     if (inRanges.length) {
       ranges.push(inRanges);
