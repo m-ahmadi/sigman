@@ -26,11 +26,6 @@ function init(e) {
   $$.clearAll.on( 'click', () => chart.removeAllShapes() );
   $$.zoomOut.on('click', zoomOut);
   $$.zoomTo.on('click', zoomTo);
-  setTimeout(() => {
-    // $$.pattern[0].selectedIndex = 3;
-    // draw();
-  }, 1500);
-  
   // initSlider($$.slider[0], bars.length);
   
   $$.pattern.on('change', function (e) {
@@ -40,9 +35,12 @@ function init(e) {
     $$.controlsContainer.html( v[i]() );
     __els($$.controlsContainer, $$, true);
     inits[i]();
-  });
-  $$.pattern.trigger('change');
+  }).trigger('change');
   
+  setTimeout(() => {
+    $$.pattern.prop({selectedIndex: 0}).trigger('change');
+    draw();
+  }, 500);
   window.$$ = $$;
   window.bars = bars;
 }
@@ -180,15 +178,15 @@ const patterns = [
       const rangeAvgs = ranges
         .map( i => [i.reduce((a,c)=>a+c), i.length] ) // [sum, count]
         .map( i => Math.floor(i[0] / i[1]) );
-      
+    
       rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
       window.ranges = ranges;
       window.rangeAvgs = rangeAvgs;
     });
     
-    log(ranges);
-    log(rangeAvgs);
+    log('ranges: ', ranges);
+    log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
     window.counts = counts;
   },
