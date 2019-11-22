@@ -74,8 +74,8 @@ const inits = [
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
-    initColorpick($$.colorpick3, '#ffe599');
-    initColorpick($$.colorpick4, '#cc0000');
+    initColorpick($$.colorpick3, '#00ff00');
+    initColorpick($$.colorpick4, 'yellow');
     addEvents();
     $$.rangeDistance.on('input blur change', function (e) {
       const el = $(this);
@@ -173,14 +173,15 @@ const patterns = [
       const nums = allInRanges.map(i=>highs[i].close);
       const ranges = getRanges(nums, rangeDistance);
       //============================================================================
+      // separate lines & arrows for each range
       const rangeIndexes = ranges.map(i => i.map(j => highs.findIndex(b=>b.close===j)) );
       const rangeAllInRanges = ranges.map(i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
       
       const step = stepper(0, 3);
       rangeAllInRanges.forEach(i => {
         const bars = i.map(j => highs[j]);
-        // const color = colors[step()];
-        const color = randColor();
+        const color = colors[step()];
+        // const color = randColor();
         i.forEach(idx => {
           const { time, close } = highs[idx];
           shapes[0].push(  arrow(time, close+40, color) );
