@@ -1,4 +1,4 @@
-import { randColor, splitArr, isOdd } from '../gen/util.js';
+import { randColor, splitArr, isOdd, stepper } from '../gen/util.js';
 import { initColorpick, destroyColorpick, getColor } from './colorpick.js';
 import initSlider from './initSlider.js';
 import { arrow, rect, line, horzline, text } from './shapes.js';
@@ -152,10 +152,9 @@ const patterns = [
       const mostOccurred = counts[k].map(i => highs[i].close);
       const allInRanges = getAllInRanges(mostOccurred, highs);
       
-      allInRanges.forEach(idx => {
+      /* allInRanges.forEach(idx => {
         const { time, close } = highs[idx];
-        shapes[0].push( arrow(time, close+40, colors[0]) );
-        // shapes[0].push( text(time, close+150, ''+close) );
+        shapes[0].push( arrow(time, close+40, colors[0]) ); // shapes[0].push( text(time, close+150, ''+close) );
         
         if ($$.guide[0].checked) {
           const barIdx = _bars.findIndex(j=>j.time===time);
@@ -169,17 +168,37 @@ const patterns = [
             rect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close}, colors[2], colors[3])
           );
         }
-      });
+      }); */
       
-      const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
+      const nums = allInRanges.map(i=>highs[i].close);
       const ranges = getRanges(nums, rangeDistance);
       //============================================================================
       const rangeIndexes = ranges.map(i => i.map(j => highs.findIndex(b=>b.close===j)) );
       const rangeAllInRanges = ranges.map(i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
+      
+      const step = stepper(0, 3);
+      rangeAllInRanges.forEach(i => {
+        const bars = i.map(j => highs[j]);
+        // const color = colors[step()];
+        const color = randColor();
+        i.forEach(idx => {
+          const { time, close } = highs[idx];
+          shapes[0].push(  arrow(time, close+40, color) );
+        });
+        
+        const prices = bars.map(j => j.close);
+        const avg = Math.floor(prices.reduce((a,c)=>a+c) / prices.length);
+        log(avg);
+        const points = [
+          { time: bars[0].time, price: avg },
+          { time: bars[bars.length-1].time, price: avg}
+        ];
+        shapes[0].push( line(points, color) );
+      });
       //============================================================================
       const rangeAvgs = ranges.map( i => Math.floor(i.reduce((a,c)=>a+c) / i.length) ); // sum / count
       
-      rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
+      // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
       window.mostOccurred = mostOccurred;
       window.allInRanges = allInRanges;
@@ -424,5 +443,8 @@ window.percDiff = percDiff;
 window.isInRange = isInRange;
 window.getInRangeBars = getInRangeBars;
 window.getRanges = getRanges;
+window.getAllInRanges = getAllInRanges;
+window.getTurningPoints = getTurningPoints;
+
 
 export default { init 
