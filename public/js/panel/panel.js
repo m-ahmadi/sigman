@@ -159,23 +159,17 @@ const patterns = [
     shapes[0] = [];
     Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
       const mostOccurred = counts[k].map(i => highs[i].close);
-      
-      const allInRanges = mostOccurred
-        .map( close => getInRangeBars(highs, close) )                        // in range bars for each item
-        .map( bars => bars.map(i => highs.findIndex(j=>j.close===i.close)) ) // replace bar with index of highs array
-        .reduce((a,c) => a.concat(c), [])                                    // combine all items into one array
-        .filter((v,i,a) => a.indexOf(v) === i);                              // deduplicate
+      const allInRanges = getAllInRanges(mostOccurred, highs);
       
       //=============================================================================
-      var a = mostOccurred.map(close => getInRangeBars(highs, close));
+      /* var a = mostOccurred.map(close => getInRangeBars(highs, close));
       var b = a.map(bars => bars.map(i => highs.findIndex(j=>j.close===i.close)));
       var c = b.reduce((a,c) => a.concat(c), []);
       var d = c.filter((v,i,a) => a.indexOf(v) === i);
       log ('in range bars for each item:', a);
       log ('replace bar with index of highs array: ', b);
       log ('combine all items into one array: ', c);
-      log ('deduplicate: ', d);
-      
+      log ('deduplicate: ', d); */
       //=============================================================================
       allInRanges.forEach(idx => {
         const { time, close } = highs[idx];
@@ -205,6 +199,7 @@ const patterns = [
       }); */
       //============================================================================
       const rangeIndexes = ranges.map(i => i.map(j => highs.findIndex(b=>b.close===j)) );
+      const rangeAllInRanges = ranges.map(i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
       //============================================================================
       const rangeAvgs = ranges.map( i => Math.floor(i.reduce((a,c)=>a+c) / i.length) ); // sum / count
       
@@ -214,6 +209,7 @@ const patterns = [
       window.allInRanges = allInRanges;
       window.ranges = ranges;
       window.rangeIndexes = rangeIndexes;
+      window.rangeAllInRanges = rangeAllInRanges;
       window.rangeAvgs = rangeAvgs;
     });
     
@@ -223,6 +219,7 @@ const patterns = [
     log('counts: ', counts);
     log('ranges: ', ranges);
     log('rangeIndexes: ', rangeIndexes);
+    log('rangeAllInRanges: ', rangeAllInRanges);
     log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
     window.counts = counts;
@@ -413,6 +410,13 @@ function getRanges(nums, range=1, percent=true) {
     }
   }
   return ranges;
+}
+function getAllInRanges(prices, src, prop='close') {
+  return prices
+    .map( price => getInRangeBars(src, price) )                        // in range bars for each item
+    .map( bars => bars.map(i => src.findIndex(j=>j[prop]===i[prop])) ) // replace bar with index of src array
+    .reduce((a,c) => a.concat(c), [])                                  // combine all items into one array
+    .filter((v,i,a) => a.indexOf(v) === i);                            // deduplicate
 }
 
 window.perc = perc;
