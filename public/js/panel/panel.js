@@ -132,16 +132,7 @@ const patterns = [
     const rangeDistance = +$$.rangeDistance.val();
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
-    const highs = [];
-    for (let i=0; i<_bars.length; i+=period) {
-      const curr = _bars[i];
-      const prev = _bars[i-period];
-      const next = _bars[i+period];
-      // if (next && prev && curr.close > prev.close && curr.close > next.close) {
-      if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
-        highs.push( Object.assign({}, curr) );
-      }
-    }
+    const highs = getTurningPoints(_bars, period, distance);
     const counts = highs.map((bar, i) => {
       const { close } = bar;
       const rest = highs.filter((v,j) => j !== i);
@@ -161,22 +152,11 @@ const patterns = [
       const mostOccurred = counts[k].map(i => highs[i].close);
       const allInRanges = getAllInRanges(mostOccurred, highs);
       
-      //=============================================================================
-      /* var a = mostOccurred.map(close => getInRangeBars(highs, close));
-      var b = a.map(bars => bars.map(i => highs.findIndex(j=>j.close===i.close)));
-      var c = b.reduce((a,c) => a.concat(c), []);
-      var d = c.filter((v,i,a) => a.indexOf(v) === i);
-      log ('in range bars for each item:', a);
-      log ('replace bar with index of highs array: ', b);
-      log ('combine all items into one array: ', c);
-      log ('deduplicate: ', d); */
-      //=============================================================================
       allInRanges.forEach(idx => {
         const { time, close } = highs[idx];
         shapes[0].push( arrow(time, close+40, colors[0]) );
         // shapes[0].push( text(time, close+150, ''+close) );
         
-        // expr
         if ($$.guide[0].checked) {
           const barIdx = _bars.findIndex(j=>j.time===time);
           const curr = _bars[barIdx];
@@ -193,10 +173,6 @@ const patterns = [
       
       const nums = allInRanges.map(i=>highs[i].close).sort((a,b)=>a-b);
       const ranges = getRanges(nums, rangeDistance);
-      /* ranges.forEach(i => {
-        const avg = Math.floor(i.reduce((a,c)=>a+c) / i.length);
-        shapes[0].push( horzline(avg, i.length) );
-      }); */
       //============================================================================
       const rangeIndexes = ranges.map(i => i.map(j => highs.findIndex(b=>b.close===j)) );
       const rangeAllInRanges = ranges.map(i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
@@ -417,6 +393,28 @@ function getAllInRanges(prices, src, prop='close') {
     .map( bars => bars.map(i => src.findIndex(j=>j[prop]===i[prop])) ) // replace bar with index of src array
     .reduce((a,c) => a.concat(c), [])                                  // combine all items into one array
     .filter((v,i,a) => a.indexOf(v) === i);                            // deduplicate
+}
+function getTurningPoints(bars=[], period=1, distance=0, low=false, percent=true, prop='close') {
+  const len = bars.length;
+  if (!len) return;
+  const res = [];
+  const comp = (n1, n2) => low ? n1 < n2 : n1 > n2;
+  for (let i=0; i<len; i+=period) {
+    const curr = bars[i];
+    const prev = bars[i-period];
+    const next = bars[i+period];
+    if (!next || !prev) continue;
+    const currN = curr[prop];
+    const prevN = prev[prop];
+    const nextN = next[prop];
+    if (
+      comp(currN, percent ? perc(prevN, distance) : prevN) &&
+      comp(currN, percent ? perc(nextN, distance) : nextN)
+    ) {
+      res.push( Object.assign({}, curr) );
+    }
+  }
+  return res;
 }
 
 window.perc = perc;
