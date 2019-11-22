@@ -16,4 +16,12 @@ export function splitArr(arr, size){
 
 export function isOdd(n) {
   return n % 2 !== 0;
+}
+
+export function stepper(start=0, end=3) {
+  let n = start;
+  return function () {
+    n = n > end ? start+1 : n+1;
+    return n-1;
+  };
 
