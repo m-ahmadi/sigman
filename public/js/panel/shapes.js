@@ -8,12 +8,12 @@ export function arrow(time, price, color, up=false, thick=false) {
   return chart.createShape({time, price}, opts);
 }
 
-export function line(points, color) {
+export function line(points, color, width=1) {
   const opts = {
     shape: 'extended', // trend_line
     overrides: {
       linecolor: color,
-      linewidth: 4,
+      linewidth: width,
       linestyle: 0
     }
   };
