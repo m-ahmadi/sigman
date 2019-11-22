@@ -373,19 +373,20 @@ function getInRangeBars(bars, price, n=1) {
   return bars.filter( j => isInRange(j.close, min, max) );
 }
 function getRanges(nums, range=1, percent=true) {
-  const ranges = [];
+  const res = [];
   const len = nums.length;
+  nums = nums.sort((a, b) => a - b);
   for (let i=0; i<len; i+=1) {
     const num = nums[i];
     const min = percent ? perc(num, -range) : num - range;
     const max = percent ? perc(num, +range) : num + range;
     const inRanges = nums.slice(i).filter( j => isInRange(j, min, max) );
     if (inRanges.length) {
-      ranges.push(inRanges);
+      res.push(inRanges);
       i = nums.findIndex(j => j === inRanges[inRanges.length-1]);
     }
   }
-  return ranges;
+  return res;
 }
 function getAllInRanges(prices, src, prop='close') {
   return prices
