@@ -74,8 +74,8 @@ const inits = [
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
-    initColorpick($$.colorpick3, '#00ff00');
-    initColorpick($$.colorpick4, 'yellow');
+    initColorpick($$.colorpick3, 'cyan');
+    initColorpick($$.colorpick4, '#9900ff');
     addEvents();
     $$.rangeDistance.on('input blur change', function (e) {
       const el = $(this);
@@ -86,6 +86,32 @@ const inits = [
         v === 0 ? 0   :
         undefined;
       if (n !== undefined) el.val(n);
+    });
+    
+    const step = stepper(0, 3);
+    $$.rangeList.on('change', function (e) {
+      const val = $(this).val();
+      shapes[0].forEach( i => chart.removeEntity(i) );
+      shapes[0] = [];
+      const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
+      val.forEach(i => {
+        const rangeIndexes = JSON.parse(i);
+        const rangeBars = rangeIndexes.map(idx => bars[idx]).sort((a,b) => a.time - b.time);
+        
+        const color = colors[step()];
+        rangeBars.forEach(bar => {
+          const { time, close } = bar;
+          shapes[0].push(  arrow(time, close+20, color) );
+        });
+        
+        const rangePrices = rangeBars.map(bar => bar.close);
+        const avg = Math.floor(rangePrices.reduce((a,c)=>a+c) / rangePrices.length);
+        const points = [
+          { time: rangeBars[0].time, price: avg },
+          { time: rangeBars[rangeBars.length-1].time, price: avg}
+        ];
+        shapes[0].push( line(points, color, 2) );
+      });
     });
   },
   function () { // highs & count of in-range occurrences
@@ -178,28 +204,35 @@ const patterns = [
       const rangeAllInRanges = ranges.map(i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
       
       const step = stepper(0, 3);
-      rangeAllInRanges.forEach(i => {
-        const bars = i.map(j => highs[j]);
+      rangeAllInRanges.forEach(indexes => {
+        const bars = indexes.map(idx => highs[idx]);
         const color = colors[step()];
         // const color = randColor();
-        i.forEach(idx => {
+        indexes.forEach(idx => {
           const { time, close } = highs[idx];
-          shapes[0].push(  arrow(time, close+40, color) );
+          shapes[0].push(  arrow(time, close+20, color) );
         });
         
         const prices = bars.map(j => j.close);
         const avg = Math.floor(prices.reduce((a,c)=>a+c) / prices.length);
-        log(avg);
         const points = [
           { time: bars[0].time, price: avg },
           { time: bars[bars.length-1].time, price: avg}
         ];
-        shapes[0].push( line(points, color) );
+        shapes[0].push( line(points, color, 2) );
       });
       //============================================================================
       const rangeAvgs = ranges.map( i => Math.floor(i.reduce((a,c)=>a+c) / i.length) ); // sum / count
       
       // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
+      
+      const selectOptions = rangeAllInRanges.map((indxes, i) => {
+        const rangeGlobalIndexes = indxes.map( idx => bars.findIndex(b => b.close === highs[idx].close) );
+        const prices = rangeGlobalIndexes.map(i => bars[i].close).sort((a,b)=>a-b);
+        const str = JSON.stringify(rangeGlobalIndexes);
+        return $('<option>').val(str).text(prices.join(','));
+      });
+      $$.rangeList.append( selectOptions.reverse() );
       
       window.mostOccurred = mostOccurred;
       window.allInRanges = allInRanges;
@@ -312,7 +345,7 @@ const patterns = [
         { time: chunk[0].time, price: max.close },
         { time: chunk[chunk.length-1].time , price: max.close }
       ];
-      shapes[4].push( line(points, colors[1]) );
+      shapes[4].push( line(points, colors[1], 4) );
     }
     res.forEach(i => {
       const maxIdx = bars.findIndex(j => j.time === i.max.time);
@@ -320,7 +353,7 @@ const patterns = [
       const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
       const pointB = { time: bars[maxIdx+10].time, price: i.max.close };
       const points = [pointA, pointB];
-      shapes[4].push( line(points, colors[0]) );
+      shapes[4].push( line(points, colors[0], 4) );
     })
   },
   function () { // dummy

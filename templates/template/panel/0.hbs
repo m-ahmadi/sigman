@@ -1,38 +1,46 @@
-<input type='text' data-el="colorpick1" data-els="colorpicks" />
-<input type='text' data-el="colorpick2" data-els="colorpicks" />
-<input type='text' data-el="colorpick3" data-els="colorpicks" />
-<input type='text' data-el="colorpick4" data-els="colorpicks" />
+<div>
+  <input type='text' data-el="colorpick1" data-els="colorpicks" />
+  <input type='text' data-el="colorpick2" data-els="colorpicks" />
+  <input type='text' data-el="colorpick3" data-els="colorpicks" />
+  <input type='text' data-el="colorpick4" data-els="colorpicks" />
+  
+  <input id="guide-input" type="checkbox" class="uk-checkbox uk-margin-small-left" data-el="guide" />
+  <label for="guide-input">Guides</label>
+</div>
 
-<input id="guide-input" type="checkbox" class="uk-checkbox uk-margin-small-left" data-el="guide" />
-<label for="guide-input">Guides</label>
-
-<div class="uk-grid-collapse uk-child-width-1-2 uk-width-1-4 uk-margin-small" uk-grid>
+<div class="uk-width-1-1 uk-child-width-1-2" uk-grid>
   <div>
-    <label class="uk-form-label" for="period-input">Period:</label>
+    <div class="uk-grid-collapse uk-child-width-1-2 uk-margin-small" uk-grid>
+      <div>
+        <label class="uk-form-label" for="period-input">Period:</label>
+      </div>
+      
+      <div>
+        <input id="period-input" type="number" class="uk-input uk-form-small" style="width:60px" min="3" max="999" value="3" step="2" data-el="period" />
+        <label class="uk-form-label" for="period-input">days.</label>
+      </div>
+      
+      <div>
+        <label class="uk-form-label" for="distance-input">Distance:</label>
+      </div>
+      
+      <div>
+        <input id="distance-input" type="number" class="uk-input uk-form-small" style="width:60px" min="0" max="100" value="0" data-el="distance" />
+        <label class="uk-form-label" for="distance-input">%</label>
+      </div>
+      
+      <div>
+        <label class="uk-form-label" for="range-distance-input">Range Distance:</label>
+      </div>
+      
+      <div>
+        <input id="range-distance-input" type="number" class="uk-input uk-form-small" style="width:60px" min="0" max="100" value="1" data-el="rangeDistance" />
+        <label class="uk-form-label" for="range-distance-input">%</label>
+      </div>
+    </div>
   </div>
   
   <div>
-    <input id="period-input" type="number" class="uk-input uk-form-small" style="width:60px" min="3" max="999" value="3" step="2" data-el="period" />
-    <label class="uk-form-label" for="period-input">days.</label>
-  </div>
-  
-  
-  
-  <div>
-    <label class="uk-form-label" for="distance-input">Distance:</label>
-  </div>
-  
-  <div>
-    <input id="distance-input" type="number" class="uk-input uk-form-small" style="width:60px" min="0" max="100" value="0" data-el="distance" />
-    <label class="uk-form-label" for="distance-input">%</label>
-  </div>
-  
-  <div>
-    <label class="uk-form-label" for="range-distance-input">Range Distance:</label>
-  </div>
-  
-  <div>
-    <input id="range-distance-input" type="number" class="uk-input uk-form-small" style="width:60px" min="0" max="100" value="1" data-el="rangeDistance" />
-    <label class="uk-form-label" for="range-distance-input">%</label>
+    <select class="uk-select uk-form-small uk-padding-remove uk-height-small" name="res" multiple data-el="rangeList"></select>
   </div>
 </div
