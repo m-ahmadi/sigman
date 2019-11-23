@@ -67,8 +67,11 @@ function addEvents() {
     if (n !== undefined) el.val(n);
   });
 }
+
 const inits = [
   function () { // most in-range occurrences
+    $$.start.val(150);
+    $$.end.val(250);
     $$.period.val(3);
     $$.guide[0].checked = false;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
@@ -88,12 +91,13 @@ const inits = [
       if (n !== undefined) el.val(n);
     });
     
-    const step = stepper(0, 3);
+    
     $$.rangeList.on('change', function (e) {
       const val = $(this).val();
       shapes[0].forEach( i => chart.removeEntity(i) );
       shapes[0] = [];
       const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
+      const step = stepper(0, 3);
       val.forEach(i => {
         const rangeIndexes = JSON.parse(i);
         const rangeBars = rangeIndexes.map(idx => bars[idx]).sort((a,b) => a.time - b.time);
@@ -226,13 +230,13 @@ const patterns = [
       
       // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
-      const selectOptions = rangeAllInRanges.map((indxes, i) => {
+      const selectOptions = rangeAllInRanges.map(indxes => {
         const rangeGlobalIndexes = indxes.map( idx => bars.findIndex(b => b.close === highs[idx].close) );
         const prices = rangeGlobalIndexes.map(i => bars[i].close).sort((a,b)=>a-b);
         const str = JSON.stringify(rangeGlobalIndexes);
         return $('<option>').val(str).text(prices.join(','));
       });
-      $$.rangeList.append( selectOptions.reverse() );
+      $$.rangeList.empty().append( selectOptions.reverse() );
       
       window.mostOccurred = mostOccurred;
       window.allInRanges = allInRanges;
