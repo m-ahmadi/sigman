@@ -22,7 +22,7 @@ function debug() {
   fs.writeFileSync(OUT+'/js/gen/root.js', `export default '${ROOT}';`);
   
   shell.exec('rollup -c');
-  shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html`);
+  shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html -t index.hbs`);
   shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/lib/_templates.js -e hbs -o`);
   shell.exec(`handlebars ${INP}/templates/partial/ -f ${OUT}/lib/_partials.js -p -e hbs -o`);
   shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css`);
@@ -40,7 +40,7 @@ function release() {
   fs.writeFileSync(INP+'/html/scripts/app/filename.htm', FL);
   fs.writeFileSync(INP+'/js/gen/root.js', `export default '${ROOT}';`);
 
-  shell.exec(`htmlbilder ${INP}/html/ -o ./release/index.html`);
+  shell.exec(`htmlbilder ${INP}/html/ -o ./release/index.html -t index.hbs`);
   
   const TEMPLATES_FILE = `${OUT}/js/templates.tmp.js`;
   const PARTIALS_FILE = `${OUT}/js/partials.tmp.js`;
