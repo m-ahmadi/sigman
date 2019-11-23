@@ -204,11 +204,12 @@ const patterns = [
       const ranges = getRanges(nums, rangeDistance);
       //============================================================================
       // separate lines & arrows for each range
-      const rangeIndexes = ranges.map(i => i.map(j => highs.findIndex(b=>b.close===j)) );
-      const rangeAllInRanges = ranges.map(i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
+      const rangeIndexes = ranges.map(i => i.map( j => highs.findIndex(b=>b.close===j)) );
+      const rangeAllInRangeIndexes = ranges.map( i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
+      const rangeAllInRangePrices = rangeAllInRangeIndexes.map( idxs => idxs.map(idx=>highs[idx].close).sort((a,b)=>a-b) );
       
       const step = stepper(0, 3);
-      rangeAllInRanges.forEach(indexes => {
+      rangeAllInRangeIndexes.forEach(indexes => {
         const bars = indexes.map(idx => highs[idx]);
         const color = colors[step()];
         // const color = randColor();
@@ -230,7 +231,7 @@ const patterns = [
       
       // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
-      const selectOptions = rangeAllInRanges.map(indxes => {
+      const selectOptions = rangeAllInRangeIndexes.map(indxes => {
         const rangeGlobalIndexes = indxes.map( idx => bars.findIndex(b => b.close === highs[idx].close) );
         const prices = rangeGlobalIndexes.map(i => bars[i].close).sort((a,b)=>a-b);
         const str = JSON.stringify(rangeGlobalIndexes);
@@ -242,7 +243,8 @@ const patterns = [
       window.allInRanges = allInRanges;
       window.ranges = ranges;
       window.rangeIndexes = rangeIndexes;
-      window.rangeAllInRanges = rangeAllInRanges;
+      window.rangeAllInRangePrices = rangeAllInRangePrices;
+      window.rangeAllInRangeIndexes = rangeAllInRangeIndexes;
       window.rangeAvgs = rangeAvgs;
     });
     
@@ -252,7 +254,8 @@ const patterns = [
     log('counts: ', counts);
     log('ranges: ', ranges);
     log('rangeIndexes: ', rangeIndexes);
-    log('rangeAllInRanges: ', rangeAllInRanges);
+    log('rangeAllInRangePrices: ', rangeAllInRangePrices);
+    log('rangeAllInRangeIndexes: ', rangeAllInRangeIndexes);
     log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
     window.counts = counts;
