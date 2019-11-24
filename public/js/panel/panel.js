@@ -70,7 +70,7 @@ function addCommonEvents() {
 
 const inits = [
   function () { // most in-range occurrences
-    $$.clear.on('click', function () {
+    $$.clear.off().on('click', function () {
       clear();
       $$.rangeList.empty();
     });
