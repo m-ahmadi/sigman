@@ -17,7 +17,7 @@ function init(e) {
   v = __temps('panel');
   
   $$.start.val(0);
-  $$.end.val(bars.length); // bars.length
+  $$.end.val(500); // bars.length
   
   
   // chart.removeAllShapes();
@@ -45,7 +45,7 @@ function init(e) {
   window.bars = bars;
 }
 
-function addEvents() {
+function addCommonEvents() {
   $$.period.on('input blur change', function (e) {
   const el = $(this);
   const v = +el.val();
@@ -74,16 +74,12 @@ const inits = [
       clear();
       $$.rangeList.empty();
     });
-    $$.start.val(150);
-    $$.end.val(250);
-    $$.period.val(3);
-    $$.guide[0].checked = false;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
     initColorpick($$.colorpick3, 'cyan');
     initColorpick($$.colorpick4, '#9900ff');
-    addEvents();
+    addCommonEvents();
     $$.rangeDistance.on('input blur change', function (e) {
       const el = $(this);
       const v = +el.val();
@@ -123,31 +119,25 @@ const inits = [
     });
   },
   function () { // highs & count of in-range occurrences
-    $$.start.val(150);
-    $$.end.val(250);
     if ($$.colorpick1) destroyColorpick($$.colorpick1);
     initColorpick($$.colorpick1, 'red');
-    addEvents();
+    addCommonEvents();
   },
   function () { // highs
-    $$.period.val(61);
-    $$.guide[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
     initColorpick($$.colorpick3, '#ffe599');
     initColorpick($$.colorpick4, '#cc0000');
-    addEvents();
+    addCommonEvents();
   },
   function () { // lows
-    $$.period.val(31);
-    $$.guide[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'blue');
     initColorpick($$.colorpick2, 'red');
     initColorpick($$.colorpick3, '#ffe599');
     initColorpick($$.colorpick4, '#cc0000');
-    addEvents();
+    addCommonEvents();
   },
   function () { // local maxima
     initColorpick($$.colorpick1, 'red');
@@ -393,7 +383,7 @@ function draw() {
 }
 function clear() {
   const arr = shapes[ $$.pattern.val() ];
-  if (arr) arr.forEach( i => chart.removeEntity(i) );
+  if (arr && arr.length) arr.forEach( i => chart.removeEntity(i) );
 }
 function zoomOut() {
   chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
@@ -475,6 +465,8 @@ function getTurningPoints(bars=[], period=1, distance=0, low=false, percent=true
   }
   return res;
 }
+
+window.shapes = shapes;
 
 window.perc = perc;
 window.whatPerc = whatPerc;
