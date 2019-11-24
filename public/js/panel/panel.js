@@ -16,7 +16,7 @@ function init(e) {
   $$ = __els('[data-root="panel"]');
   v = __temps('panel');
   
-  $$.start.val(0);
+  $$.start.val(270);
   $$.end.val(500); // bars.length
   
   
@@ -202,7 +202,7 @@ const patterns = [
       
       const step = stepper(0, 3);
       rangeIdxs.forEach(idxs => {
-        const bars = idxs.map(idx => highs[idx]);
+        const bars = idxs.map(idx => highs[idx]).sort((a,b) => a.time - b.time);;
         const color = colors[step()];
         // const color = randColor();
         idxs.forEach(idx => {
@@ -223,8 +223,9 @@ const patterns = [
       
       // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
+      window.rangeGlobalIdxs = rangeIdxs.map(idxs => idxs.map(idx => bars.findIndex(b => b.time === highs[idx].time)) );
       const selectOptions = rangeIdxs.map(idxs => {
-        const rangeGlobalIdxs = idxs.map( idx => bars.findIndex(b => b.close === highs[idx].close) );
+        const rangeGlobalIdxs = idxs.map( idx => bars.findIndex(b => b.time === highs[idx].time) );
         const prices = rangeGlobalIdxs.map(i => bars[i].close).sort((a,b)=>a-b);
         const str = JSON.stringify(rangeGlobalIdxs);
         return $('<option>').val(str).text(prices.join(','));
@@ -244,6 +245,7 @@ const patterns = [
     log('allInRangeIdxs: ', allInRangeIdxs);
     log('ranges: ', ranges);
     log('rangeIdxs: ', rangeIdxs);
+    log('rangeGlobalIdxs: ', rangeGlobalIdxs);
     log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
     window.counts = counts;
