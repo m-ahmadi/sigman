@@ -450,9 +450,9 @@ function getRanges(nums, range=1, percent=true) {
 }
 function getAllInRanges(prices, src, prop='close') {
   return prices
-    .map( price => getInRangeBars(src, price) )                        // in range bars for each item
-    .map( bars => bars.map(i => src.findIndex(j=>j[prop]===i[prop])) ) // replace bar with index of src array
-    .reduce((a,c) => a.concat(c), [])                                  // combine all items into one array
+    .map( price => getInRangeBars(src, price) )                        // in range bars for each item:         [ [{},{},{}], [{},{},{}], ... ]
+    .map( bars => bars.map(i => src.findIndex(j=>j[prop]===i[prop])) ) // replace bar with index of src array: [ [n, n, n],  [n, n, n],  ... ]
+    .reduce((a,c) => a.concat(c), [])                                  // combine all items into one array:    [ n, n, n, n, n, n ]
     .filter((v,i,a) => a.indexOf(v) === i);                            // deduplicate
 }
 function getTurningPoints(bars=[], period=1, distance=0, low=false, percent=true, prop='close') {
