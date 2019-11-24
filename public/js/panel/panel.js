@@ -70,6 +70,10 @@ function addEvents() {
 
 const inits = [
   function () { // most in-range occurrences
+    $$.clear.on('click', function () {
+      clear();
+      $$.rangeList.empty();
+    });
     $$.start.val(150);
     $$.end.val(250);
     $$.period.val(3);
