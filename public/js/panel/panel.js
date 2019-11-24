@@ -179,10 +179,10 @@ const patterns = [
     
     shapes[0] = [];
     Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
-      const mostOccurred = counts[k].map(i => highs[i].close);
-      const allInRanges = getAllInRanges(mostOccurred, highs);
+      const mostOccurredPrices = counts[k].map(i => highs[i].close);
+      const allInRangeIdxs = getAllInRanges(mostOccurredPrices, highs);
       
-      /* allInRanges.forEach(idx => {
+      /* allInRangeIdxs.forEach(idx => {
         const { time, close } = highs[idx];
         shapes[0].push( arrow(time, close+40, colors[0]) ); // shapes[0].push( text(time, close+150, ''+close) );
         
@@ -200,20 +200,18 @@ const patterns = [
         }
       }); */
       
-      const nums = allInRanges.map(i=>highs[i].close);
-      const ranges = getRanges(nums, rangeDistance);
+      const allInRangePrices = allInRangeIdxs.map(i=>highs[i].close);
+      const ranges = getRanges(allInRangePrices, rangeDistance);
       //============================================================================
       // separate lines & arrows for each range
-      const rangeIndexes = ranges.map(i => i.map( j => highs.findIndex(b=>b.close===j)) );
-      const rangeAllInRangeIndexes = ranges.map( i => getAllInRanges(i, highs).sort((a,b)=>a-b) );
-      const rangeAllInRangePrices = rangeAllInRangeIndexes.map( idxs => idxs.map(idx=>highs[idx].close).sort((a,b)=>a-b) );
+      const rangeIdxs = ranges.map(i => i.map( j => highs.findIndex(b=>b.close===j)) );
       
       const step = stepper(0, 3);
-      rangeAllInRangeIndexes.forEach(indexes => {
-        const bars = indexes.map(idx => highs[idx]);
+      rangeIdxs.forEach(idxs => {
+        const bars = idxs.map(idx => highs[idx]);
         const color = colors[step()];
         // const color = randColor();
-        indexes.forEach(idx => {
+        idxs.forEach(idx => {
           const { time, close } = highs[idx];
           shapes[0].push(  arrow(time, close+20, color) );
         });
@@ -231,31 +229,27 @@ const patterns = [
       
       // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
       
-      const selectOptions = rangeAllInRangeIndexes.map(indxes => {
-        const rangeGlobalIndexes = indxes.map( idx => bars.findIndex(b => b.close === highs[idx].close) );
-        const prices = rangeGlobalIndexes.map(i => bars[i].close).sort((a,b)=>a-b);
-        const str = JSON.stringify(rangeGlobalIndexes);
+      const selectOptions = rangeIdxs.map(idxs => {
+        const rangeGlobalIdxs = idxs.map( idx => bars.findIndex(b => b.close === highs[idx].close) );
+        const prices = rangeGlobalIdxs.map(i => bars[i].close).sort((a,b)=>a-b);
+        const str = JSON.stringify(rangeGlobalIdxs);
         return $('<option>').val(str).text(prices.join(','));
       });
       $$.rangeList.empty().append( selectOptions.reverse() );
       
-      window.mostOccurred = mostOccurred;
-      window.allInRanges = allInRanges;
+      window.mostOccurredPrices = mostOccurredPrices;
+      window.allInRangeIdxs = allInRangeIdxs;
       window.ranges = ranges;
-      window.rangeIndexes = rangeIndexes;
-      window.rangeAllInRangePrices = rangeAllInRangePrices;
-      window.rangeAllInRangeIndexes = rangeAllInRangeIndexes;
+      window.rangeIdxs = rangeIdxs;
       window.rangeAvgs = rangeAvgs;
     });
     
-    log('mostOccurred: ', mostOccurred);
-    log('allInRanges: ', allInRanges);
     log('highs: ', highs);
     log('counts: ', counts);
+    log('mostOccurredPrices: ', mostOccurredPrices);
+    log('allInRangeIdxs: ', allInRangeIdxs);
     log('ranges: ', ranges);
-    log('rangeIndexes: ', rangeIndexes);
-    log('rangeAllInRangePrices: ', rangeAllInRangePrices);
-    log('rangeAllInRangeIndexes: ', rangeAllInRangeIndexes);
+    log('rangeIdxs: ', rangeIdxs);
     log('rangeAvgs: ', rangeAvgs);
     window.highs = highs;
     window.counts = counts;
