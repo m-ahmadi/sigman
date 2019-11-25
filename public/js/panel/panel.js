@@ -23,7 +23,10 @@ function init(e) {
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
   $$.clear.on('click', clear);
-  $$.clearAll.on( 'click', () => chart.removeAllShapes() );
+  $$.clearAll.on( 'click', () => {
+    Object.keys(shapes).forEach(k => shapes[k] = []);
+    chart.removeAllShapes()
+  });
   $$.zoomOut.on('click', zoomOut);
   $$.zoomTo.on('click', zoomTo);
   // initSlider($$.slider[0], bars.length);
@@ -121,6 +124,7 @@ const inits = [
   function () { // highs & count of in-range occurrences
     $$.start.val(270);
     $$.end.val(500);
+    $$.countDistancePercent[0].checked = true
     if ($$.colorpick1) destroyColorpick($$.colorpick1);
     initColorpick($$.colorpick1, 'red');
     addCommonEvents();
@@ -175,31 +179,10 @@ const patterns = [
     Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
       const mostOccurredPrices = counts[k].map(i => highs[i].close);
       const allInRangeIdxs = getAllInRanges(mostOccurredPrices, highs);
-      
-      /* allInRangeIdxs.forEach(idx => {
-        const { time, close } = highs[idx];
-        shapes[0].push( arrow(time, close+40, colors[0]) ); // shapes[0].push( text(time, close+150, ''+close) );
-        
-        if ($$.guide[0].checked) {
-          const barIdx = _bars.findIndex(j=>j.time===time);
-          const curr = _bars[barIdx];
-          const prev = _bars[barIdx-period];
-          const next = _bars[barIdx+period];
-          shapes[0].push( arrow(prev.time, prev.close-40, colors[1], true) );
-          shapes[0].push( arrow(next.time, next.close-40, colors[1], true) );
-          const sorted = sort([prev, next]);
-          shapes[0].push(
-            rect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close}, colors[2], colors[3])
-          );
-        }
-      }); */
-      
       const allInRangePrices = allInRangeIdxs.map(i=>highs[i].close);
       const ranges = getRanges(allInRangePrices, rangeDistance);
-      //============================================================================
-      // separate lines & arrows for each range
-      const rangeIdxs = ranges.map(i => i.map( j => highs.findIndex(b=>b.close===j)) );
       
+      const rangeIdxs = ranges.map(i => i.map( j => highs.findIndex(b=>b.close===j)) );
       const step = stepper(0, 3);
       rangeIdxs.forEach(idxs => {
         const bars = idxs.map(idx => highs[idx]).sort((a,b) => a.time - b.time);;
@@ -218,12 +201,7 @@ const patterns = [
         ];
         shapes[0].push( line(points, color, 2) );
       });
-      //============================================================================
-      const rangeAvgs = ranges.map( i => Math.floor(i.reduce((a,c)=>a+c) / i.length) ); // sum / count
       
-      // rangeAvgs.forEach( price => shapes[0].push(horzline(price)) );
-      
-      window.rangeGlobalIdxs = rangeIdxs.map(idxs => idxs.map(idx => bars.findIndex(b => b.time === highs[idx].time)) );
       const selectOptions = rangeIdxs.map(idxs => {
         const rangeGlobalIdxs = idxs.map( idx => bars.findIndex(b => b.time === highs[idx].time) );
         const prices = rangeGlobalIdxs.map(i => bars[i].close).sort((a,b)=>a-b);
@@ -231,24 +209,7 @@ const patterns = [
         return $('<option>').val(str).text(prices.join(','));
       });
       $$.rangeList.empty().append( selectOptions.reverse() );
-      
-      window.mostOccurredPrices = mostOccurredPrices;
-      window.allInRangeIdxs = allInRangeIdxs;
-      window.ranges = ranges;
-      window.rangeIdxs = rangeIdxs;
-      window.rangeAvgs = rangeAvgs;
     });
-    
-    log('highs: ', highs);
-    log('counts: ', counts);
-    log('mostOccurredPrices: ', mostOccurredPrices);
-    log('allInRangeIdxs: ', allInRangeIdxs);
-    log('ranges: ', ranges);
-    log('rangeIdxs: ', rangeIdxs);
-    log('rangeGlobalIdxs: ', rangeGlobalIdxs);
-    log('rangeAvgs: ', rangeAvgs);
-    window.highs = highs;
-    window.counts = counts;
   },
   function () { // highs & count of in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
@@ -375,8 +336,12 @@ function draw() {
   patterns[ $$.pattern.val() ]();
 }
 function clear() {
-  const arr = shapes[ $$.pattern.val() ];
-  if (arr && arr.length) arr.forEach( i => chart.removeEntity(i) );
+  const idx = $$.pattern.val();
+  const arr = shapes[idx];
+  if (arr && arr.length) {
+    arr.forEach( i => chart.removeEntity(i) );
+    shapes[idx] = [];
+  }
 }
 function zoomOut() {
   chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
