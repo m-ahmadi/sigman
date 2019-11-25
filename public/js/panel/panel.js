@@ -16,8 +16,8 @@ function init(e) {
   $$ = __els('[data-root="panel"]');
   v = __temps('panel');
   
-  $$.start.val(270);
-  $$.end.val(500); // bars.length
+  $$.start.val(0);
+  $$.end.val(bars.length-1); // bars.length
   
   
   // chart.removeAllShapes();
@@ -38,7 +38,7 @@ function init(e) {
   }).trigger('change');
   
   setTimeout(() => {
-    $$.pattern.prop({selectedIndex: 0}).trigger('change');
+    $$.pattern.prop({selectedIndex: 1}).trigger('change');
     draw();
   }, 500);
   window.$$ = $$;
@@ -119,11 +119,24 @@ const inits = [
     });
   },
   function () { // highs & count of in-range occurrences
+    $$.start.val(270);
+    $$.end.val(500);
     if ($$.colorpick1) destroyColorpick($$.colorpick1);
     initColorpick($$.colorpick1, 'red');
     addCommonEvents();
+    $$.countList.on('change', function () {
+      const val = $(this).val();
+      shapes[0].forEach( i => chart.removeEntity(i) );
+      shapes[0] = [];
+      val.forEach(i => {
+        const idxs = JSON.parse(i);
+        const _bars = idxs.map(idx => bars[idx]).sort((a,b) => a.time - b.time);
+      });
+    });
   },
   function () { // highs
+    $$.start.val(270);
+    $$.end.val(500);
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
@@ -157,20 +170,7 @@ const patterns = [
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = getTurningPoints(_bars, period, distance);
-    const counts = highs.map((bar, i) => {
-      const { close } = bar;
-      const rest = highs.filter((v,j) => j !== i);
-      const count = getInRangeBars(rest, close).length;
-      return [count, i];
-    })
-    .sort( (a, b) => b[0]-a[0] )
-    .reduce((acc, cur) => {
-      const [count, index] = cur;
-      if ( !acc[count] ) acc[count] = [];
-      acc[count].push(index);
-      return acc;
-    }, {});
-    
+    const counts = countInRanges(highs);
     shapes[0] = [];
     Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
       const mostOccurredPrices = counts[k].map(i => highs[i].close);
@@ -254,25 +254,18 @@ const patterns = [
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
-    const color1 = getColor($$.colorpick1);
-    const res = [];
-    for (let i=0; i<_bars.length; i+=period) {
-      const curr = _bars[i];
-      const next = _bars[i+period];
-      const prev = _bars[i-period];
-      if (next && prev && curr.close > prev.close && curr.close > next.close) {
-        res.push( Object.assign({}, curr) );
-      }
-    }
+    const distance = +$$.distance.val();
+    const countDistance = +$$.countDistance.val();
+    const percent = $$.countDistancePercent[0].checked;
+    const color = getColor($$.colorpick1);
+    const res = getTurningPoints(_bars, period, distance, undefined, false);
     shapes[1] = [];
+    const counts = countInRanges(res);
     res.forEach((bar, i) => {
       const { close } = bar;
-      const n = 1;
       const rest = res.filter((v,j) => j !== i);
-      // const found = rest.findIndex( j => isInRange(j.close, perc(close, -n), perc(close, n)) ); // at least one other high in n% range
-      // return found !== -1;
-      const count = rest.filter( j => isInRange(j.close, perc(close, -n), perc(close, n)) ).length;
-      shapes[1].push( arrow(bar.time, bar.close+40, color1) );
+      const count = getInRangeBars(rest, close, countDistance, percent).length;
+      shapes[1].push( arrow(bar.time, bar.close+40, color) );
       shapes[1].push( text(bar.time, bar.close+130, count, {bold:true, fontsize:20}) );
     });
   },
@@ -417,19 +410,19 @@ function whatPerc(y, n) {
 function isInRange(n, min, max) {
   return n >= min && n <= max;
 }
-function getInRangeBars(bars, price, n=1) {
-  const min = perc(price, -n);
-  const max = perc(price, +n);
-  return bars.filter( j => isInRange(j.close, min, max) );
+function getInRangeBars(bars, price, distance=1, percent=true, prop='close') {
+  const min = percent ? perc(price, -distance) : price - distance;
+  const max = percent ? perc(price, +distance) : price + distance;
+  return bars.filter( i => isInRange(i[prop], min, max) );
 }
-function getRanges(nums, range=1, percent=true) {
+function getRanges(nums, distance=1, percent=true) {
   const res = [];
   const len = nums.length;
   nums = nums.sort((a, b) => a - b);
   for (let i=0; i<len; i+=1) {
     const num = nums[i];
-    const min = percent ? perc(num, -range) : num - range;
-    const max = percent ? perc(num, +range) : num + range;
+    const min = percent ? perc(num, -distance) : num - distance;
+    const max = percent ? perc(num, +distance) : num + distance;
     const inRanges = nums.slice(i).filter( j => isInRange(j, min, max) );
     if (inRanges.length) {
       res.push(inRanges);
@@ -467,6 +460,21 @@ function getTurningPoints(bars=[], period=1, distance=0, low=false, percent=true
   }
   return res;
 }
+function countInRanges(bars, distance=1, percent=true, prop='close') {
+  return bars.map((bar, i) => {
+    const price = bar[prop];
+    const rest = bars.filter((v,j) => j !== i);
+    const count = getInRangeBars(rest, price, distance, percent, prop).length;
+    return [count, i];
+  })
+  .sort( (a, b) => b[0]-a[0] )
+  .reduce((acc, cur) => {
+    const [count, index] = cur;
+    if ( !acc[count] ) acc[count] = [];
+    acc[count].push(index);
+    return acc;
+  }, {});
+}
 
 window.shapes = shapes;
 
@@ -478,6 +486,7 @@ window.getInRangeBars = getInRangeBars;
 window.getRanges = getRanges;
 window.getAllInRanges = getAllInRanges;
 window.getTurningPoints = getTurningPoints;
+window.countInRanges = countInRanges;
 
 
 export default { init 
