@@ -58,6 +58,6 @@ export function text(time, price, text, _opts) {
     }, _opts)
   };
   const id = chart.createShape({time, price}, opts);
-  chart.getShapeById(id).setProperties({ text: text });
+  chart.getShapeById(id).setProperties({text});
   return id;
 }
