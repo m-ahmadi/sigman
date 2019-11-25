@@ -23,8 +23,8 @@ function debug() {
   
   shell.exec('rollup -c');
   shell.exec(`htmlbilder ${INP}/html/ -o ${OUT}/index.html -t index.hbs`);
-  shell.exec(`handlebars ${INP}/templates/template/ -f ${OUT}/lib/_templates.js -e hbs -o`);
-  shell.exec(`handlebars ${INP}/templates/partial/ -f ${OUT}/lib/_partials.js -p -e hbs -o`);
+  shell.exec(`handlebars ${INP}/template/ -f ${OUT}/lib/_partials.js -p -e phbs -o`);
+  shell.exec(`handlebars ${INP}/template/ -f ${OUT}/lib/_templates.js -e hbs -o`);
   shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css`);
 }
 
@@ -42,10 +42,10 @@ function release() {
 
   shell.exec(`htmlbilder ${INP}/html/ -o ./release/index.html -t index.hbs`);
   
-  const TEMPLATES_FILE = `${OUT}/js/templates.tmp.js`;
   const PARTIALS_FILE = `${OUT}/js/partials.tmp.js`;
-  shell.exec(`handlebars ${INP}/templates/template/ -f ${TEMPLATES_FILE} -e hbs -m -o`);
-  shell.exec(`handlebars ${INP}/templates/partial/ -f ${PARTIALS_FILE} -p -e hbs -m -o`);
+  const TEMPLATES_FILE = `${OUT}/js/templates.tmp.js`;
+  shell.exec(`handlebars ${INP}/template/ -f ${PARTIALS_FILE} -p -e phbs -m -o`);
+  shell.exec(`handlebars ${INP}/template/ -f ${TEMPLATES_FILE} -e hbs -m -o`);
   fs.writeFileSync( `${OUT}/js/templates.js`, shell.cat(TEMPLATES_FILE, PARTIALS_FILE) );
   shell.rm('-rf', TEMPLATES_FILE, PARTIALS_FILE);
   

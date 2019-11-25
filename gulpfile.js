@@ -2,17 +2,17 @@ const gulp = require('gulp');
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // watching templates
 const shell = require('gulp-shell');
-const t = 'handlebars ./templates/template/ -f ./public/lib/_templates.js -e hbs -o';
-const p = 'handlebars ./templates/partial/ -f ./public/lib/_partials.js -p -e hbs -o';
+const p = 'handlebars ./template/ -f ./public/lib/_partials.js -p -e phbs -o';
+const t = 'handlebars ./template/ -f ./public/lib/_templates.js -e hbs -o';
 
 gulp.task( 'part', shell.task(p) );
 gulp.task( 'temp', shell.task(t) );
 
-gulp.task('temp-w', () => {
-  gulp.watch( './templates/template/**', {ignoreInitial: false}, gulp.series('temp') );
-});
 gulp.task('part-w', () => {
-  gulp.watch( './templates/partial/**', {ignoreInitial: false}, gulp.series('part') );
+  gulp.watch( './template/**/*.phbs', {ignoreInitial: false}, gulp.series('part') );
+});
+gulp.task('temp-w', () => {
+  gulp.watch( './template/**/*.hbs', {ignoreInitial: false}, gulp.series('temp') );
 });
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // livereload
