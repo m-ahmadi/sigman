@@ -3,7 +3,7 @@ import { initColorpick, destroyColorpick, getColor } from './colorpick.js';
 import initSlider from './initSlider.js';
 import { arrow, rect, line, horzline, text } from './shapes.js';
 
-let $$, v;
+let $$, temps;
 let chart;
 let bars;
 
@@ -14,7 +14,7 @@ function init(e) {
   chart = e.chart;
   bars = e.bars;
   $$ = __els('[data-root="panel"]');
-  v = __temps('panel');
+  temps = __temps('panel');
   
   $$.start.val(0);
   $$.end.val(bars.length-1); // bars.length
@@ -34,8 +34,8 @@ function init(e) {
   $$.pattern.on('change', function (e) {
     const i = this.selectedIndex;
     $$.controlsContainer.empty();
-    if (!v[i]) return;
-    $$.controlsContainer.html( v[i]() );
+    if ( !temps[i] ) return;
+    $$.controlsContainer.html( temps[i]() );
     __els($$.controlsContainer, $$, true);
     inits[i]();
   }).trigger('change');
@@ -445,19 +445,5 @@ function countInRangesBasic(bars, distance=1, percent=true, prop='close') {
     return getInRangeBars(rest, price, distance, percent, prop).length;
   });
 }
-
-window.shapes = shapes;
-
-window.perc = perc;
-window.whatPerc = whatPerc;
-window.percDiff = percDiff;
-window.isInRange = isInRange;
-window.getInRangeBars = getInRangeBars;
-window.getRanges = getRanges;
-window.getAllInRanges = getAllInRanges;
-window.getTurningPoints = getTurningPoints;
-window.countInRangesFull = countInRangesFull;
-window.countInRangesBasic = countInRangesBasic;
-
 
 export default { init 

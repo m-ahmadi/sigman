@@ -16,3 +16,17 @@ log('rangeGlobalIdxs: ', rangeGlobalIdxs);
 log('rangeAvgs: ', rangeAvgs);
 window.highs = highs;
 window.counts = counts;
+
+// globs
+window.shapes = shapes;
+
+window.perc = perc;
+window.whatPerc = whatPerc;
+window.percDiff = percDiff;
+window.isInRange = isInRange;
+window.getInRangeBars = getInRangeBars;
+window.getRanges = getRanges;
+window.getAllInRanges = getAllInRanges;
+window.getTurningPoints = getTurningPoints;
+window.countInRangesFull = countInRangesFull;
+window.countInRangesBasic = countInRangesBasic
