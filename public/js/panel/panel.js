@@ -125,8 +125,8 @@ const inits = [
     $$.start.val(270);
     $$.end.val(500);
     $$.countDistancePercent[0].checked = true
-    if ($$.colorpick1) destroyColorpick($$.colorpick1);
-    initColorpick($$.colorpick1, 'red');
+    if ($$.colorpick) destroyColorpick($$.colorpick);
+    initColorpick($$.colorpick, 'red');
     addCommonEvents();
     $$.countList.on('change', function () {
       const val = $(this).val();
@@ -174,10 +174,10 @@ const patterns = [
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const highs = getTurningPoints(_bars, period, distance);
-    const counts = countInRangesFull(highs);
+    const counts = groupedInRangeCounts(highs);
     shapes[0] = [];
-    Object.keys(counts).map(parseFloat).filter(i=>i!==0).slice(-1).forEach(k => {
-      const mostOccurredPrices = counts[k].map(i => highs[i].close);
+    counts.slice(-1).forEach(idxs => {
+      const mostOccurredPrices = idxs.map(idx => highs[idx].close);
       const allInRangeIdxs = getAllInRanges(mostOccurredPrices, highs);
       const allInRangePrices = allInRangeIdxs.map(i=>highs[i].close);
       const ranges = getRanges(allInRangePrices, rangeDistance);
@@ -218,14 +218,14 @@ const patterns = [
     const distance = +$$.distance.val();
     const countDistance = +$$.countDistance.val();
     const percent = $$.countDistancePercent[0].checked;
-    const color = getColor($$.colorpick1);
+    const color = getColor($$.colorpick);
     const res = getTurningPoints(_bars, period, distance, undefined, false);
     shapes[1] = [];
-    const counts = countInRangesBasic(res, countDistance, percent);
+    const counts = inRangeCounts(res, countDistance, percent);
     res.forEach((bar, i) => {
-      const { close } = bar;
-      shapes[1].push( arrow(bar.time, bar.close+40, color) );
-      shapes[1].push( text(bar.time, bar.close+130, counts[i], {bold:true, fontsize:20}) );
+      const { time, close } = bar;
+      shapes[1].push( arrow(time, close+40, color) );
+      shapes[1].push( text(time, close+130, counts[i], {bold:true, fontsize:20}) );
     });
   },
   function () { // highs
@@ -423,7 +423,7 @@ function getTurningPoints(bars=[], period=1, distance=0, low=false, percent=true
   }
   return res;
 }
-function countInRangesFull(bars, distance=1, percent=true, prop='close') {
+function groupedInRangeCounts(bars, distance=1, percent=true, prop='close') {
   return bars.map((bar, i) => {
     const price = bar[prop];
     const rest = bars.filter((v,j) => j !== i);
@@ -436,9 +436,9 @@ function countInRangesFull(bars, distance=1, percent=true, prop='close') {
     if ( !acc[count] ) acc[count] = [];
     acc[count].push(index);
     return acc;
-  }, {});
+  }, []);
 }
-function countInRangesBasic(bars, distance=1, percent=true, prop='close') {
+function inRangeCounts(bars, distance=1, percent=true, prop='close') {
   return bars.map((bar, i) => {
     const price = bar[prop];
     const rest = bars.filter((v,j) => j !== i);
