@@ -222,6 +222,11 @@ const patterns = [
     const res = getTurningPoints(_bars, period, distance, undefined, false);
     shapes[1] = [];
     const counts = inRangeCounts(res, countDistance, percent);
+    /* const groupedCounts = groupedInRangeCounts(res, countDistance, percent);
+    const allInRanges = groupedCounts.map(idxs => {
+      const prices = idxs.map(idx => res[idx].close);
+      return getAllInRanges(prices, res);
+    }); */
     res.forEach((bar, i) => {
       const { time, close } = bar;
       shapes[1].push( arrow(time, close+40, color) );
