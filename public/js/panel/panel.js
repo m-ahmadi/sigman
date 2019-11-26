@@ -401,7 +401,7 @@ function getAllInRanges(prices, src, prop='close') {
     .reduce((a,c) => a.concat(c), [])                                  // combine all items into one array:    [ n, n, n, n, n, n ]
     .filter((v,i,a) => a.indexOf(v) === i);                            // deduplicate
 }
-function getTurningPoints(bars=[], period=1, distance=0, low=false, percent=true, prop='close') {
+function getTurningPoints(bars=[], period=1, distance=1, low=false, percent=true, prop='close') {
   const len = bars.length;
   if (!len) return;
   const res = [];
