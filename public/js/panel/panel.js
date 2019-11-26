@@ -383,18 +383,18 @@ function getInRangeBars(bars, price, distance=1, percent=true, prop='close') {
   const max = percent ? perc(price, +distance) : price + distance;
   return bars.filter( i => isInRange(i[prop], min, max) );
 }
-function getRanges(nums, distance=1, percent=true) {
+function getRanges(nums, diff=1, percent=true) {
   const res = [];
   const len = nums.length;
   nums = nums.sort((a, b) => a - b);
   for (let i=0; i<len; i+=1) {
     const num = nums[i];
-    const min = percent ? perc(num, -distance) : num - distance;
-    const max = percent ? perc(num, +distance) : num + distance;
+    const min = percent ? perc(num, -diff) : num - diff;
+    const max = percent ? perc(num, +diff) : num + diff;
     const inRanges = nums.slice(i).filter( j => isInRange(j, min, max) );
     if (inRanges.length) {
       res.push(inRanges);
-      i = nums.findIndex(j => j === inRanges[inRanges.length-1]);
+      i = nums.indexOf(inRanges[inRanges.length-1]);
     }
   }
   return res;
