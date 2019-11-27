@@ -1,5 +1,15 @@
 <div>
-  <input type='text' data-el="colorpick" />
+  <input type='text' data-el="colorpick1" data-els="colorpicks" />
+  <input type='text' data-el="colorpick2" data-els="colorpicks" />
+  <input type='text' data-el="colorpick3" data-els="colorpicks" />
+  <input type='text' data-el="colorpick4" data-els="colorpicks" />
+  
+  <div>
+    <label><input type="radio" class="uk-radio" name="direction" value="high" checked data-els="direction" /> High</label>
+  </div>
+  <div>
+    <label><input type="radio" class="uk-radio" name="direction" value="low" data-els="direction" /> Low</label>
+  </div>
 </div>
 
 <div class="uk-width-1-1 uk-child-width-1-2" uk-grid>
@@ -29,9 +39,7 @@
       
       <div>
         <input id="count-distance-input" type="number" class="uk-input uk-form-small" style="width:80px" value="1" data-el="countDistance" />
-        <label class="uk-form-label">
-          <input type="checkbox" class="uk-checkbox" data-el="countDistancePercent" />%
-        </label>
+        <label class="uk-form-label"><input type="checkbox" class="uk-checkbox" data-el="countDistancePercent" />%</label>
       </div>
     </div>
   </div>

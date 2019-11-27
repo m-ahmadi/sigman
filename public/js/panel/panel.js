@@ -121,6 +121,16 @@ const inits = [
       });
     });
   },
+  function () { // turning points
+    $$.start.val(270);
+    $$.end.val(500);
+    if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
+    initColorpick($$.colorpick1, 'red');
+    initColorpick($$.colorpick2, 'blue');
+    initColorpick($$.colorpick3, '#ffe599');
+    initColorpick($$.colorpick4, '#cc0000');
+    addCommonEvents();
+  },
   function () { // highs & count of in-range occurrences
     $$.start.val(270);
     $$.end.val(500);
@@ -211,6 +221,18 @@ const patterns = [
       $$.rangeList.empty().append( selectOptions.reverse() );
     });
   },
+  function () { // turning points
+    const _bars = bars.slice($$.start.val(), $$.end.val());
+    chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
+    const period = Math.floor(+$$.period.val() / 2);
+    const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
+    const distance = +$$.distance.val();
+    const countDistance = +$$.countDistance.val();
+    const percent = $$.countDistancePercent[0].checked;
+    shapes[2] = [];
+    const points = getTurningPoints(_bars, period, distance);
+    
+  },
   function () { // highs & count of in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
@@ -220,7 +242,7 @@ const patterns = [
     const percent = $$.countDistancePercent[0].checked;
     const color = getColor($$.colorpick);
     const res = getTurningPoints(_bars, period, distance, undefined, false);
-    shapes[1] = [];
+    shapes[2] = [];
     const counts = inRangeCounts(res, countDistance, percent);
     /* const groupedCounts = groupedInRangeCounts(res, countDistance, percent);
     const allInRanges = groupedCounts.map(idxs => {
@@ -229,8 +251,8 @@ const patterns = [
     }); */
     res.forEach((bar, i) => {
       const { time, close } = bar;
-      shapes[1].push( arrow(time, close+40, color) );
-      shapes[1].push( text(time, close+130, counts[i], {bold:true, fontsize:20}) );
+      shapes[2].push( arrow(time, close+40, color) );
+      shapes[2].push( text(time, close+130, counts[i], {bold:true, fontsize:20}) );
     });
   },
   function () { // highs
@@ -239,20 +261,20 @@ const patterns = [
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     const distance = +$$.distance.val();
-    shapes[2] = [];
+    shapes[3] = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
       if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         // res.push(curr);
-        shapes[2].push( arrow(curr.time, curr.close+40, colors[0]) );
+        shapes[3].push( arrow(curr.time, curr.close+40, colors[0]) );
         if ($$.guide[0].checked) {
-          shapes[2].push( arrow(prev.time, prev.close-40, colors[1], true) );
-          shapes[2].push( arrow(next.time, next.close-40, colors[1], true) );
+          shapes[3].push( arrow(prev.time, prev.close-40, colors[1], true) );
+          shapes[3].push( arrow(next.time, next.close-40, colors[1], true) );
           
           const sorted = sort([prev, next]);
-          shapes[2].push(
+          shapes[3].push(
             rect({time: sorted[0].time, channel: 'close'}, {time: sorted[1].time, price: curr.close}, colors[2], colors[3])
           );
         }
@@ -264,19 +286,19 @@ const patterns = [
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
-    shapes[3] = [];
+    shapes[4] = [];
     for (let i=0; i<_bars.length; i+=period) {
       const curr = _bars[i];
       const next = _bars[i+period];
       const prev = _bars[i-period];
       if (next && prev && curr.close < prev.close && curr.close < next.close) {
-        shapes[3].push( arrow(curr.time, curr.close-50, colors[0], true) );
+        shapes[4].push( arrow(curr.time, curr.close-50, colors[0], true) );
         if ($$.guide[0].checked) {
-          shapes[3].push( arrow(prev.time, prev.close+40, colors[1]) );
-          shapes[3].push( arrow(next.time, next.close+40, colors[1]) );
+          shapes[4].push( arrow(prev.time, prev.close+40, colors[1]) );
+          shapes[4].push( arrow(next.time, next.close+40, colors[1]) );
           
           const sorted = sort([prev, next]);
-          shapes[3].push(
+          shapes[4].push(
             rect({time: sorted[1].time, channel: 'close'}, {time: sorted[0].time, price: curr.close}, colors[2], colors[3])
           );
         }
@@ -288,7 +310,7 @@ const patterns = [
     const chunks = splitArr(bars, 100);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
     const res = [];
-    shapes[4] = [];
+    shapes[5] = [];
     for (let i=0; i<chunks.length; i++) {
       const chunk = chunks[i];
       const closePrices = chunk.map(i => i.close);
@@ -299,7 +321,7 @@ const patterns = [
         { time: chunk[0].time, price: max.close },
         { time: chunk[chunk.length-1].time , price: max.close }
       ];
-      shapes[4].push( line(points, colors[1], 4) );
+      shapes[5].push( line(points, colors[1], 4) );
     }
     res.forEach(i => {
       const maxIdx = bars.findIndex(j => j.time === i.max.time);
@@ -307,7 +329,7 @@ const patterns = [
       const pointA = { time: bars[maxIdx-10].time, price: i.max.close };
       const pointB = { time: bars[maxIdx+10].time, price: i.max.close };
       const points = [pointA, pointB];
-      shapes[4].push( line(points, colors[0], 4) );
+      shapes[5].push( line(points, colors[0], 4) );
     })
   },
   function () { // dummy
@@ -318,7 +340,7 @@ const patterns = [
       if (!found) res.push(item.time);
     }
     // res.forEach( i => chart.createShape({ time: i }, { shape: 'arrow_down' }) );
-    shapes[5] = res.map( i => arrow(i, undefined, randColor(), true, true) );
+    shapes[6] = res.map( i => arrow(i, undefined, randColor(), true, true) );
   }
 ];
 
