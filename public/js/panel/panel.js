@@ -130,6 +130,12 @@ const inits = [
     initColorpick($$.colorpick3, '#ffe599');
     initColorpick($$.colorpick4, '#cc0000');
     addCommonEvents();
+    
+    $$.count.on('change', function () {
+      const checked = this.checked;
+      $$.countDistance[0].disabled = !checked;
+      $$.countDistancePercent[0].disabled = !checked;
+    }).trigger('change');
   },
   function () { // highs & count of in-range occurrences
     $$.start.val(270);
@@ -226,21 +232,30 @@ const patterns = [
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
+    const direction = +$$.direction.filter(':checked').val();
     const distance = +$$.distance.val();
+    const distancePercent = $$.distancePercent[0].checked;
+    const count = $$.count[0].checked;
     const countDistance = +$$.countDistance.val();
-    const percent = $$.countDistancePercent[0].checked;
-    shapes[2] = [];
-    const points = getTurningPoints(_bars, period, distance);
-    
+    const countDistancePercent = $$.countDistancePercent[0].checked;
+    const guide = $$.guide[0].checked;
+    shapes[1] = [];
+    const points = getTurningPoints(_bars, period, distance, distancePercent, direction);
+    const counts = inRangeCounts(points, countDistance, countDistancePercent);
+    points.forEach((bar, i) => {
+      const { time, close } = bar;
+      shapes[1].push( arrow(time, close+40, colors[direction], direction) );
+      shapes[1].push( text(time, close+130, counts[i], {bold:true, fontsize:20}) );
+    });
   },
   function () { // highs & count of in-range occurrences
     const _bars = bars.slice($$.start.val(), $$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
+    const color = getColor($$.colorpick);
     const distance = +$$.distance.val();
     const countDistance = +$$.countDistance.val();
     const percent = $$.countDistancePercent[0].checked;
-    const color = getColor($$.colorpick);
     const res = getTurningPoints(_bars, period, distance, undefined, false);
     shapes[2] = [];
     const counts = inRangeCounts(res, countDistance, percent);
