@@ -43,6 +43,9 @@ function init(e) {
   setTimeout(() => {
     $$.pattern.prop({selectedIndex: 1}).trigger('change');
     draw();
+    $$.direction[1].checked = true;
+    draw();
+    $$.direction[0].checked = true;
   }, 500);
   window.$$ = $$;
   window.bars = bars;
@@ -244,8 +247,10 @@ const patterns = [
     const counts = inRangeCounts(points, countDistance, countDistancePercent);
     points.forEach((bar, i) => {
       const { time, close } = bar;
-      shapes[1].push( arrow(time, close+40, colors[direction], direction) );
-      shapes[1].push( text(time, close+130, counts[i], {bold:true, fontsize:20}) );
+      shapes[1].push( arrow(time, close+(direction ? -50 : 40), colors[direction], direction) );
+      if (count) {
+        shapes[1].push( text(time, close+(direction ? -100 : 130), counts[i], {bold:true, fontsize:20}) );
+      }
     });
   },
   function () { // highs & count of in-range occurrences
@@ -256,7 +261,7 @@ const patterns = [
     const distance = +$$.distance.val();
     const countDistance = +$$.countDistance.val();
     const percent = $$.countDistancePercent[0].checked;
-    const res = getTurningPoints(_bars, period, distance, undefined, false);
+    const res = getTurningPoints(_bars, period, distance, false);
     shapes[2] = [];
     const counts = inRangeCounts(res, countDistance, percent);
     /* const groupedCounts = groupedInRangeCounts(res, countDistance, percent);
@@ -443,7 +448,7 @@ function getAllInRanges(prices, src, prop='close') {
     .reduce((a,c) => a.concat(c), [])                                  // combine all items into one array:    [ n, n, n, n, n, n ]
     .filter((v,i,a) => a.indexOf(v) === i);                            // deduplicate
 }
-function getTurningPoints(bars=[], period=1, distance=1, low=false, percent=true, prop='close') {
+function getTurningPoints(bars=[], period=1, distance=1, percent=true, low=false, prop='close') {
   const len = bars.length;
   if (!len) return;
   const res = [];
