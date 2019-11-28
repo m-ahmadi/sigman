@@ -127,6 +127,8 @@ const inits = [
   function () { // turning points
     $$.start.val(270);
     $$.end.val(500);
+    $$.period.val(15);
+    $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
@@ -241,8 +243,8 @@ const patterns = [
     const count = $$.count[0].checked;
     const countDistance = +$$.countDistance.val();
     const countDistancePercent = $$.countDistancePercent[0].checked;
-    const guide = $$.guide[0].checked;
-    shapes[1] = [];
+    const guides = $$.guides[0].checked;
+    if (!shapes[1]) shapes[1] = [];
     const points = getTurningPoints(_bars, period, distance, distancePercent, direction);
     const counts = inRangeCounts(points, countDistance, countDistancePercent);
     points.forEach((bar, i) => {
@@ -250,6 +252,18 @@ const patterns = [
       shapes[1].push( arrow(time, close+(direction ? -50 : 40), colors[direction], direction) );
       if (count) {
         shapes[1].push( text(time, close+(direction ? -100 : 130), counts[i], {bold:true, fontsize:20}) );
+      }
+      if (guides) {
+        const barIdx = _bars.findIndex(j=>j.time===time);
+        const curr = _bars[barIdx];
+        const prev = _bars[barIdx-period];
+        const next = _bars[barIdx+period];
+        shapes[1].push( arrow(prev.time, prev.close+(direction ? -40 : 40), colors[1], direction) );
+        shapes[1].push( arrow(next.time, next.close+(direction ? -40 : 40), colors[1], direction) );
+        const sorted = sort([prev, next]);
+        shapes[1].push(
+          rect({time: sorted[1].time, channel: 'close'}, {time: sorted[0].time, price: curr.close}, colors[2], colors[3])
+        );
       }
     });
   },
@@ -289,7 +303,7 @@ const patterns = [
       if (next && prev && curr.close > perc(prev.close, distance) && curr.close > perc(next.close, distance)) {
         // res.push(curr);
         shapes[3].push( arrow(curr.time, curr.close+40, colors[0]) );
-        if ($$.guide[0].checked) {
+        if ($$.guides[0].checked) {
           shapes[3].push( arrow(prev.time, prev.close-40, colors[1], true) );
           shapes[3].push( arrow(next.time, next.close-40, colors[1], true) );
           
@@ -313,7 +327,7 @@ const patterns = [
       const prev = _bars[i-period];
       if (next && prev && curr.close < prev.close && curr.close < next.close) {
         shapes[4].push( arrow(curr.time, curr.close-50, colors[0], true) );
-        if ($$.guide[0].checked) {
+        if ($$.guides[0].checked) {
           shapes[4].push( arrow(prev.time, prev.close+40, colors[1]) );
           shapes[4].push( arrow(next.time, next.close+40, colors[1]) );
           
