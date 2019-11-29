@@ -134,8 +134,16 @@ const inits = [
     initColorpick($$.colorpick2, 'blue');
     initColorpick($$.colorpick3, '#ffe599');
     initColorpick($$.colorpick4, '#cc0000');
-    addCommonEvents();
-    
+    $$.period.on('input blur change', function (e) {
+      const el = $(this);
+      const v = +el.val();
+      const n =
+        v < 3       ? 3   :
+        v > 999     ? 999 :
+        v % 2 === 0 ? v-1 :
+        undefined;
+      if (n !== undefined) el.val(n);
+    });
     $$.count.on('change', function () {
       const checked = this.checked;
       $$.countDistance[0].disabled = !checked;
