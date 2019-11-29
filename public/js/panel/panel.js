@@ -43,9 +43,9 @@ function init(e) {
   setTimeout(() => {
     $$.pattern.prop({selectedIndex: 1}).trigger('change');
     draw();
-    $$.direction[1].checked = true;
-    draw();
-    $$.direction[0].checked = true;
+    // $$.direction[1].checked = true;
+    // draw();
+    // $$.direction[0].checked = true;
   }, 500);
   window.$$ = $$;
   window.bars = bars;
@@ -162,6 +162,8 @@ const inits = [
   function () { // highs
     $$.start.val(270);
     $$.end.val(500);
+    $$.period.val(15);
+    $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
     initColorpick($$.colorpick1, 'red');
     initColorpick($$.colorpick2, 'blue');
@@ -258,11 +260,14 @@ const patterns = [
         const curr = _bars[barIdx];
         const prev = _bars[barIdx-period];
         const next = _bars[barIdx+period];
-        shapes[1].push( arrow(prev.time, prev.close+(direction ? -40 : 40), colors[1], direction) );
-        shapes[1].push( arrow(next.time, next.close+(direction ? -40 : 40), colors[1], direction) );
+        const color = colors[direction ? 0 : 1];
+        const extra = direction ? 50 : -40;
+        shapes[1].push( arrow(prev.time, prev.close+extra, color, !direction) );
+        shapes[1].push( arrow(next.time, next.close+extra, color, !direction) );
         const sorted = sort([prev, next]);
+        const idx = direction ? 0 : 1;
         shapes[1].push(
-          rect({time: sorted[1].time, channel: 'close'}, {time: sorted[0].time, price: curr.close}, colors[2], colors[3])
+          rect({time: sorted[direction].time, channel: 'close'}, {time: sorted[idx].time, price: curr.close}, colors[2], colors[3])
         );
       }
     });
