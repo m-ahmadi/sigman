@@ -479,19 +479,16 @@ function getTurningPoints(bars=[], period=1, distance=1, percent=true, low=false
   const len = bars.length;
   if (!len) return;
   const res = [];
-  const comp = (n1, n2) => low ? n1 < n2 : n1 > n2;
+  const comp = (n1, n2) => low ? (percent ? n1<=n2: n1<n2) : (percent ? n1>=n2 : n1>n2);
   for (let i=0; i<len; i+=period) {
     const curr = bars[i];
     const prev = bars[i-period];
     const next = bars[i+period];
     if (!next || !prev) continue;
     const currN = curr[prop];
-    const prevN = prev[prop];
-    const nextN = next[prop];
-    if (
-      comp(currN, percent ? perc(prevN, distance) : prevN) &&
-      comp(currN, percent ? perc(nextN, distance) : nextN)
-    ) {
+    const prevN = percent ? perc(prev[prop], distance) : prev[prop];
+    const nextN = percent ? perc(next[prop], distance) : next[prop];
+    if ( comp(currN, prevN) && comp(currN, nextN) ) {
       res.push( Object.assign({}, curr) );
     }
   }
