@@ -24,4 +24,14 @@ export function stepper(start=0, end=3) {
     n = n > end ? start+1 : n+1;
     return n-1;
   };
+}
 
+export function selectorExists(selector) { 
+  return Object.keys(document.styleSheets)
+    .map(k => document.styleSheets[k])
+    .map(i => i.rules || i.cssRules)
+    .map(i => Object.keys(i).map(k=>i[k].selectorText) )
+    .reduce((a,c) => a.concat(c), [])
+    .filter(i => i)
+    .indexOf(selector) !== -1; 
+}
