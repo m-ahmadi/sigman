@@ -16,8 +16,7 @@ function init(e) {
   $$ = __els('[data-root="panel"]');
   temps = __temps('panel');
   
-  $$.start.val(0);
-  $$.end.val(bars.length-1); // bars.length
+  
   
   
   // chart.removeAllShapes();
@@ -27,9 +26,32 @@ function init(e) {
     Object.keys(shapes).forEach(k => shapes[k] = []);
     chart.removeAllShapes()
   });
-  $$.zoomOut.on('click', zoomOut);
+  $$.zoomAllOut.on('click', zoomAllOut);
   $$.zoomTo.on('click', zoomTo);
-  // initSlider($$.slider[0], bars.length);
+  
+  
+  initSlider($$.slider[0], bars.length-1);
+  $$.slider[0].noUiSlider.on('slide', function (values, handle) {
+    const inputs = [$$.start, $$.end];
+    inputs[handle].val( values[handle] );
+    zoomTo();
+  });
+  // $$.slider[0].noUiSlider.on('end', zoomTo);
+  $$.start.on('input blur change', function () {
+    $$.slider[0].noUiSlider.set([this.value, null]);
+  });
+  $$.end.on('input blur change', function () {
+    $$.slider[0].noUiSlider.set([null, this.value]);
+  });
+  $$.start.val(0);
+  $$.end.val(bars.length-1);
+  $$.grabFromChart.on('click', function () {
+    const { from, to } = chart.getVisibleRange();
+    const start = bars.findIndex(i => i.time >= from);
+    const end   = bars.findIndex(i => i.time >= to);
+    $$.start.val(start === -1 ? 0 : start).trigger('change');
+    $$.end.val(end === -1 ? bars.length-1 : end).trigger('change');
+  })
   
   $$.pattern.on('change', function (e) {
     const i = this.selectedIndex;
@@ -125,8 +147,8 @@ const inits = [
     });
   },
   function () { // turning points
-    $$.start.val(270);
-    $$.end.val(500);
+    $$.start.val(270); 
+    $$.end.val(379); //500
     $$.period.val(15);
     $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
@@ -417,8 +439,10 @@ function clear() {
     shapes[idx] = [];
   }
 }
-function zoomOut() {
-  chart.setVisibleRange({ from: bars[0].time, to: bars[bars.length-1].time });
+function zoomAllOut() {
+  $$.start.val(0).trigger('change');
+  $$.end.val(bars.length-1).trigger('change');;
+  zoomTo();
 }
 function zoomTo() {
   chart.setVisibleRange({ from: bars[$$.start.val()].time, to: bars[$$.end.val()].time });
@@ -517,4 +541,4 @@ function inRangeCounts(bars, distance=1, percent=true, prop='close') {
   });
 }
 
-export default { init 
+export default { init }
