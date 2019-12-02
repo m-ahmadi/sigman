@@ -16,7 +16,6 @@
     "sass": "latest",
     "shelljs": "latest",
     "gulp": "latest",
-    "gulp-cli": "latest",
     "gulp-livereload": "latest",
     "gulp-shell": "latest"
   },
