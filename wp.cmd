@@ -1,3 +1,3 @@
 @echo off
-call wset.bat
+call set.cmd
 gulp part-w
