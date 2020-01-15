@@ -1,1 +1,7 @@
+make panel draggable and min/maxable (and ideally dockabale to somewhere)
+start with:
+	remove sticky from <div id="panel">
+	#panel { position: fixed }
+	$(panel).draggable()
+
 continue charting in html
