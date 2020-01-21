@@ -22,6 +22,9 @@ const c = './public/css/**/*.css';
 const j = './public/js/**/*.js';
 const l = './public/lib/_*';
 
+const { readFileSync, existsSync } = require('fs');
+const port = existsSync('.livereload') ? readFileSync('.livereload', 'utf8').match(/:(\d+)\/livereload.js\?snipver=1/)[1] : undefined;
+
 gulp.task('live-html', cb => {
   gulp.src(h)
     .pipe( livereload() );
@@ -43,11 +46,11 @@ gulp.task('live-lib', cb => {
   cb();
 });
 gulp.task('live', () => {
-  livereload.listen();
+  livereload.listen(port ? {port} : undefined);
   
   gulp.watch( h, gulp.series('live-html') );
   gulp.watch( c, gulp.series('live-css') );
   gulp.watch( j, gulp.series('live-js') );
   gulp.watch( l, gulp.series('live-lib') );
 });
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
