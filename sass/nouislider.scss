@@ -1,0 +1,32 @@
+$w: 12px;
+$h: 25px;
+
+@function d($n) {
+  @return round($n * 100) / 100;
+}
+
+.noUi-horizontal {
+  height: $h;
+  .noUi-handle {
+    border-radius: d($w / 11.333);
+    width: $w;
+    height: d($h / 0.642);
+    right: - d($w / 2);
+    top: - d($h / 3);
+  }
+}
+.noUi-handle {
+  &:before, &:after {
+    height: d($h / 1.285);
+    top: d($h / 3);
+  }
+  &:before{
+    left: d($w/4);
+  }
+  &:after {
+    left: d($w/2);
+  }
+}
+.noUi-connect {
+  background: #ff0080;
+}
