@@ -1,7 +1,7 @@
 import { randColor, splitArr, isOdd, stepper } from '../gen/util.js';
 import { initColorpick, destroyColorpick, getColor } from './colorpick.js';
-import initSlider from './initSlider.js';
 import { arrow, rect, line, horzline, text } from './shapes.js';
+import zoomPanel from '../zoomPanel/zoomPanel.js';
 
 let $$, temps;
 let chart;
@@ -16,8 +16,7 @@ function init(e) {
   $$ = __els('[data-root="panel"]');
   temps = __temps('panel');
   
-  
-  
+  $$.root.draggable(); // handle: '.drag-handle'
   
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
@@ -26,32 +25,7 @@ function init(e) {
     Object.keys(shapes).forEach(k => shapes[k] = []);
     chart.removeAllShapes()
   });
-  $$.zoomAllOut.on('click', zoomAllOut);
-  $$.zoomTo.on('click', zoomTo);
   
-  
-  initSlider($$.slider[0], bars.length-1);
-  $$.slider[0].noUiSlider.on('slide', function (values, handle) {
-    const inputs = [$$.start, $$.end];
-    inputs[handle].val( values[handle] );
-    zoomTo();
-  });
-  // $$.slider[0].noUiSlider.on('end', zoomTo);
-  $$.start.on('input blur change', function () {
-    $$.slider[0].noUiSlider.set([this.value, null]);
-  });
-  $$.end.on('input blur change', function () {
-    $$.slider[0].noUiSlider.set([null, this.value]);
-  });
-  $$.start.val(0);
-  $$.end.val(bars.length-1);
-  $$.grabFromChart.on('click', function () {
-    const { from, to } = chart.getVisibleRange();
-    const start = bars.findIndex(i => i.time >= from);
-    const end   = bars.findIndex(i => i.time >= to);
-    $$.start.val(start === -1 ? 0 : start).trigger('change');
-    $$.end.val(end === -1 ? bars.length-1 : end).trigger('change');
-  })
   
   $$.pattern.on('change', function (e) {
     const i = this.selectedIndex;
@@ -147,8 +121,8 @@ const inits = [
     });
   },
   function () { // turning points
-    $$.start.val(270); 
-    $$.end.val(379); //500
+    zoomPanel.$$.start.val(270); 
+    zoomPanel.$$.end.val(379); //500
     $$.period.val(15);
     $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
@@ -173,8 +147,8 @@ const inits = [
     }).trigger('change');
   },
   function () { // highs & count of in-range occurrences
-    $$.start.val(270);
-    $$.end.val(500);
+    zoomPanel.$$.start.val(270);
+    zoomPanel.$$.end.val(500);
     $$.countDistancePercent[0].checked = true
     if ($$.colorpick) destroyColorpick($$.colorpick);
     initColorpick($$.colorpick, 'red');
@@ -190,8 +164,8 @@ const inits = [
     });
   },
   function () { // highs
-    $$.start.val(270);
-    $$.end.val(500);
+    zoomPanel.$$.start.val(270);
+    zoomPanel.$$.end.val(500);
     $$.period.val(15);
     $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
@@ -220,7 +194,7 @@ const inits = [
 
 const patterns = [
   function () { // most in-range occurrences
-    const _bars = bars.slice($$.start.val(), $$.end.val());
+    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
     const rangeDistance = +$$.rangeDistance.val();
@@ -265,7 +239,7 @@ const patterns = [
     });
   },
   function () { // turning points
-    const _bars = bars.slice($$.start.val(), $$.end.val());
+    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
@@ -303,7 +277,7 @@ const patterns = [
     });
   },
   function () { // highs & count of in-range occurrences
-    const _bars = bars.slice($$.start.val(), $$.end.val());
+    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const color = getColor($$.colorpick);
@@ -325,7 +299,7 @@ const patterns = [
     });
   },
   function () { // highs
-    const _bars = bars.slice($$.start.val(), $$.end.val());
+    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
@@ -351,7 +325,7 @@ const patterns = [
     }
   },
   function () { // lows
-    const _bars = bars.slice($$.start.val(), $$.end.val());
+    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
@@ -438,14 +412,6 @@ function clear() {
     arr.forEach( i => chart.removeEntity(i) );
     shapes[idx] = [];
   }
-}
-function zoomAllOut() {
-  $$.start.val(0).trigger('change');
-  $$.end.val(bars.length-1).trigger('change');;
-  zoomTo();
-}
-function zoomTo() {
-  chart.setVisibleRange({ from: bars[$$.start.val()].time, to: bars[$$.end.val()].time });
 }
 
 // calcy

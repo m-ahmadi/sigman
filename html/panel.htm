@@ -1,32 +1,23 @@
-<div class="uk-grid-collapse uk-grid-divider uk-child-width-1-2 uk-padding-small white"
-  uk-grid style="border:1px solid #e3e3e3;" data-root="panel">
-  <div>
-    <select class="uk-select uk-width-1-2" data-el="pattern">
-      <option value="0">most in-range occurrences</option>
-      <option value="1">turning points</option>
-      <option value="2">highs & count of in-range occurrences</option>
-      <option value="3">highs</option>
-      <option value="4">lows</option>
-      <option value="5">local maxima</option>
-      <option value="6">dummy</option>
-    </select>
-    
-    <button class="uk-button uk-button-default uk-text-capitalize light-green lighten-4" data-el="draw">Draw</button>
-    <button class="uk-button uk-button-default uk-text-capitalize orange lighten-5" data-el="clear">Clear</button>
-    <button class="uk-button uk-button-default uk-text-capitalize red lighten-5" data-el="clearAll">Clear All</button>
-    
-    <div class="uk-margin-small uk-grid-small uk-child-width-1-1" uk-grid data-el="controlsContainer"></div>
-  </div>
-  
-  <div>
-    <div class="uk-margin-small">
-      <label class="uk-form-label">Start: <input type="number" class="uk-input uk-form-small" style="width:80px" value="0" data-el="start" /></label>
-      <label class="uk-form-label">End: <input type="number" class="uk-input uk-form-small" style="width:80px" value="0" data-el="end" /></label>
-      <button class="uk-button uk-button-small uk-text-capitalize cyan lighten-5" data-el="zoomTo">Zoom to</button>
-      <button class="uk-button uk-button-small uk-text-capitalize cyan lighten-5" data-el="zoomAllOut">Zoom all out</button>
-      <button class="uk-button uk-button-small uk-text-capitalize cyan lighten-5" data-el="grabFromChart">Grab from chart</button>
+<div class="uk-width-1-2 uk-padding-small white panel" data-root="panel">
+  <!-- <span uk-icon="move" class="uk-position-top-left"></span> -->
+  <div uk-grid class="uk-grid-collapse uk-grid-divider uk-child-width-1-1">
+    <div>
+      <select class="uk-select uk-width-1-2" data-el="pattern">
+        <option value="0">most in-range occurrences</option>
+        <option value="1">turning points</option>
+        <option value="2">highs & count of in-range occurrences</option>
+        <option value="3">highs</option>
+        <option value="4">lows</option>
+        <option value="5">local maxima</option>
+        <option value="6">dummy</option>
+      </select>
+      
+      <button class="uk-button uk-button-default uk-text-capitalize light-green lighten-4" data-el="draw">Draw</button>
+      <button class="uk-button uk-button-default uk-text-capitalize orange lighten-5" data-el="clear">Clear</button>
+      <button class="uk-button uk-button-default uk-text-capitalize red lighten-5" data-el="clearAll">Clear All</button>
+      
+      <div class="uk-margin-small uk-grid-small uk-child-width-1-1" uk-grid data-el="controlsContainer"></div>
     </div>
-    <div class="uk-width-2-3 uk-margin-medium-top uk-margin-medium-bottom" data-el="slider"></div>
   </div>
 </div>
 
