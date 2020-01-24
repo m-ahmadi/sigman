@@ -1,5 +1,5 @@
 $w: 12px;
-$h: 25px;
+$h: 18px;
 
 @function d($n) {
   @return round($n * 100) / 100;
