@@ -121,8 +121,8 @@ const inits = [
     });
   },
   function () { // turning points
-    zoomPanel.$$.start.val(270); 
-    zoomPanel.$$.end.val(379); //500
+    zoomPanel.$start.val(270); 
+    zoomPanel.$end.val(379); //500
     $$.period.val(15);
     $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
@@ -147,8 +147,8 @@ const inits = [
     }).trigger('change');
   },
   function () { // highs & count of in-range occurrences
-    zoomPanel.$$.start.val(270);
-    zoomPanel.$$.end.val(500);
+    zoomPanel.$start.val(270);
+    zoomPanel.$end.val(500);
     $$.countDistancePercent[0].checked = true
     if ($$.colorpick) destroyColorpick($$.colorpick);
     initColorpick($$.colorpick, 'red');
@@ -164,8 +164,8 @@ const inits = [
     });
   },
   function () { // highs
-    zoomPanel.$$.start.val(270);
-    zoomPanel.$$.end.val(500);
+    zoomPanel.$start.val(270);
+    zoomPanel.$end.val(500);
     $$.period.val(15);
     $$.guides[0].checked = true;
     if ($$.colorpicks.length) $$.colorpicks.each( (i, el) => destroyColorpick($(el)) );
@@ -194,7 +194,7 @@ const inits = [
 
 const patterns = [
   function () { // most in-range occurrences
-    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
+    const _bars = bars.slice(zoomPanel.$start.val(), zoomPanel.$end.val());
     const period = Math.floor(+$$.period.val() / 2);
     const distance = +$$.distance.val();
     const rangeDistance = +$$.rangeDistance.val();
@@ -239,7 +239,7 @@ const patterns = [
     });
   },
   function () { // turning points
-    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
+    const _bars = bars.slice(zoomPanel.$start.val(), zoomPanel.$end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
@@ -277,7 +277,7 @@ const patterns = [
     });
   },
   function () { // highs & count of in-range occurrences
-    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
+    const _bars = bars.slice(zoomPanel.$start.val(), zoomPanel.$end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const color = getColor($$.colorpick);
@@ -299,7 +299,7 @@ const patterns = [
     });
   },
   function () { // highs
-    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
+    const _bars = bars.slice(zoomPanel.$start.val(), zoomPanel.$end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );
@@ -325,7 +325,7 @@ const patterns = [
     }
   },
   function () { // lows
-    const _bars = bars.slice(zoomPanel.$$.start.val(), zoomPanel.$$.end.val());
+    const _bars = bars.slice(zoomPanel.$start.val(), zoomPanel.$end.val());
     chart.setVisibleRange({ from: _bars[0].time, to: _bars[_bars.length-1].time });
     const period = Math.floor(+$$.period.val() / 2);
     const colors = $$.colorpicks.map((i, el) => getColor($(el)) );

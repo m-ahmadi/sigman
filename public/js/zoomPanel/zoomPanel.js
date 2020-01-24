@@ -1,9 +1,11 @@
 import initSlider from './initSlider.js';
+const { stringify: strify, parse } = JSON;
 
 let $$;
 
 let inst = {
-  get $$() { return $$ }
+  get $start() { return $$.start },
+  get $end() { return $$.end }
 };
 
 function init(e) {
@@ -24,11 +26,9 @@ function init(e) {
   });
   // $$.slider[0].noUiSlider.on('end', zoomTo);
   $$.start.on('input blur change', function () {
-    start = this.value;
     $$.slider[0].noUiSlider.set([this.value, null]);
   });
   $$.end.on('input blur change', function () {
-    end = this.value;
     $$.slider[0].noUiSlider.set([null, this.value]);
   });
   $$.start.val(0);
@@ -43,8 +43,8 @@ function init(e) {
 }
 
 function zoomAllOut() {
-  zoomPanel.$$.start.val(0).trigger('change');
-  zoomPanel.$$.end.val(bars.length-1).trigger('change');;
+  $$.start.val(0).trigger('change');
+  $$.end.val(bars.length-1).trigger('change');;
   zoomTo();
 }
 function zoomTo() {
