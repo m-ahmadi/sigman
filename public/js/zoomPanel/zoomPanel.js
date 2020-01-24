@@ -13,7 +13,14 @@ function init(e) {
   // bars = e.bars;
   $$ = __els('[data-root="zoomPanel"]');
   
-  $$.root.draggable(); // handle: '.drag-handle'
+  $$.root.draggable({
+    cursor: 'move',
+    stop: function (e, ui) {
+      localStorage.setItem('stosis.zoomPanelPosition', strify(ui.position));
+    }
+  });
+  const pos = localStorage.getItem('stosis.zoomPanelPosition');
+  if (pos) $$.root.css( parse(pos) );
   
   $$.zoomAllOut.on('click', zoomAllOut);
   $$.zoomTo.on('click', zoomTo);

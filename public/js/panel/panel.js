@@ -2,6 +2,7 @@ import { randColor, splitArr, isOdd, stepper } from '../gen/util.js';
 import { initColorpick, destroyColorpick, getColor } from './colorpick.js';
 import { arrow, rect, line, horzline, text } from './shapes.js';
 import zoomPanel from '../zoomPanel/zoomPanel.js';
+const { stringify: strify, parse } = JSON;
 
 let $$, temps;
 let chart;
@@ -17,6 +18,14 @@ function init(e) {
   temps = __temps('panel');
   
   $$.root.draggable(); // handle: '.drag-handle'
+  $$.root.draggable({
+    cursor: 'move',
+    stop: function (e, ui) {
+      localStorage.setItem('stosis.panelPosition', strify(ui.position));
+    }
+  });
+  const pos = localStorage.getItem('stosis.panelPosition');
+  if (pos) $$.root.css( parse(pos) );
   
   // chart.removeAllShapes();
   $$.draw.on('click', draw);
