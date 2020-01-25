@@ -17,7 +17,6 @@ function init(e) {
   $$ = __els('[data-root="panel"]');
   temps = __temps('panel');
   
-  $$.root.draggable(); // handle: '.drag-handle'
   $$.root.draggable({
     cursor: 'move',
     stop: function (e, ui) {
