@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../public/lib/jquery-ui/jquery-ui.min.css" />
+<script src="../public/lib/jquery.min.js"></script>
+<script src="../public/lib/jquery-ui/jquery-ui.min.js"></script>
+
+<style>
+  #panel {
+    background: blue;
+    width: 50px;
+    height: 200px;
+  }
+  #panel .item {
+    margin: 5px;
+  }
+
+  .item {
+    width: 40px;
+    height: 40px;
+  }
+
+  .active {
+    background: orange !important;
+  }
+
+  .hover {
+    background: yellow !important;
+  }
+</style>
+
+
+<div id="panel"></div>
+<div id="rest"></div>
+<div class="item" style="background:purple;"></div>
+<div class="item" style="background:cyan;"></div>
+
+<script>
+  $(function () {
+    $('#panel').droppable({
+      classes: {
+        'ui-droppable-active': 'active',
+        'ui-droppable-hover': 'hover'
+      },
+      drop: function (e, ui) {
+        $(this)
+          .addClass('highlight')
+          .append( ui.draggable.css({top: 0, left: 0}).draggable() );
+      },
+      out: function (e, ui) {
+        ui.draggable.appendTo('#rest');
+      }
+    });
+    $('.item').draggable();
+  });
+</script>
