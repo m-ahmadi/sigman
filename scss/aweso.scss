@@ -5,4 +5,9 @@
 }
 .awesomplete {
   direction: rtl;
+  
+  > ul:before {
+    top: -.23em;
+    right: 1em;
+  }
 }
