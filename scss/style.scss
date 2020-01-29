@@ -2,6 +2,7 @@
 @use "sass:math";
 @use "materialize-colors";
 @use "nouislider";
+@use "aweso";
 
 body {
   width: 100%;
@@ -14,15 +15,6 @@ body {
 .panel {
   position: fixed;
   border:1px solid #e3e3e3;
-}
-
-#aweso {
-  font-family: "BYekan";
-  direction: rtl;
-  width: 300px;
-}
-.awesomplete {
-  direction: rtl;
 }
 
 #tree-container {
