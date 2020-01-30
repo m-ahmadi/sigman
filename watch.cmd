@@ -3,6 +3,7 @@ start wp.cmd
 start wt.cmd
 start wl.cmd
 timeout 1
+REM start wsr.cmd (L16=150 L18=1420 L21=8)
 start ws.cmd
 start wj.cmd
 start wh.cmd

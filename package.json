@@ -15,6 +15,7 @@
     "rollup": "latest",
     "htmlbilder": "latest",
     "sass": "latest",
+    // "rtlcss": "latest",
     "shelljs": "latest",
     "gulp": "latest",
     "gulp-livereload": "latest",
