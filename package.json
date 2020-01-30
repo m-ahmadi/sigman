@@ -1,21 +1,18 @@
 {
   "name": "stk2",
   "version": "0.0.0",
-  "description": "",
   "scripts": {
     "build": "node build.js",
     "toggleLive": "node build.js toggleLive",
     "debug": "nodemon -x node --inspect-brk build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "Mohammad Ahmadi",
-  "license": "MIT",
   "devDependencies": {
     "rollup": "latest",
     "htmlbilder": "latest",
     "sass": "latest",
-    // "rtlcss": "latest",
+    "rtlcss": "latest",
     "shelljs": "latest",
     "gulp": "latest",
     "gulp-livereload": "latest",
