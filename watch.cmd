@@ -13,9 +13,9 @@ if %errorlevel% == 1 (echo cmdow not installed. && exit /b 1)
 
 setlocal EnableDelayedExpansion
 set count=0
-set top=250
+set top=267
 for /f %%i in ('cmdow /t') do (
-	cmdow %%i /mov 1410 !top!
+	cmdow %%i /mov 1430 !top!
 	set /a "top=!top!+110"
 	set /a "count=!count!+1"
 	if "!count!" == "7" goto :done
