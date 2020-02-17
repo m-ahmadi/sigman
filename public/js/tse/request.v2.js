@@ -43,4 +43,4 @@ export default {
   InstrumentAndShare,
   LastPossibleDeven,
   ClosingPrices
-
+}

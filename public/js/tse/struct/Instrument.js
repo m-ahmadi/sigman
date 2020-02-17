@@ -26,4 +26,4 @@ export default class Instrument {
     this.CSoSecVal    = row[16];
     this.YVal         = i(row[17], 10);
   }
-
+}

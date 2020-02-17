@@ -43,4 +43,4 @@ export default class Column {
     this.fname  = fnames[ row[0] ];
     this.header = row[1];
   }
-
+}

@@ -46,4 +46,4 @@ function rowToObj(row) {
     close: day.last,
     volume: day.vol
   };
-
+}

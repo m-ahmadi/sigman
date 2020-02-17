@@ -38,4 +38,4 @@ export function destroyColorpick($el) {
 
 export function getColor($el) {
   return '#' + $el.spectrum('get').toHex();
-
+}

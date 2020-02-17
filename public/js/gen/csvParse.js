@@ -12,4 +12,4 @@ export default function (str, parseRows=false) {
   }
   
   return res;
-
+}

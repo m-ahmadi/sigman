@@ -88,4 +88,4 @@ function init() {
   window.baseData = baseData;
 }
 
-export default { init 
+export default { init }

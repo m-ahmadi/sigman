@@ -405,4 +405,4 @@ function draw() {
   svg.select("g.trendlines").call(trendline.refresh);
   svg.select("g.supstances").call(supstance.refresh);
   svg.select("g.tradearrow").call(tradearrow.refresh);
-
+}

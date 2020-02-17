@@ -25,4 +25,4 @@ export default class Day {
     
     // ohlc4: (open + high + low + close) / 4
   }
-
+}

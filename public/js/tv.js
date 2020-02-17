@@ -154,4 +154,4 @@ function init() {
 }
 
 inst.init = init;
-export default inst
+export default inst;

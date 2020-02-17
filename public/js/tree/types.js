@@ -44,4 +44,4 @@ export default [
   { id: 701, parent: '#', node: 'گواهی سپرده کالایی' },
   { id: 901, parent: '#', node: 'انرژی', alias: [902] },
   { id: 801, parent: '#', node: 'سلف بورس انرژی', alias: [802,803,804] }
-
+];

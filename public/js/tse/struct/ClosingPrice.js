@@ -16,4 +16,4 @@ export default class ClosingPrice {
     this.PriceYesterday = row[9];  // yesterday
     this.PriceFirst     = row[10]; // open
   }
-
+}

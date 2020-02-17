@@ -114,4 +114,4 @@ inst.openModal = openModal;
 
 window.uk = inst;
 
-export default inst
+export default inst;

@@ -12,4 +12,4 @@ export default class Share {
     this.NumberOfShareNew = i( row[3] ); // Decimal
     this.NumberOfShareOld = i( row[4] ); // Decimal
   }
-
+}
