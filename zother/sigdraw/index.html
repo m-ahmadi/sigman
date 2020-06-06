@@ -1,0 +1,46 @@
+<head>
+	<meta charset="utf-8" />
+</head>
+<style>
+.graph-container {
+	float: left;
+	overflow-y: auto;
+	width: 550px;
+}
+canvas {
+	border: 1px dashed grey;
+}
+div.y-section {
+	position: relative;
+}
+canvas.y-labels {
+	float: left;
+}
+canvas.y-overlay {
+	position: absolute;
+	left: 0;
+}
+input.y-scale-btn {
+	position: absolute;
+	left: 0;
+	padding: 0;
+	width: 40px;
+}
+</style>
+
+<div data-root="chart">
+	<div class="y-section">
+		<canvas class="y-labels" data-el="yAxCanvas"></canvas>
+		<canvas class="y-overlay" data-el="yOverlayCanvas"></canvas>
+		<input class="y-scale-btn" type="number" min="10" max="400" step="5" value="50" data-el="yScaleBtn" />
+	</div>
+	<div class="graph-container">
+		<canvas data-el="graphCanvas"></canvas>
+	</div>
+</div>
+
+<script src="./lib/localforage.min.js"></script>
+<script src="./lib/jalaali.min.js"></script>
+<script src="./lib/big.min.js"></script>
+<script src="./lib/tse.js"></script>
+<script src="./main.js"></script>

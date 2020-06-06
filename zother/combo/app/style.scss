@@ -1,0 +1,104 @@
+body {
+	font-family: "Segoe UI";
+}
+
+$input-width: 500px;
+$border-color: #b0b0b0;
+
+.combo {
+	*, *::before, *::after { box-sizing: border-box; }
+	
+	width: $input-width;
+	position: relative;
+	
+	.hide  { display: none; }
+	.focus { background: #0080ff; }
+	.query { background: #ffffbf; line-height: 1.4; }
+	
+	> input:first-child {
+		position: absolute;
+		width: 100%;
+		font-family: "Segoe UI";
+		padding-left: 20px;
+		&:valid { padding-left: 35px; } // making room for x-btn
+	}
+	
+	> ul:nth-child(2) {
+		position: absolute;
+		top: 8px;
+		width: 100%;
+		height: 80vh;
+		overflow-y: scroll;
+		border: 1px solid $border-color;
+		border-top: none;
+		list-style: none;
+		padding: 0;
+		
+		> li {
+			float: right;
+			width: 100%;
+			border-width: 0 0 1px;
+			border-style: solid;
+			border-color: $border-color;
+			font-size: 0.9rem;
+			&:last-child { border-bottom: 0; }
+			> div { float: right; }
+			> div:first-child { width: 35%; padding-right: 5px; }
+			> div:nth-child(2) { width: 50%; font-size: 0.8rem; line-height: 1.5rem;  }
+			> div:last-child { width: 15%; font-size: 0.7rem; line-height: 1.6rem; color: grey; }
+		}
+	}
+	
+	> span.x-btn {
+		position: absolute;
+		left: 20px;
+		user-select: none;
+		cursor: pointer;
+	}
+	
+	> svg.filter-btn {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		top: 6px;
+		left: 5px;
+		cursor: pointer;
+		
+		fill: white;
+		stroke: black;
+		stroke-linejoin: round;
+		stroke-width: 5.2px;
+	}
+	
+	> div.filter-box {
+		position: absolute;
+		top: 0;
+		right: $input-width;
+		width: 400px;
+		height: 90vh;
+		font-size: 0.9rem;
+		overflow-y: auto;
+		border: 1px solid #e3e3e3;
+		background: whitesmoke;
+		transition: width 50ms;
+		small {
+			font-size: 0.67rem;
+			color: #b3b3b3;
+		}
+		
+		&.jstree.jstree-default.jstree-rtl .jstree-anchor {
+			line-height: 20px;
+			> .jstree-themeicon {
+				margin-right: -4px;
+				margin-left: -2px;
+			}
+		}
+		
+		&.slide-off {
+			width: 0;
+			border-left: none;
+			border-right: none;
+			overflow: hidden;
+		}
+	}
+}
