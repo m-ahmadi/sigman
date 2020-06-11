@@ -16,11 +16,16 @@ if (args.length) {
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // html
-function runHtml(globals={root: '.'}) {
+function runHtml(_globals={}) {
   const srcdir			= './html';
   const outFile			= './public/index.html';
   const tempFile		= 'index.htm';
   const dataFileExt = '.htm';
+  const globals = {
+    root: '.',
+    staticRoot: '/sigman/public',
+    ..._globals
+  };
   const tree = dirTree(srcdir, dataFileExt, tempFile);
   const html = parseAndRender(tree, {tempFile, dataFileExt, globals});
   if (!html) return;
