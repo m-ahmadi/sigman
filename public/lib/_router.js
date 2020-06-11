@@ -4,7 +4,7 @@
   window.addEventListener('popstate', async function () {
     const { hash } = location;
     if (!hash) {
-      location.replace('/stack8/public/#/');
+      location.replace('/sigman/public/#/');
       return;
     }
     console.log();
