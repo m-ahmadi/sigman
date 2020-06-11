@@ -5,9 +5,11 @@
     "start": "webpack -w"
   },
   "devDependencies": {
+    "chokidar": "^3.4.0",
     "css-loader": "^3.5.3",
     "file-loader": "^6.0.0",
     "html-loader": "^1.1.0",
+    "indent.js": "^0.3.5",
     "livereload": "^0.9.1",
     "postcss-loader": "^3.0.0",
     "rtlcss": "^2.5.0",
