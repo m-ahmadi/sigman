@@ -41,6 +41,10 @@ module.exports = {
           loader: 'file-loader',
           options: { name: '[name].[ext]', outputPath: 'fonts/' }
         }]
+      },
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
       }
     ]
   },
