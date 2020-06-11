@@ -1,0 +1,15 @@
+$global-font-family: BYekan, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$v: none;
+$base-heading-text-transform: $v;
+$nav-header-text-transform: $v;
+$button-text-transform: $v;
+$description-list-term-text-transform: $v;
+$label-text-transform: $v;
+$navbar-nav-item-text-transform: $v;
+$subnav-item-text-transform: $v;
+$tab-item-text-transform: $v;
+
+@import "uikit/variables-theme.scss";
+@import "uikit/mixins-theme.scss";
+@import "uikit/uikit-theme.scss";
