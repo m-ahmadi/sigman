@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const rtlcss = require('rtlcss');
 
 module.exports = {
@@ -18,7 +19,8 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
+          // 'style-loader',
+          MiniCssExtractPlugin.loader,
           { loader: 'css-loader', options: { importLoaders: 1 } },
           { loader: 'postcss-loader', options: {plugins: [rtlcss]} },
           'sass-loader',
@@ -54,6 +56,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin(),
+    new MiniCssExtractPlugin({ filename: 'style.css' }),
     new webpack.ProvidePlugin({
       $: 'jquery'
     })
