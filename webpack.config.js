@@ -60,5 +60,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery'
     })
-  ]
+  ],
+  devtool: 'eval-source-map'
 };
