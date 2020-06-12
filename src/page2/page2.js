@@ -3,5 +3,5 @@ import comp from './comp.js';
 
 export default async function () {
   await comp.init();
-  $('#content').html(temp);
+  __$routerOutlet.html(temp);
 }

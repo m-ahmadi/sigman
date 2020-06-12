@@ -5,7 +5,7 @@ import comp from './comp.js';
 let $$;
 
 export default function init() {
-  $('#content').html(temp);
+  __$routerOutlet.html(temp);
   
   $$ = __els('[data-root="page1"]');
   

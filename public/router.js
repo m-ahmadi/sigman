@@ -17,7 +17,7 @@
     }
     
     if (route) {
-      window._route = route;
+      window.__route = route;
       window.dispatchEvent(new CustomEvent('_route', {detail: route}));
       document.title = seg1[0].toUpperCase() + seg1.slice(1).toLowerCase();
     }

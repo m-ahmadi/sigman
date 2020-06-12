@@ -1,6 +1,6 @@
 node_modules/
 package-lock.json
-public/index.html
-public/bundle.js
-public/fonts/*
-public/images/*
+public/*
+!public/favicon.ico
+!public/.htaccess
+!public/router.js

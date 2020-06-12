@@ -19,7 +19,8 @@ window.addEventListener('_route', function (e) {
 });
 
 $(async function () {
-  if (window._route) pages[window._route]();
+  window.__$routerOutlet = $('body > div[data-router-outlet]');
+  if (window.__route) pages[window.__route]();
   
   await comp1.init();
   comp2.init();
