@@ -22,8 +22,7 @@ function runHtml(_globals={}) {
   const tempFile		= 'index.htm';
   const dataFileExt = '.htm';
   const globals = {
-    root: '.',
-    staticRoot: '/sigman/public',
+    root: '/sigman/public',
     ..._globals
   };
   const tree = dirTree(srcdir, dataFileExt, tempFile);
