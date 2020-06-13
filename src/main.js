@@ -12,8 +12,9 @@ import page1 from './page1/page1.js';
 import page2 from './page2/page2.js';
 import notfound from './not-found.js';
 import sigman from './sigman/sigman.js';
+import stosis from './stosis/stosis.js';
 
-const pages = {page1, page2, 'not-found': notfound, sigman};
+const pages = {page1, page2, 'not-found': notfound, sigman, stosis};
 
 window.addEventListener('_route', function (e) {
   const route = e.detail;
