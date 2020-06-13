@@ -24,6 +24,7 @@
     "big.js": "^5.2.2",
     "jalaali-js": "^1.1.0",
     "jquery": "^3.5.1",
+    "jstree": "^3.3.9",
     "localforage": "^1.7.4",
     "uikit": "^3.5.3"
   }
