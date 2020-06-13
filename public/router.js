@@ -1,5 +1,5 @@
 (function () {
-  const routes = ['', 'page1', 'page2', 'not-found'];
+  const routes = ['', 'page1', 'page2', 'sigman', 'not-found'];
   
   window.addEventListener('popstate', async function () {
     const { hash } = location;
