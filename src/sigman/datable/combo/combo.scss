@@ -104,12 +104,22 @@ $border-color: #b0b0b0;
     }
     
     &.jstree.jstree-default.jstree-rtl .jstree-anchor {
+      line-height: 22px;
+      > .jstree-themeicon {
+        margin-right: -4px;
+        margin-left: -2px;
+      }
+      > .jstree-themeicon.jstree-themeicon-custom {
+        margin-right: -22px;
+      }
+    }
+    /* &.jstree.jstree-default.jstree-rtl .jstree-anchor {
       line-height: 20px;
       > .jstree-themeicon {
         margin-right: -4px;
         margin-left: -2px;
       }
-    }
+    } */
     
     &.slide-off {
       width: 0;
