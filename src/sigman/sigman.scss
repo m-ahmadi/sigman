@@ -1,1 +1,20 @@
-// 
+#datable {
+  td > input {
+    padding: 0;
+  }
+  td > select {
+    /*rtl:ignore*/
+    background-position: -22% 50%;
+  }
+  td>input, td>select {
+    padding-right: 0;
+    height: 22px;
+  }
+  
+  .buyrange {
+    width: 65px;
+    > input { float: left; }
+  }
+  .date > input { width: 35px; }
+  .w8time > * { width: 50px; }
+}
