@@ -1,0 +1,73 @@
+<header class="uk-card uk-card-default uk-padding-remove" uk-sticky>
+  <div class="uk-card-body uk-card-small">
+  
+    <!-- navigation -->
+    <nav class="uk-float-left uk-margin-small uk-visible@m">
+      <ul class="uk-subnav uk-subnav-divider">
+        <li>
+          <a id="sidebar-toggle" class="uk-button uk-button-text">
+            <span uk-icon="icon: menu; ratio: 2;"></span>
+          </a>
+        </li>
+        <li class="">
+          <a href="/"><span uk-icon="icon: home; ratio: 1.7"></span> خانه</a>
+        </li>
+        <li class="uk-active">
+          <a href="#/settings"><span uk-icon="icon: happy; ratio: 1.7"></span> تنظیمات</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- logo -->
+    <span class="uk-float-right uk-visible@m" uk-icon="icon: twitter; ratio: 2"></span>
+
+
+    <!-- user -->
+    <div class="uk-inline uk-float-right">
+      <img class="uk-border-circle" src="${g.root}/images/avatar.jpg"
+      width="40" height="40" alt="Border circle" style="border: 1.7px rgb(104, 104, 104) solid;">
+      <!-- <a class="uk-button">
+        <span uk-icon="icon: user; ratio: 1.7;"></span>
+      </a> -->
+      <div uk-drop="offset:0; delay-hide: 100">
+        <div class="uk-card uk-card-body uk-card-default">
+          <a href="#" class="uk-link">
+            <span uk-icon="sign-out">خروج</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- notifications -->
+    <div class="uk-inline uk-float-right">
+
+      <a class="uk-button">
+        <div class="uk-inline">
+          <span uk-icon="icon: tag; ratio: 1.7"></span>
+          <span class="uk-badge uk-position-top-left red"
+            style="top: -6px; right: -10px;">9</span>
+        </div>
+      </a>
+      <div uk-drop="offset:0; delay-hide: 100">
+        <div class="uk-card uk-card-body uk-card-default">
+          <a href="#" class="uk-link">
+            <span uk-icon="icon: sign-out">خروج</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- search -->
+    <form class="uk-search uk-search-default
+        uk-float-right
+        uk-margin-small
+        uk-width-1-2@s
+        uk-width-1-4@m
+        uk-width-2-6@l
+        uk-width-1-4@xl
+        ">
+      <a class="uk-search-icon-flip" uk-search-icon></a>
+      <input class="uk-input uk-form-small" type="search" placeholder="جستجو">
+    </form>
+  </div>
+</header>

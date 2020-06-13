@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- fa en-US -->
-<head>
+<html lang="en" dir="rtl"> <!-- fa en-US -->
+  <head>
   <script src="router.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0" />
@@ -9,13 +9,22 @@
   <title>Stack8 Boilerplate</title>
 </head>
 <body>
-  ${ c.nav }
+  <div>
+    ${ c.header }
+    
+    <div class="uk-grid-collapse uk-grid-match" uk-grid>
+      ${ c.sidebar }
+      
+      <div class="uk-width-expand">
+        <div data-router-outlet></div>
+      </div>
+    </div>
+  </div>
+  
   <div data-root="comp1">
     <button data-el="btn">doSome</button>
   </div>
   <div data-root="comp2"></div>
-  
-  <div data-router-outlet></div>
   
   <script src="bundle.js"></script>
 </body>

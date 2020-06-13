@@ -2,6 +2,7 @@ import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons'; 
 UIkit.use(Icons);
 
+import './images/avatar.jpg';
 import './style.scss';
 import './helpers.js';
 import comp1 from './comp1/comp1.js';
